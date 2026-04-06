@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDashboardViewModel } from '../viewmodels/useDashboardViewModel'
 import type { RunExperimentRequest } from '../../domain/models/RunExperiment'
@@ -156,6 +156,7 @@ const DashboardView = () => {
   const { setExperimentId, setLastResult } = useExperimentStore()
   const { loading, error, runExperiment } = useDashboardViewModel()
   const [elapsed, setElapsed] = useState(0)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const [form, setForm] = useState<RunExperimentRequest>({
     ph: 7.0,
@@ -182,6 +183,28 @@ const DashboardView = () => {
       setExperimentId(result.experiment_id)
       setLastResult(result)
       navigate(`/results/${result.experiment_id}`)
+    }
+  }
+
+  const startStep = (fieldName: string, step: number, min: number, max: number, direction: number) => {
+    setForm(prev => {
+      const current = prev[fieldName as keyof RunExperimentRequest] as number
+      const newValue = Math.min(max, Math.max(min, Number((current + direction * step).toFixed(2))))
+      return { ...prev, [fieldName]: newValue }
+    })
+    intervalRef.current = setInterval(() => {
+      setForm(prev => {
+        const current = prev[fieldName as keyof RunExperimentRequest] as number
+        const newValue = Math.min(max, Math.max(min, Number((current + direction * step).toFixed(2))))
+        return { ...prev, [fieldName]: newValue }
+      })
+    }, 150)
+  }
+
+  const stopStep = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
     }
   }
 
@@ -224,7 +247,18 @@ const DashboardView = () => {
                       <p className="text-xs" style={{ color: '#52525B' }}>{field.description}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onMouseDown={() => startStep(field.name, field.step, field.min, field.max, -1)}
+                      onMouseUp={stopStep}
+                      onMouseLeave={stopStep}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
+                      style={{ backgroundColor: '#1F1F22', color: '#71717A' }}
+                    >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <path d="M5 12h14" />
+                    </svg>
+                  </button>
                     <input
                       type="number"
                       name={field.name}
@@ -236,7 +270,17 @@ const DashboardView = () => {
                       className="text-right text-2xl font-bold outline-none w-20 bg-transparent"
                       style={{ color: '#22C55E' }}
                     />
-                    <span className="text-sm" style={{ color: '#52525B' }}>{field.unit}</span>
+                    <button
+                      onMouseDown={() => startStep(field.name, field.step, field.min, field.max, 1)}
+                      onMouseUp={stopStep}
+                      onMouseLeave={stopStep}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
+                      style={{ backgroundColor: '#1F1F22', color: '#71717A' }}
+                    >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                  </button>
                   </div>
                 </div>
 
