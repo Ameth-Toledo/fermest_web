@@ -153,7 +153,7 @@ const microorganisms = [
 
 const DashboardView = () => {
   const navigate = useNavigate()
-  const { setExperimentId } = useExperimentStore()
+  const { setExperimentId, setLastResult } = useExperimentStore()
   const { loading, error, runExperiment } = useDashboardViewModel()
   const [elapsed, setElapsed] = useState(0)
 
@@ -180,7 +180,8 @@ const DashboardView = () => {
     const result = await runExperiment(form)
     if (result?.experiment_id) {
       setExperimentId(result.experiment_id)
-      navigate(`/experiment/${result.experiment_id}`)
+      setLastResult(result)
+      navigate(`/results/${result.experiment_id}`)
     }
   }
 
@@ -201,7 +202,6 @@ const DashboardView = () => {
 
       <div className="flex-1 grid grid-cols-3 gap-6">
 
-        {/* Sliders */}
         <div className="col-span-2 flex flex-col gap-4">
           {fields.map(field => {
             const value = form[field.name as keyof RunExperimentRequest] as number
@@ -265,10 +265,7 @@ const DashboardView = () => {
           })}
         </div>
 
-        {/* Right panel */}
         <div className="flex flex-col gap-4">
-
-          {/* Microorganism */}
           <div className="rounded-2xl p-6 flex-1" style={{ backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#16A34A18', border: '1px solid #16A34A33' }}>
@@ -302,7 +299,6 @@ const DashboardView = () => {
             </div>
           </div>
 
-          {/* Summary */}
           <div className="rounded-2xl p-6" style={{ backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
             <p className="text-xs tracking-widest uppercase mb-4" style={{ color: '#52525B' }}>Resumen</p>
             <div className="space-y-2">
@@ -324,9 +320,12 @@ const DashboardView = () => {
 
           <button
             onClick={handleSubmit}
-            className="w-full py-4 rounded-xl text-sm font-semibold tracking-widest uppercase transition-all"
+            className="w-full py-4 rounded-xl text-sm font-semibold tracking-widest uppercase transition-all flex items-center justify-center gap-3"
             style={{ backgroundColor: '#22C55E', color: '#0A0A0B', cursor: 'pointer' }}
           >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 3l14 9-14 9V3z" />
+            </svg>
             Ejecutar experimento
           </button>
         </div>

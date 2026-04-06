@@ -4,6 +4,7 @@ import DashboardView from '../../features/dashboard/presentation/view/DashboardV
 import ExperimentView from '../../features/dashboard/presentation/view/ExperimentView'
 import BestPerGenerationView from '../../features/dashboard/presentation/view/BestPerGenerationView'
 import SimulationView from '../../features/dashboard/presentation/view/SimulationView'
+import ResultsView from '../../features/dashboard/presentation/view/ResultsView'
 import ChartsView from '../../features/dashboard/presentation/view/ChartsView'
 
 const AppRouter = () => {
@@ -16,6 +17,7 @@ const AppRouter = () => {
           <Route path="/experiment/:id/best-per-generation" element={<BestPerGenerationView />} />
           <Route path="/simulation/:id" element={<SimulationView />} />
           <Route path="/experiment/:id/charts" element={<ChartsView />} />
+          <Route path="/results/:id" element={<ResultsView />} />
         </Route>
       </Routes>
     </BrowserRouter>
