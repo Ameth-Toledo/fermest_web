@@ -1,10 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useExperimentStore } from '../../../../core/store/useExperimentStore'
+import { useState } from 'react'
 
 const ResultsView = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const [showEnergy, setShowEnergy] = useState(false)
   const { lastResult } = useExperimentStore()
   const result = lastResult
 
@@ -38,12 +40,24 @@ const ResultsView = () => {
     { label: 'Etanol producido', value: result.best_individual.ethanol?.toFixed(2) ?? 'N/A', unit: 'g/L', description: 'Concentración de etanol' },
     { label: 'Biomasa final', value: result.best_individual.biomass?.toFixed(2) ?? 'N/A', unit: 'g/L', description: 'Concentración de biomasa' },
     { label: 'Eficiencia', value: result.best_individual.efficiency != null ? (result.best_individual.efficiency * 100).toFixed(1) : 'N/A', unit: '%', description: 'Eficiencia de conversión' },
-    { label: 'Energía consumida', value: result.best_individual.energy?.toFixed(2) ?? 'N/A', unit: 'kWh', description: 'Energía total consumida' },
+    { label: 'Energía consumida', value: result.best_individual.energy?.toFixed(2) ?? 'N/A', unit: 'Wh', description: 'Energía total consumida' },
   ]
 
   const totalGenerations = result.history.length
   const improvement = (((result.history[totalGenerations - 1] - result.history[0]) / result.history[0]) * 100).toFixed(1)
   const bestGeneration = result.history.indexOf(Math.max(...result.history))
+
+  const rpm = result.best_individual.rpm
+  const flow = result.best_individual.flow
+  const temp = result.best_individual.temperature
+  const t = 120
+  const pAgit = 0.1 * Math.pow(rpm / 60, 3)
+  const pBomb = 1.0 * flow
+  const pTemp = 0.05 * Math.abs(temp - 25)
+  const eAgit = pAgit * t
+  const eBomb = pBomb * t
+  const eTemp = pTemp * t
+  const total = eAgit + eBomb + eTemp
 
   return (
     <div className="min-h-screen flex flex-col px-12 py-12" style={{ backgroundColor: '#0A0A0B' }}>
@@ -166,6 +180,53 @@ const ResultsView = () => {
           <span style={{ color: '#22C55E' }}>{result.best_individual.energy?.toFixed(2) ?? 'N/A'} Wh</span> de energía.
         </p>
       </div>
+
+      <div className="mt-4 rounded-xl overflow-hidden" style={{ backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
+        <button
+          onClick={() => setShowEnergy(!showEnergy)}
+          className="w-full px-6 py-4 flex items-center justify-between"
+          style={{ color: '#A1A1AA' }}
+        >
+          <p className="text-xs tracking-widest uppercase" style={{ color: '#52525B' }}>Desglose energético</p>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+            style={{ transform: showEnergy ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+        {showEnergy && (
+          <div className="px-6 pb-6">
+            <div className="h-px mb-4" style={{ backgroundColor: '#1F1F22' }} />
+            <table className="w-full text-xs">
+              <thead>
+                <tr>
+                  <th className="text-left pb-3" style={{ color: '#52525B' }}>Componente</th>
+                  <th className="text-right pb-3" style={{ color: '#52525B' }}>Potencia (W)</th>
+                  <th className="text-right pb-3" style={{ color: '#52525B' }}>Energía (Wh)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { label: 'Agitador (motor a pasos)', p: pAgit, e: eAgit },
+                  { label: 'Bomba peristáltica', p: pBomb, e: eBomb },
+                  { label: 'Control de temperatura', p: pTemp, e: eTemp },
+                ].map(row => (
+                  <tr key={row.label}>
+                    <td className="py-2" style={{ color: '#A1A1AA' }}>{row.label}</td>
+                    <td className="text-right py-2" style={{ color: '#A1A1AA' }}>{row.p.toFixed(4)}</td>
+                    <td className="text-right py-2" style={{ color: '#A1A1AA' }}>{row.e.toFixed(2)}</td>
+                  </tr>
+                ))}
+                <tr style={{ borderTop: '1px solid #1F1F22' }}>
+                  <td className="pt-3 font-semibold" style={{ color: '#F4F4F5' }}>Total</td>
+                  <td className="text-right pt-3 font-semibold" style={{ color: '#F4F4F5' }}>{(pAgit + pBomb + pTemp).toFixed(4)}</td>
+                  <td className="text-right pt-3 font-semibold" style={{ color: '#22C55E' }}>{total.toFixed(2)} Wh</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
     </div>
   )
 }
