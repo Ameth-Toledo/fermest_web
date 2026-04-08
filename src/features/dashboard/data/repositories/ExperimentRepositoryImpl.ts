@@ -6,28 +6,33 @@ import type { BestPerGenerationResult } from '../../domain/models/BestPerGenerat
 
 const BASE_URL = import.meta.env.VITE_API_URL
 
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true',
+}
+
 export class ExperimentRepositoryImpl implements ExperimentRepository {
   async runExperiment(data: RunExperimentRequest): Promise<RunExperimentResponse> {
     const res = await fetch(`${BASE_URL}/run-experiment`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: HEADERS,
       body: JSON.stringify(data),
     })
     return res.json()
   }
 
   async getExperiment(experimentId: string): Promise<ExperimentResult> {
-    const res = await fetch(`${BASE_URL}/experiment/${experimentId}`)
+    const res = await fetch(`${BASE_URL}/experiment/${experimentId}`, { headers: HEADERS })
     return res.json()
   }
 
   async getSimulation(individualId: string): Promise<Simulation> {
-    const res = await fetch(`${BASE_URL}/simulation/${individualId}`)
+    const res = await fetch(`${BASE_URL}/simulation/${individualId}`, { headers: HEADERS })
     return res.json()
   }
 
   async getBestPerGeneration(experimentId: string): Promise<BestPerGenerationResult> {
-    const res = await fetch(`${BASE_URL}/experiment/${experimentId}/best-per-generation`)
+    const res = await fetch(`${BASE_URL}/experiment/${experimentId}/best-per-generation`, { headers: HEADERS })
     return res.json()
   }
 }
