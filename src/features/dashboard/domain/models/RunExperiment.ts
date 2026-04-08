@@ -11,6 +11,10 @@ export interface BestIndividual {
   temperature: number
   flow: number
   fitness: number
+  ethanol: number
+  biomass: number
+  efficiency: number
+  energy: number
 }
 
 export interface RunExperimentResponse {

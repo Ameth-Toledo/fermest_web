@@ -35,6 +35,10 @@ const ResultsView = () => {
     { label: 'Temperatura', value: result.best_individual.temperature.toFixed(1), unit: '°C', description: 'Temperatura del biorreactor' },
     { label: 'Flujo', value: result.best_individual.flow.toFixed(2), unit: 'L/h', description: 'Tasa de flujo volumétrico' },
     { label: 'Fitness', value: result.best_individual.fitness.toFixed(4), unit: '', description: 'Puntuación de aptitud global' },
+    { label: 'Etanol producido', value: result.best_individual.ethanol?.toFixed(2) ?? 'N/A', unit: 'g/L', description: 'Concentración de etanol' },
+    { label: 'Biomasa final', value: result.best_individual.biomass?.toFixed(2) ?? 'N/A', unit: 'g/L', description: 'Concentración de biomasa' },
+    { label: 'Eficiencia', value: result.best_individual.efficiency != null ? (result.best_individual.efficiency * 100).toFixed(1) : 'N/A', unit: '%', description: 'Eficiencia de conversión' },
+    { label: 'Energía consumida', value: result.best_individual.energy?.toFixed(2) ?? 'N/A', unit: 'kWh', description: 'Energía total consumida' },
   ]
 
   const totalGenerations = result.history.length
@@ -78,14 +82,14 @@ const ResultsView = () => {
             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#22C55E' }} />
             <p className="text-xs tracking-widest uppercase" style={{ color: '#22C55E' }}>Mejor individuo</p>
           </div>
-          <div className="space-y-5">
+          <div className="grid grid-cols-2 gap-4">
             {metrics.map(item => (
               <div key={item.label}>
                 <div className="flex justify-between items-baseline mb-1">
                   <span className="text-xs" style={{ color: '#52525B' }}>{item.label}</span>
-                  <span className="text-lg font-bold" style={{ color: '#F4F4F5' }}>
+                  <span className="text-sm font-bold" style={{ color: '#F4F4F5' }}>
                     {item.value}
-                    <span className="text-sm font-normal ml-1" style={{ color: '#52525B' }}>{item.unit}</span>
+                    <span className="text-xs font-normal ml-1" style={{ color: '#52525B' }}>{item.unit}</span>
                   </span>
                 </div>
                 <p className="text-xs" style={{ color: '#3F3F46' }}>{item.description}</p>
@@ -145,6 +149,22 @@ const ResultsView = () => {
           </svg>
           Ver gráficas completas
         </button>
+      </div>
+
+      <div className="mt-6 rounded-xl px-6 py-5" style={{ backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
+        <p className="text-xs tracking-widest uppercase mb-3" style={{ color: '#52525B' }}>Interpretación del resultado</p>
+        <p className="text-sm leading-relaxed" style={{ color: '#A1A1AA' }}>
+          Los parámetros óptimos encontrados son{' '}
+          <span style={{ color: '#22C55E' }}>RPM {result.best_individual.rpm.toFixed(1)}</span>,{' '}
+          temperatura <span style={{ color: '#22C55E' }}>{result.best_individual.temperature.toFixed(1)} °C</span> y{' '}
+          flujo <span style={{ color: '#22C55E' }}>{result.best_individual.flow.toFixed(2)} L/h</span>,{' '}
+          logrando una eficiencia de conversión del{' '}
+          <span style={{ color: '#22C55E' }}>{result.best_individual.efficiency != null ? (result.best_individual.efficiency * 100).toFixed(1) : 'N/A'}%</span>{' '}
+          con una producción de{' '}
+          <span style={{ color: '#22C55E' }}>{result.best_individual.ethanol?.toFixed(2) ?? 'N/A'} g/L</span> de etanol{' '}
+          en 120 horas de fermentación, consumiendo{' '}
+          <span style={{ color: '#22C55E' }}>{result.best_individual.energy?.toFixed(2) ?? 'N/A'} Wh</span> de energía.
+        </p>
       </div>
     </div>
   )

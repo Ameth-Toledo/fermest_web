@@ -127,7 +127,7 @@ const ChartsView = () => {
           <ResponsiveContainer width="100%" height={220}>
             <ScatterChart>
               <CartesianGrid strokeDasharray="3 3" stroke="#1F1F22" />
-              <XAxis dataKey="flujo" name="Flujo" tick={{ fill: '#52525B', fontSize: 11 }} axisLine={{ stroke: '#1F1F22' }} tickLine={false} label={{ value: 'Flujo', position: 'insideBottom', offset: -2, fill: '#52525B', fontSize: 10 }} />
+              <XAxis dataKey="flujo" name="Flujo" tick={{ fill: '#52525B', fontSize: 11 }} axisLine={{ stroke: '#1F1F22' }} tickLine={false} tickFormatter={(v) => v.toFixed(1)} label={{ value: 'Flujo', position: 'insideBottom', offset: -2, fill: '#52525B', fontSize: 10 }} />
               <YAxis dataKey="fitness" name="Fitness" tick={{ fill: '#52525B', fontSize: 11 }} axisLine={{ stroke: '#1F1F22' }} tickLine={false} width={55} />
               <ZAxis range={[20, 20]} />
               <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: '3 3', stroke: '#1F1F22' }} />
