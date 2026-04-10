@@ -147,7 +147,18 @@ const ChartsView = () => {
 
         <div className="rounded-xl p-6 col-span-2" style={{ backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
           <p className="text-xs tracking-widest uppercase mb-1" style={{ color: '#71717A' }}>Gráfica 5</p>
-          <p className="text-sm font-medium mb-6" style={{ color: '#F4F4F5' }}>Evolución de la población — Distribución del fitness</p>
+          <div className="flex items-center gap-2 mb-6">
+            <p className="text-sm font-medium" style={{ color: '#F4F4F5' }}>Evolución de la población — Distribución del fitness</p>
+            <div className="relative group">
+              <div className="w-4 h-4 rounded-full flex items-center justify-center cursor-help" style={{ backgroundColor: '#1F1F22', border: '1px solid #3F3F46' }}>
+                <span className="text-xs" style={{ color: '#71717A' }}>?</span>
+              </div>
+              <div className="absolute bottom-6 left-0 w-64 p-3 rounded-lg text-xs leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                style={{ backgroundColor: '#1A1A1C', border: '1px solid #2F2F32', color: '#A1A1AA' }}>
+                El área sombreada representa el rango de fitness entre el mejor y peor individuo de cada generación. Cuando se achica, la población está convergiendo.
+              </div>
+            </div>
+          </div>
           <ResponsiveContainer width="100%" height={220}>
             <ComposedChart data={populationData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#1F1F22" />
