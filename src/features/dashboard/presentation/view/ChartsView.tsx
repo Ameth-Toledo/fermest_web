@@ -12,6 +12,8 @@ import {
   Scatter,
   ZAxis,
   Legend,
+  Area, 
+  ComposedChart
 } from 'recharts'
 
 const ChartsView = () => {
@@ -50,6 +52,13 @@ const ChartsView = () => {
       fitness: parseFloat(ind.fitness.toFixed(4)),
     }))
   )
+
+  const populationData = bestPerGeneration?.generations.map(gen => ({
+    generacion: gen.generation,
+    mejor: parseFloat(gen.best_fitness.toFixed(4)),
+    peor: parseFloat((gen.worst_fitness ?? 0).toFixed(4)),
+    promedio: parseFloat((gen.avg_fitness ?? 0).toFixed(4)),
+  }))
 
   const tooltipStyle = {
     backgroundColor: '#111113',
@@ -133,6 +142,23 @@ const ChartsView = () => {
               <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: '3 3', stroke: '#1F1F22' }} />
               <Scatter data={allIndividuals} fill="#A78BFA" fillOpacity={0.5} />
             </ScatterChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="rounded-xl p-6 col-span-2" style={{ backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
+          <p className="text-xs tracking-widest uppercase mb-1" style={{ color: '#71717A' }}>Gráfica 5</p>
+          <p className="text-sm font-medium mb-6" style={{ color: '#F4F4F5' }}>Evolución de la población — Distribución del fitness</p>
+          <ResponsiveContainer width="100%" height={220}>
+            <ComposedChart data={populationData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1F1F22" />
+              <XAxis dataKey="generacion" tick={{ fill: '#52525B', fontSize: 11 }} axisLine={{ stroke: '#1F1F22' }} tickLine={false} />
+              <YAxis tick={{ fill: '#52525B', fontSize: 11 }} axisLine={{ stroke: '#1F1F22' }} tickLine={false} width={55} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Legend wrapperStyle={{ color: '#71717A', fontSize: '11px' }} />
+              <Area type="monotone" dataKey="mejor" stroke="#22C55E" fill="#22C55E" fillOpacity={0.15} strokeWidth={2} name="mejor" />
+              <Area type="monotone" dataKey="peor" stroke="#EF4444" fill="#0A0A0B" fillOpacity={1} strokeWidth={2} name="peor" />
+              <Line type="monotone" dataKey="promedio" stroke="#F59E0B" strokeWidth={2} dot={false} name="promedio" />
+            </ComposedChart>
           </ResponsiveContainer>
         </div>
 
