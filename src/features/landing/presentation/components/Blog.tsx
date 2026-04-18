@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Ripple } from "@/components/ui/ripple";
+import { Ripple } from "../../../../components/ui/ripple";
 
 const POSTS = [
   {
