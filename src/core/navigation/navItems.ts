@@ -1,7 +1,7 @@
 export const nav = [
   {
     label: 'Nuevo Experimento',
-    path: '/',
+    path: '/dashboard',
     always: true,
     icon: 'M12 4v16m8-8H4',
     description: 'Configurar parámetros'

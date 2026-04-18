@@ -12,10 +12,10 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/landing" element={<LandingView />} />
+        <Route path="/" element={<LandingView />} />
         
         <Route element={<Layout />}>
-          <Route path="/" element={<DashboardView />} />
+          <Route path="/dashboard" element={<DashboardView />} />
           <Route path="/experiment/:id" element={<ExperimentView />} />
           <Route path="/experiment/:id/best-per-generation" element={<BestPerGenerationView />} />
           <Route path="/simulation/:id" element={<SimulationView />} />
