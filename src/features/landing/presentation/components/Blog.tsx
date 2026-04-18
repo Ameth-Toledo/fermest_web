@@ -1,0 +1,150 @@
+import { useState } from "react";
+import { Ripple } from "@/components/ui/ripple";
+
+const POSTS = [
+  {
+    tag: "Casos de éxito",
+    tagColor: "#4ade80",
+    image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80",
+    title: "Cómo un pequeño agricultor transformó su finca con nuestro fermentador",
+    excerpt: "Descubre cómo se redujeron costos y mejoró la producción utilizando nuestro fermentador de residuos agrícolas.",
+    date: "Mar 2025",
+    readTime: "5 min",
+  },
+  {
+    tag: "Guías",
+    tagColor: "#fbbf24",
+    image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80",
+    title: "5 consejos para maximizar la eficiencia de tu fermentador",
+    excerpt: "Las mejores prácticas para obtener el máximo rendimiento y convertir más residuos en bioproductos valiosos.",
+    date: "Feb 2025",
+    readTime: "7 min",
+  },
+  {
+    tag: "Sostenibilidad",
+    tagColor: "#38bdf8",
+    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
+    title: "El impacto ambiental de los residuos agrícolas y cómo mitigarlo",
+    excerpt: "Exploramos el impacto negativo de los residuos en el medio ambiente y cómo la fermentación puede ser parte de la solución.",
+    date: "Ene 2025",
+    readTime: "4 min",
+  },
+];
+
+const BlogCard = ({ post }: { post: typeof POSTS[0] }) => {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      className="group flex flex-col rounded-2xl overflow-hidden cursor-pointer"
+      style={{
+        background: "#0d0d0f",
+        border: "1px solid rgba(255,255,255,0.08)",
+        transform: hovered ? "translateY(-6px)" : "translateY(0)",
+        transition: "transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease",
+        boxShadow: hovered ? "0 24px 48px rgba(0,0,0,0.4)" : "0 4px 16px rgba(0,0,0,0.2)",
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* image area */}
+      <div className="relative overflow-hidden" style={{ height: 220 }}>
+        <img
+          src={post.image}
+          alt={post.title}
+          className="w-full h-full object-cover transition-transform duration-700"
+          style={{ transform: hovered ? "scale(1.06)" : "scale(1)" }}
+        />
+        {/* gradient overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(13,13,15,1) 0%, rgba(13,13,15,0.4) 50%, transparent 100%)" }} />
+
+        {/* tag */}
+        <div className="absolute top-4 left-4">
+          <span
+            className="text-[10px] uppercase tracking-[0.2em] font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm"
+            style={{ background: "rgba(0,0,0,0.5)", color: post.tagColor, border: `1px solid ${post.tagColor}30` }}
+          >
+            {post.tag}
+          </span>
+        </div>
+
+        {/* read time */}
+        <div className="absolute top-4 right-4">
+          <span className="text-[10px] text-white/50 px-2.5 py-1 rounded-full backdrop-blur-sm" style={{ background: "rgba(0,0,0,0.4)" }}>
+            {post.readTime} lectura
+          </span>
+        </div>
+      </div>
+
+      {/* content */}
+      <div className="flex flex-col gap-4 p-6 flex-1">
+        <h3 className="text-base font-black text-white leading-snug tracking-tight">
+          {post.title}
+        </h3>
+        <p className="text-white/45 text-sm leading-relaxed flex-1">
+          {post.excerpt}
+        </p>
+
+        {/* footer */}
+        <div
+          className="flex items-center justify-between pt-4"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          <div className="flex items-center gap-2">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-black text-black"
+              style={{ background: post.tagColor }}
+            >
+              F
+            </div>
+            <span className="text-white/30 text-xs">Equipo Fermest · {post.date}</span>
+          </div>
+
+          <span
+            className="flex items-center gap-1.5 text-xs font-medium transition-all duration-200"
+            style={{ color: hovered ? post.tagColor : "rgba(255,255,255,0.25)" }}
+          >
+            Leer
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transform: hovered ? "translateX(3px)" : "translateX(0)", transition: "transform 0.2s ease" }}>
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Blog = () => (
+  <section className="relative w-full overflow-hidden" style={{ background: "#0F8E4D" }}>
+    <Ripple className="absolute inset-0 z-0" mainCircleSize={500} mainCircleOpacity={0.3} numCircles={7} />
+    <div className="absolute top-0 left-0 right-0 h-px bg-white/10" />
+    <div className="absolute bottom-0 left-0 right-0 h-px bg-black/20" />
+
+    <div className="relative z-10 mx-auto max-w-7xl px-6 py-28 flex flex-col gap-14">
+
+      {/* header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="flex flex-col gap-4">
+          <span className="text-xs uppercase tracking-[0.3em] text-white/60 font-medium">Nuestro blog</span>
+          <h2 className="text-5xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter">
+            Historias y consejos
+          </h2>
+          <div className="w-12 h-1 rounded-full bg-white/40" />
+        </div>
+        <p className="max-w-xs text-white/50 text-sm leading-relaxed md:text-right">
+          Casos de éxito, guías prácticas y artículos sobre sostenibilidad agroindustrial.
+        </p>
+      </div>
+
+      {/* cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {POSTS.map(post => <BlogCard key={post.title} post={post} />)}
+      </div>
+
+    </div>
+  </section>
+);
+
+export default Blog;
