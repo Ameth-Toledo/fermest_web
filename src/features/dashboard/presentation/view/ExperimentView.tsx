@@ -88,11 +88,13 @@ const ExperimentView = () => {
           return (
             <button
               key={ind.id}
-              onClick={() => handleIndividualClick(ind)}
+              onClick={() => isBest ? handleIndividualClick(ind) : undefined}
               className="rounded-xl p-5 text-left transition-all hover:scale-[1.02]"
               style={{
                 backgroundColor: isBest ? '#0D2818' : '#111113',
                 border: `1px solid ${isBest ? '#22C55E' : '#1F1F22'}`,
+                cursor: isBest ? 'pointer' : 'not-allowed',
+                opacity: isBest ? 1 : 0.5,
               }}
             >
               {isBest && (
@@ -102,13 +104,13 @@ const ExperimentView = () => {
               )}
               <div className="space-y-2 mt-1">
                 {[
-                    { label: 'Fitness', value: ind.fitness?.toFixed(4) ?? 'N/A' },
-                    { label: 'RPM', value: ind.rpm?.toFixed(1) ?? 'N/A' },
-                    { label: 'Temperatura', value: `${ind.temperature?.toFixed(1) ?? 'N/A'} °C` },
-                    { label: 'Flujo', value: ind.flow?.toFixed(2) ?? 'N/A' },
-                    { label: 'Eficiencia', value: ind.efficiency?.toFixed(3) ?? 'N/A' },
-                    { label: 'Etanol', value: `${ind.ethanol?.toFixed(1) ?? 'N/A'} g/L` },
-                  ].map(item => (
+                  { label: 'Fitness', value: ind.fitness?.toFixed(4) ?? 'N/A' },
+                  { label: 'RPM', value: ind.rpm?.toFixed(1) ?? 'N/A' },
+                  { label: 'Temperatura', value: `${ind.temperature?.toFixed(1) ?? 'N/A'} °C` },
+                  { label: 'Flujo', value: ind.flow?.toFixed(2) ?? 'N/A' },
+                  { label: 'Eficiencia', value: ind.efficiency?.toFixed(3) ?? 'N/A' },
+                  { label: 'Etanol', value: `${ind.ethanol?.toFixed(1) ?? 'N/A'} g/L` },
+                ].map(item => (
                   <div key={item.label} className="flex justify-between items-center">
                     <span className="text-xs" style={{ color: '#52525B' }}>{item.label}</span>
                     <span className="text-xs font-medium" style={{ color: isBest ? '#22C55E' : '#A1A1AA' }}>{item.value}</span>

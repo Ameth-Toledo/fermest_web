@@ -27,6 +27,12 @@ const SimulationView = () => {
     </div>
   )
 
+  if (!simulation || simulation.time.length === 0) return (
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0A0A0B' }}>
+      <p className="text-sm" style={{ color: '#71717A' }}>Este individuo no tiene datos de simulación disponibles.</p>
+    </div>
+  )
+
   const data = simulation?.time.map((t, i) => ({
     tiempo: parseFloat(t.toFixed(2)),
     biomasa: parseFloat(simulation.biomass[i].toFixed(4)),
@@ -43,10 +49,10 @@ const SimulationView = () => {
     fontFamily: 'Poppins, sans-serif',
   }
 
-  const finalBiomass = simulation?.biomass[simulation.biomass.length - 1].toFixed(3)
-  const finalEthanol = simulation?.ethanol[simulation.ethanol.length - 1].toFixed(3)
-  const finalSubstrate = simulation?.substrate[simulation.substrate.length - 1].toFixed(3)
-  const totalTime = simulation?.time[simulation.time.length - 1].toFixed(1)
+  const finalBiomass = simulation?.biomass?.at(-1)?.toFixed(3)
+  const finalEthanol = simulation?.ethanol?.at(-1)?.toFixed(3)
+  const finalSubstrate = simulation?.substrate?.at(-1)?.toFixed(3)
+  const totalTime = simulation?.time?.at(-1)?.toFixed(1)
 
   return (
     <div className="min-h-screen flex flex-col px-12 py-12" style={{ backgroundColor: '#0A0A0B' }}>
