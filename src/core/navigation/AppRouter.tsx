@@ -6,11 +6,14 @@ import BestPerGenerationView from '../../features/dashboard/presentation/view/Be
 import SimulationView from '../../features/dashboard/presentation/view/SimulationView'
 import ResultsView from '../../features/dashboard/presentation/view/ResultsView'
 import ChartsView from '../../features/dashboard/presentation/view/ChartsView'
+import LandingView from '../../features/landing/presentation/views/LandingScreen'
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/landing" element={<LandingView />} />
+        
         <Route element={<Layout />}>
           <Route path="/" element={<DashboardView />} />
           <Route path="/experiment/:id" element={<ExperimentView />} />
