@@ -10,6 +10,8 @@ import LandingView from '../../features/landing/presentation/views/LandingScreen
 import Login from '../../features/auth/presentation/views/Login'
 import FermentationView from '../../features/fermentation/presentation/view/FermentationView'
 import SensorsView from '../../features/sensors/presentation/view/SensorsView'
+import Register from '../../features/auth/presentation/views/Register'
+import ChatView from '../../features/chat/presentation/view/ChatView'
 
 const AppRouter = () => {
   return (
@@ -17,6 +19,7 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<LandingView />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<DashboardView />} />
@@ -26,6 +29,7 @@ const AppRouter = () => {
           <Route path="/experiment/:id/charts" element={<ChartsView />} />
           <Route path="/results/:id" element={<ResultsView />} />
           <Route path="/fermentation" element={<FermentationView />} />
+          <Route path="/chat" element={<ChatView />} />
           <Route path="/grafics" element={<SensorsView />} />
         </Route>
       </Routes>

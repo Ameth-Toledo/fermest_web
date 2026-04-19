@@ -23,10 +23,8 @@ const Sidebar = () => {
     setOpenGroups(prev => ({ ...prev, [group]: !prev[group] }))
   }
 
-  // Separar items sin grupo de los agrupados
   const soloItems = nav.filter(item => !item.group)
   
-  // Obtener grupos únicos en orden de aparición
   const groups = nav
     .filter(item => item.group)
     .reduce<string[]>((acc, item) => {
@@ -77,15 +75,13 @@ const Sidebar = () => {
       style={{ backgroundColor: '#111215', borderRight: '1px solid #1A1A1D' }}
     >
       <div className="mb-10 px-2 flex items-center gap-3">
-        <img src="/assets/fermest.png" alt="FermEST" className="h-10 object-contain" />
+        <img src="/assets/logo.svg" alt="FermEST" className="h-10 object-contain" />
         <span className="text-base font-semibold" style={{ color: '#F4F4F5' }}>FermEST</span>
       </div>
 
       <nav className="flex flex-col gap-1">
-        {/* Items sin grupo */}
         {soloItems.map(item => renderNavButton(item, false))}
 
-        {/* Grupos colapsables */}
         {groups.map(group => {
           const groupItems = nav.filter(item => item.group === group)
           const firstItem = groupItems[0]
@@ -97,7 +93,6 @@ const Sidebar = () => {
 
           return (
             <div key={group}>
-              {/* Toggle del grupo */}
               <button
                 onClick={() => toggleGroup(group)}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all w-full"
@@ -128,7 +123,6 @@ const Sidebar = () => {
                 </svg>
               </button>
 
-              {/* Items del grupo */}
               <div style={{
                 maxHeight: isOpen ? `${groupItems.length * 56}px` : '0px',
                 overflow: 'hidden',
@@ -142,8 +136,17 @@ const Sidebar = () => {
       </nav>
 
       <div className="mt-auto px-2">
-        <div className="h-px w-full mb-4" style={{ backgroundColor: '#1A1A1D' }} />
-        <p className="text-xs" style={{ color: '#3F3F46' }}>FermEST v1.0</p>
+        <div className="h-px w-full mb-3" style={{ backgroundColor: '#1A1A1D' }} />
+        <button
+          onClick={() => { localStorage.removeItem('access_token'); navigate('/login') }}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg w-full transition-all duration-200 hover:bg-red-500/10 group"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#71717A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            className="group-hover:stroke-red-400 transition-colors">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          <span className="text-xs font-medium text-neutral-500 group-hover:text-red-400 transition-colors">Cerrar sesión</span>
+        </button>
       </div>
     </aside>
   )

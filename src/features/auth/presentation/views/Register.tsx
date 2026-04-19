@@ -4,13 +4,18 @@ import { useRegisterViewModel } from '../viewmodels/useRegisterViewModel'
 import { BlurFade } from '../../../../components/ui/blur-fade'
 import { cn } from '../../../../lib/utils'
 
-const COFFEE_IMAGES = [
-  { src: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80', alt: 'Granos de café verdes' },
-  { src: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80', alt: 'Fermentación de café' },
-  { src: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80', alt: 'Taza de café' },
-  { src: 'https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=600&q=80', alt: 'Cosecha de café' },
-  { src: 'https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&q=80', alt: 'Café procesado' },
-  { src: 'https://images.unsplash.com/photo-1559525839-8c4c01c1dee2?w=600&q=80', alt: 'Barista' },
+const COL1 = [
+  'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80',
+  'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80',
+  'https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=600&q=80',
+  'https://images.unsplash.com/photo-1611077543764-4b6a1fe68b25?w=600&q=80',
+]
+
+const COL2 = [
+  'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80',
+  'https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&q=80',
+  'https://images.unsplash.com/photo-1559525839-8c4c01c1dee2?w=600&q=80',
+  'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&q=80',
 ]
 
 const Register = () => {
@@ -176,48 +181,39 @@ const Register = () => {
 
       </div>
 
-      <div className="hidden lg:block flex-1 relative overflow-hidden">
+      <div className="hidden lg:flex flex-1 relative overflow-hidden">
+        <style>{`
+          @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0%); } }
+          @keyframes scrollUp   { from { transform: translateY(0%);   } to { transform: translateY(-50%); } }
+        `}</style>
+
         <div className="absolute inset-0" style={{background:'linear-gradient(135deg,#0a1a0f 0%,#0f2d1a 30%,#1a4a2a 60%,#2d6b3f 100%)'}} />
-        <div className="absolute inset-0" style={{background:'radial-gradient(ellipse 80% 60% at 50% 50%,rgba(15,142,77,0.3),transparent 70%)'}} />
-        <div className="absolute inset-0 opacity-20" style={{backgroundImage:'linear-gradient(to right,rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,0.05) 1px,transparent 1px)',backgroundSize:'40px 40px'}} />
+        <div className="absolute inset-0" style={{background:'radial-gradient(ellipse 80% 60% at 50% 50%,rgba(15,142,77,0.25),transparent 70%)'}} />
 
-        <div className="absolute inset-0 overflow-y-auto px-8 py-10">
-
-          <BlurFade delay={0.1} duration={0.5} direction="up">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-xs text-green-400/70 font-medium tracking-widest uppercase">Fermest · Café inteligente</span>
-            </div>
-          </BlurFade>
-
-          <div className="columns-2 gap-3">
-            {COFFEE_IMAGES.map((img, idx) => (
-              <BlurFade key={img.src} delay={0.15 + idx * 0.08} duration={0.5} inView>
-                <div className="mb-3 overflow-hidden rounded-xl relative group">
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    style={{filter:'brightness(0.7) saturate(0.85)'}}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 flex gap-3 px-6 overflow-hidden">
+          <div className="flex-1 overflow-hidden">
+            <div style={{animation:'scrollDown 22s linear infinite'}}>
+              {[...COL1, ...COL1].map((src, i) => (
+                <div key={i} className="mb-3 rounded-xl overflow-hidden">
+                  <img src={src} alt="" className="w-full object-cover rounded-xl" style={{filter:'brightness(0.65) saturate(0.8)'}} />
                 </div>
-              </BlurFade>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <BlurFade delay={0.7} duration={0.5} direction="up">
-            <div className="mt-2 flex items-center justify-between px-1">
-              <span className="text-xs text-white/25">Fermentación controlada · pH · Temperatura</span>
-              <div className="flex gap-1">
-                {[0,1,2].map(i => (
-                  <div key={i} className="w-1 h-1 rounded-full bg-green-400/40" />
-                ))}
-              </div>
+          <div className="flex-1 overflow-hidden">
+            <div style={{animation:'scrollUp 26s linear infinite'}}>
+              {[...COL2, ...COL2].map((src, i) => (
+                <div key={i} className="mb-3 rounded-xl overflow-hidden">
+                  <img src={src} alt="" className="w-full object-cover rounded-xl" style={{filter:'brightness(0.65) saturate(0.8)'}} />
+                </div>
+              ))}
             </div>
-          </BlurFade>
-
+          </div>
         </div>
+
+        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none" style={{background:'linear-gradient(to bottom,#0a1a0f,transparent)'}} />
+        <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style={{background:'linear-gradient(to top,#0a1a0f,transparent)'}} />
       </div>
 
     </div>
