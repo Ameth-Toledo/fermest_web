@@ -1,13 +1,13 @@
 const STATS = [
-  { value: "2M+", label: "Toneladas de residuos agrícolas generadas al año" },
-  { value: "60%", label: "Se quema o abandona sin ningún aprovechamiento" },
-  { value: "3x",  label: "Más emisiones de CO₂ por quema vs. fermentación" },
+  { value: "70%",  label: "Del sabor del café depende del proceso de fermentación" },
+  { value: "48h",  label: "Tiempo crítico donde los parámetros deben ser precisos" },
+  { value: "3x",   label: "Más consistencia con monitoreo automatizado vs. manual" },
 ];
 
 const OUTCOMES = [
-  { icon: "⚡", label: "Biogás" },
-  { icon: "🧪", label: "Bioetanol" },
-  { icon: "🌱", label: "Biofertilizantes" },
+  { icon: null, label: "Control de pH", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M2 12h20"/></svg> },
+  { icon: null, label: "Temperatura",   svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg> },
+  { icon: null, label: "Perfil de sabor", svg: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> },
 ];
 
 import { Ripple } from "../../../../components/ui/ripple";
@@ -15,7 +15,7 @@ import { NodeServer } from "./ui/NodeServer";
 
 const Characteristics = () => {
   return (
-    <section className="relative w-full overflow-hidden" style={{ background: "#0F8E4D" }}>
+    <section id="features" className="relative w-full overflow-hidden" style={{ background: "#0F8E4D" }}>
       <Ripple
         className="absolute inset-0 z-0"
         mainCircleSize={500}
@@ -33,7 +33,7 @@ const Characteristics = () => {
               El problema
             </span>
             <h2 className="text-5xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter">
-              ¿Por qué este proyecto?
+              ¿Por qué Fermest?
             </h2>
             <div className="w-12 h-1 rounded-full bg-white/40" />
           </div>
@@ -41,9 +41,9 @@ const Characteristics = () => {
             <NodeServer />
           </div>
           <p className="max-w-md text-white/75 text-lg leading-relaxed md:pt-16">
-            En zonas agrícolas, millones de toneladas de residuos como bagazo y paja
-            se desperdician o queman, generando contaminación. Nuestro fermentador
-            busca cambiar esto.
+            La fermentación del café es el paso más crítico y menos controlado del proceso.
+            Pequeñas variaciones en temperatura o pH cambian radicalmente el perfil de sabor.
+            Fermest lo automatiza.
           </p>
         </div>
 
@@ -80,22 +80,22 @@ const Characteristics = () => {
                 La solución
               </span>
               <p className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
-                La fermentación anaerobia convierte residuos en recursos.
+                Control total del proceso de fermentación, en tiempo real.
               </p>
               <p className="text-neutral-400 text-sm leading-relaxed">
                 Un sistema compacto, automatizado y accesible para pequeños
-                y medianos productores agrícolas.
+                y medianos productores de café.
               </p>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
-              {OUTCOMES.map(({ icon, label }) => (
+              {OUTCOMES.map(({ svg, label }) => (
                 <div
                   key={label}
                   className="flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-white/80"
                   style={{ background: "rgba(255,255,255,0.04)" }}
                 >
-                  <span>{icon}</span>
+                  <span className="text-green-400">{svg}</span>
                   <span>{label}</span>
                 </div>
               ))}

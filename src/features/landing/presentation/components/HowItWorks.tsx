@@ -26,8 +26,8 @@ const STEPS = [
   {
     Icon: IconArrow,
     tag: "Entrada",
-    title: "Residuos agroindustriales",
-    description: "Bagazo, paja, aserrín y otros subproductos del campo listos para ser aprovechados.",
+    title: "Grano de café en cereza",
+    description: "El productor carga el lote en el fermentador. El sistema registra el peso, variedad y condiciones iniciales del grano.",
     num: "01",
     offset: "md:mt-0",
     iconColor: "text-white",
@@ -39,8 +39,8 @@ const STEPS = [
   {
     Icon: IconMicroscope,
     tag: "Proceso",
-    title: "Fermentación automatizada",
-    description: "Controlada en tiempo real mediante sensores de pH, temperatura y flujo desde nuestra app web.",
+    title: "Fermentación controlada",
+    description: "Sensores de pH y temperatura monitorean el proceso en tiempo real. La IA ajusta las condiciones automáticamente para el perfil deseado.",
     num: "02",
     offset: "md:mt-16",
     iconColor: "text-green-400",
@@ -52,8 +52,8 @@ const STEPS = [
   {
     Icon: IconCheck,
     tag: "Salida",
-    title: "Bioetanol y ácidos orgánicos",
-    description: "Productos de alto valor obtenidos de forma limpia, eficiente y trazable.",
+    title: "Café con perfil único",
+    description: "El grano fermentado obtiene características de sabor consistentes y reproducibles, listo para el lavado y secado.",
     num: "03",
     offset: "md:mt-32",
     iconColor: "text-white",
@@ -296,7 +296,7 @@ const GeneratingLoader = () => (
 
 const HowItWorks = () => {
   return (
-    <section className="relative w-full overflow-hidden bg-bg">
+    <section id="how-it-works" className="relative w-full overflow-hidden bg-bg">
       <div
         className="pointer-events-none absolute inset-0 select-none bg-size-[40px_40px]"
         style={{ backgroundImage: "linear-gradient(to right,#111 1px,transparent 1px),linear-gradient(to bottom,#111 1px,transparent 1px)" }}
@@ -379,9 +379,9 @@ const HowItWorks = () => {
               Algoritmo genético dinámico
             </Text3DFlip>
             <p className="text-neutral-400 text-sm leading-relaxed max-w-2xl">
-              Implementamos IA para optimizar en tiempo real los parámetros del proceso fermentativo.
-              El algoritmo evoluciona y adapta las condiciones de operación para maximizar el rendimiento
-              de cada lote, aprendiendo de cada ciclo de producción.
+              Implementamos IA para optimizar en tiempo real los parámetros de la fermentación del café.
+              El algoritmo aprende de cada lote, ajustando pH y temperatura para reproducir
+              o mejorar el perfil de sabor objetivo del productor.
             </p>
           </div>
 
@@ -403,9 +403,9 @@ const HowItWorks = () => {
 
             <div className="flex flex-col justify-around py-4 pl-4 shrink-0 w-52">
               {[
-                { label: "Etanol producido", sub: "g/L — producto principal", n: "01" },
-                { label: "Biomasa final",    sub: "g/L — crecimiento celular", n: "02" },
-                { label: "Sustrato final",   sub: "g/L — azúcar restante",    n: "03" },
+                { label: "pH óptimo",          sub: "Acidez ideal para el perfil",    n: "01" },
+                { label: "Temperatura",         sub: "°C — rango controlado",          n: "02" },
+                { label: "Tiempo estimado",     sub: "h — duración del lote",          n: "03" },
               ].map(({ label, sub, n }) => (
                 <div
                   key={label}

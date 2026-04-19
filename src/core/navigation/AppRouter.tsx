@@ -7,12 +7,14 @@ import SimulationView from '../../features/dashboard/presentation/view/Simulatio
 import ResultsView from '../../features/dashboard/presentation/view/ResultsView'
 import ChartsView from '../../features/dashboard/presentation/view/ChartsView'
 import LandingView from '../../features/landing/presentation/views/LandingScreen'
+import Login from '../../features/auth/presentation/views/Login'
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingView />} />
+        <Route path="/login" element={<Login />} />
         
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<DashboardView />} />

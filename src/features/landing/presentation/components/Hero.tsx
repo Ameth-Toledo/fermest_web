@@ -44,7 +44,7 @@ const Hero = () => {
           )}
         >
           <p className="text-xs uppercase tracking-[0.3em] text-green-500/80 font-medium">
-            Transformando residuos agroindustriales en energía limpia
+            Fermentación inteligente del grano de café
           </p>
 
           <h1 className="flex flex-col gap-1 text-6xl md:text-7xl font-black leading-[0.95] tracking-tighter">
@@ -68,7 +68,7 @@ const Hero = () => {
               staggerFrom="first"
               transition={{ type: "spring", damping: 30, stiffness: 160 }}
             >
-              de biomasa
+              de café
             </Text3DFlip>
             <Text3DFlip
               className="bg-transparent justify-start mt-2"
@@ -84,7 +84,7 @@ const Hero = () => {
           </h1>
 
           <p className="max-w-sm text-sm text-neutral-500 leading-relaxed border-l-2 border-green-500/30 pl-4">
-            Un sistema automatizado que convierte residuos agroindustriales en bioproductos sostenibles.
+            Un sistema automatizado que optimiza y controla la fermentación del café para obtener perfiles de sabor únicos y consistentes.
           </p>
 
           <div className="flex items-center gap-4">

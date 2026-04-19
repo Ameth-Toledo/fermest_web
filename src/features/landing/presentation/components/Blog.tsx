@@ -5,27 +5,27 @@ const POSTS = [
   {
     tag: "Casos de éxito",
     tagColor: "#4ade80",
-    image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80",
-    title: "Cómo un pequeño agricultor transformó su finca con nuestro fermentador",
-    excerpt: "Descubre cómo se redujeron costos y mejoró la producción utilizando nuestro fermentador de residuos agrícolas.",
+    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80",
+    title: "Cómo un caficultor de Chiapas logró consistencia en su perfil de sabor",
+    excerpt: "Con Fermest, este productor pasó de resultados inconsistentes a reproducir el mismo perfil de sabor en cada lote de fermentación.",
     date: "Mar 2025",
     readTime: "5 min",
   },
   {
     tag: "Guías",
     tagColor: "#fbbf24",
-    image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80",
-    title: "5 consejos para maximizar la eficiencia de tu fermentador",
-    excerpt: "Las mejores prácticas para obtener el máximo rendimiento y convertir más residuos en bioproductos valiosos.",
+    image: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800&q=80",
+    title: "pH y temperatura: los dos parámetros que definen tu café",
+    excerpt: "Explicamos cómo pequeñas variaciones en estos valores durante la fermentación pueden transformar completamente el resultado en taza.",
     date: "Feb 2025",
     readTime: "7 min",
   },
   {
-    tag: "Sostenibilidad",
+    tag: "Ciencia del café",
     tagColor: "#38bdf8",
-    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
-    title: "El impacto ambiental de los residuos agrícolas y cómo mitigarlo",
-    excerpt: "Exploramos el impacto negativo de los residuos en el medio ambiente y cómo la fermentación puede ser parte de la solución.",
+    image: "https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?w=800&q=80",
+    title: "Fermentación anaeróbica vs. lavado tradicional: ¿cuál da mejor resultado?",
+    excerpt: "Comparamos ambos métodos y analizamos por qué el control automatizado de la fermentación anaeróbica está cambiando la industria.",
     date: "Ene 2025",
     readTime: "4 min",
   },
@@ -117,7 +117,7 @@ const BlogCard = ({ post }: { post: typeof POSTS[0] }) => {
 };
 
 const Blog = () => (
-  <section className="relative w-full overflow-hidden" style={{ background: "#0F8E4D" }}>
+  <section id="blog" className="relative w-full overflow-hidden" style={{ background: "#0F8E4D" }}>
     <Ripple className="absolute inset-0 z-0" mainCircleSize={500} mainCircleOpacity={0.3} numCircles={7} />
     <div className="absolute top-0 left-0 right-0 h-px bg-white/10" />
     <div className="absolute bottom-0 left-0 right-0 h-px bg-black/20" />
@@ -134,7 +134,7 @@ const Blog = () => (
           <div className="w-12 h-1 rounded-full bg-white/40" />
         </div>
         <p className="max-w-xs text-white/50 text-sm leading-relaxed md:text-right">
-          Casos de éxito, guías prácticas y artículos sobre sostenibilidad agroindustrial.
+          Casos de éxito, guías prácticas y ciencia detrás de la fermentación del café.
         </p>
       </div>
 

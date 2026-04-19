@@ -24,7 +24,7 @@ const Header = () => {
       >
         <div className="flex items-center gap-3">
           <img
-            src="/assets/fermest.png"
+            src="/assets/logo.svg"
             alt="Fermest Logo"
             className="h-8 w-8 object-contain"
           />
