@@ -1,12 +1,9 @@
-import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../core/hooks/useAuth'
 
 const ProfileNav = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const ref = useRef<HTMLDivElement>(null)
-
   const initials = user?.name
     .split(' ')
     .map((n: string) => n[0])

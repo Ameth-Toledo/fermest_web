@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from "react"
-import { BentoCard, BentoGrid } from "@/components/ui/bento-grid"
+import { BentoCard, BentoGrid } from "../../../../components/ui/bento-grid"
 
-/* ── backgrounds ── */
-
-// 1. Live pH chart
 const PhChart = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
@@ -20,12 +17,10 @@ const PhChart = () => {
       const t = Math.min(1, (now % 6000) / 6000)
       const pad = { l: 28, r: 12, t: 10, b: 20 }
       const gW = W - pad.l - pad.r, gH = H - pad.t - pad.b
-      // grid
       for (let i = 0; i <= 4; i++) {
         ctx.beginPath(); ctx.moveTo(pad.l, pad.t + gH / 4 * i); ctx.lineTo(W - pad.r, pad.t + gH / 4 * i)
         ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.lineWidth = 0.5; ctx.stroke()
       }
-      // curve
       ctx.beginPath()
       for (let i = 0; i <= 120; i++) {
         const rx = i / 120; if (rx > t) break
@@ -33,7 +28,6 @@ const PhChart = () => {
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
       }
       ctx.strokeStyle = "rgba(74,222,128,0.9)"; ctx.lineWidth = 2; ctx.shadowColor = "#4ade80"; ctx.shadowBlur = 8; ctx.stroke(); ctx.shadowBlur = 0
-      // fill
       const fill = ctx.createLinearGradient(0, pad.t, 0, pad.t + gH)
       fill.addColorStop(0, "rgba(74,222,128,0.2)"); fill.addColorStop(1, "rgba(74,222,128,0)")
       ctx.beginPath()
@@ -43,7 +37,6 @@ const PhChart = () => {
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
       }
       ctx.lineTo(pad.l + t * gW, pad.t + gH); ctx.lineTo(pad.l, pad.t + gH); ctx.closePath(); ctx.fillStyle = fill; ctx.fill()
-      // labels
       ctx.font = "8px monospace"; ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.textAlign = "right"
       ;["6.5","5.8","5.2","4.5","4.0"].forEach((l, i) => ctx.fillText(l, pad.l - 4, pad.t + gH / 4 * i + 3))
       raf = requestAnimationFrame(draw)
@@ -54,7 +47,6 @@ const PhChart = () => {
   return <canvas ref={canvasRef} className="w-full h-full" />
 }
 
-// 2. Animated notification list
 const ALERTS = [
   { color: "#4ade80", icon: "✓", msg: "pH estabilizado en 4.8", time: "hace 2 min" },
   { color: "#fbbf24", icon: "⚠", msg: "Temperatura subió a 25°C", time: "hace 5 min" },
@@ -83,7 +75,6 @@ const AlertList = () => {
   )
 }
 
-// 3. Lote history cards
 const LOTES = [
   { id: "2024-A", perfil: "Frutal · Cítrico",  ph: "4.8", h: "48h", color: "#4ade80" },
   { id: "2024-B", perfil: "Floral · Dulce",     ph: "5.1", h: "36h", color: "#fbbf24" },
@@ -109,7 +100,6 @@ const LoteHistory = () => (
   </div>
 )
 
-// 4. Mini AI gauge arcs
 const MiniGauge = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
@@ -142,7 +132,6 @@ const MiniGauge = () => {
         ctx.beginPath(); ctx.arc(tx, ty, 4, 0, Math.PI * 2)
         ctx.fillStyle = `rgb(${cr},${cg},${cb})`; ctx.fill()
       })
-      // rotating ring
       for (let i = 0; i < 32; i++) {
         const angle = (i / 32) * Math.PI * 2 + now / 5000
         const R1 = base * 0.43, R2 = base * 0.45
@@ -162,7 +151,6 @@ const MiniGauge = () => {
   return <canvas ref={canvasRef} className="w-full h-full" />
 }
 
-/* ── Icons ── */
 const IconChart = ({ className }: { className?: string }) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
 const IconBell  = ({ className }: { className?: string }) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
 const IconBox   = ({ className }: { className?: string }) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
