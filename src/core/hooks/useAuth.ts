@@ -15,8 +15,9 @@ export const useAuth = () => {
     if (!token) return null
     const payload = parseJwt(token)
     return {
-      name: payload?.name ?? payload?.username ?? 'Usuario',
-      email: payload?.email ?? '',
+      name:       payload?.name       ?? payload?.username ?? 'Usuario',
+      email:      payload?.email      ?? '',
+      circuit_id: payload?.circuit_id ?? null,
     }
   }, [token])
 

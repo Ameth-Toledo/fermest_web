@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import type { ScheduleFormProps } from '../types/ScheduleFormProps'
+import type { FermentationFormData } from '../types/FermentationFormData'
+
+export interface ScheduleFormProps {
+  onSubmit: (data: FermentationFormData) => void
+  onCancel: () => void
+  loading:  boolean
+}
 
 const ScheduleForm = ({ onSubmit, onCancel, loading }: ScheduleFormProps) => {
   const now   = new Date()
@@ -8,7 +14,6 @@ const ScheduleForm = ({ onSubmit, onCancel, loading }: ScheduleFormProps) => {
     new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
 
   const [form, setForm] = useState({
-    circuit_id:      1,
     scheduled_start: toLocal(now),
     scheduled_end:   toLocal(later),
     initial_sugar:   '' as unknown as number,
@@ -19,7 +24,6 @@ const ScheduleForm = ({ onSubmit, onCancel, loading }: ScheduleFormProps) => {
 
   const handleSubmit = () => {
     onSubmit({
-      circuit_id:      Number(form.circuit_id),
       scheduled_start: new Date(form.scheduled_start).toISOString(),
       scheduled_end:   new Date(form.scheduled_end).toISOString(),
       initial_sugar:   Number(form.initial_sugar),
@@ -29,26 +33,26 @@ const ScheduleForm = ({ onSubmit, onCancel, loading }: ScheduleFormProps) => {
   const isValid = Number(form.initial_sugar) > 0
 
   const inputBase: React.CSSProperties = {
-    width:        '100%',
+    width:           '100%',
     backgroundColor: '#0A0A0B',
-    border:       '1px solid #2A2A2D',
-    borderRadius: 8,
-    color:        '#F4F4F5',
-    fontSize:     13,
-    padding:      '10px 12px',
-    outline:      'none',
-    fontFamily:   'Poppins, sans-serif',
-    colorScheme:  'dark',
-    boxSizing:    'border-box',
+    border:          '1px solid #2A2A2D',
+    borderRadius:    8,
+    color:           '#F4F4F5',
+    fontSize:        13,
+    padding:         '10px 12px',
+    outline:         'none',
+    fontFamily:      'Poppins, sans-serif',
+    colorScheme:     'dark',
+    boxSizing:       'border-box',
   }
 
   const labelBase: React.CSSProperties = {
-    display:       'block',
-    color:         '#71717A',
-    fontSize:      10,
-    letterSpacing: '0.1em',
-    textTransform: 'uppercase',
-    marginBottom:  6,
+    display:        'block',
+    color:          '#71717A',
+    fontSize:       10,
+    letterSpacing:  '0.1em',
+    textTransform:  'uppercase',
+    marginBottom:   6,
   }
 
   return (
@@ -65,27 +69,37 @@ const ScheduleForm = ({ onSubmit, onCancel, loading }: ScheduleFormProps) => {
         Configurar sesión de fermentación
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-        <div>
-          <label style={labelBase}>Circuit ID</label>
-          <input type="number" value={form.circuit_id} min={1}
-            onChange={e => set('circuit_id', e.target.value)} style={inputBase} />
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
         <div>
           <label style={labelBase}>Azúcar inicial (g/L)</label>
-          <input type="number" value={form.initial_sugar} min={0} step={0.1}
+          <input
+            type="number"
+            value={form.initial_sugar}
+            onChange={e => set('initial_sugar', e.target.value)}
             placeholder="Ej: 120"
-            onChange={e => set('initial_sugar', e.target.value)} style={inputBase} />
+            style={inputBase}
+            min={0}
+            step={0.1}
+            autoFocus
+          />
         </div>
         <div>
           <label style={labelBase}>Inicio programado</label>
-          <input type="datetime-local" value={form.scheduled_start}
-            onChange={e => set('scheduled_start', e.target.value)} style={inputBase} />
+          <input
+            type="datetime-local"
+            value={form.scheduled_start}
+            onChange={e => set('scheduled_start', e.target.value)}
+            style={inputBase}
+          />
         </div>
         <div>
           <label style={labelBase}>Fin programado</label>
-          <input type="datetime-local" value={form.scheduled_end}
-            onChange={e => set('scheduled_end', e.target.value)} style={inputBase} />
+          <input
+            type="datetime-local"
+            value={form.scheduled_end}
+            onChange={e => set('scheduled_end', e.target.value)}
+            style={inputBase}
+          />
         </div>
       </div>
 
