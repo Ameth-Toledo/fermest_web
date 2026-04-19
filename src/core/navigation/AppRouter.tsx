@@ -8,6 +8,8 @@ import ResultsView from '../../features/dashboard/presentation/view/ResultsView'
 import ChartsView from '../../features/dashboard/presentation/view/ChartsView'
 import LandingView from '../../features/landing/presentation/views/LandingScreen'
 import Login from '../../features/auth/presentation/views/Login'
+import FermentationView from '../../features/fermentation/presentation/view/FermentationView'
+import SensorsView from '../../features/sensors/presentation/view/SensorsView'
 
 const AppRouter = () => {
   return (
@@ -23,6 +25,8 @@ const AppRouter = () => {
           <Route path="/simulation/:id" element={<SimulationView />} />
           <Route path="/experiment/:id/charts" element={<ChartsView />} />
           <Route path="/results/:id" element={<ResultsView />} />
+          <Route path="/fermentation" element={<FermentationView />} />
+          <Route path="/grafics" element={<SensorsView />} />
         </Route>
       </Routes>
     </BrowserRouter>
