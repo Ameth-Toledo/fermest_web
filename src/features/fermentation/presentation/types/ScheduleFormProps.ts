@@ -1,4 +1,4 @@
-import type { FermentationFormData } from '../viewmodels/useFermentationViewModel'
+import type { FermentationFormData } from './FermentationFormData'
 
 export interface ScheduleFormProps {
   onSubmit: (data: FermentationFormData) => void

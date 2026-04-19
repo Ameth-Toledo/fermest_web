@@ -1,5 +1,5 @@
 import { useFermentationViewModel } from '../viewmodels/useFermentationViewModel'
-import type { SensorKey } from '../../domain/models/Fermentation'
+import type { SensorKey } from '../../../sensors/domain/models/Sensor'
 import MainControlSection from '../components/MainControlSection'
 import SensorControlSection from '../components/SensorControlSection'
 
@@ -12,6 +12,7 @@ const FermentationView = () => {
     sensorStates,
     showForm,
     isRunning,
+    circuitId,
     setShowForm,
     startFermentation,
     stopFermentation,
@@ -36,6 +37,7 @@ const FermentationView = () => {
         flexDirection:   'column',
       }}
     >
+      {/* ── Header ── */}
       <div style={{ marginBottom: 40 }}>
         <p style={{ color: '#22C55E', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: 12 }}>
           Control
@@ -46,6 +48,7 @@ const FermentationView = () => {
         <div style={{ marginTop: 12, height: 1, width: 96, backgroundColor: '#22C55E', opacity: 0.4 }} />
       </div>
 
+      {/* ── Alerts ── */}
       {error && (
         <div
           style={{
@@ -95,6 +98,7 @@ const FermentationView = () => {
         loading={loading}
         showForm={showForm}
         session={session}
+        circuitId={circuitId}
         onMainToggle={handleMainToggle}
         onSubmit={startFermentation}
         onCancelForm={() => setShowForm(false)}

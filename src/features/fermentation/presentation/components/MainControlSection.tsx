@@ -8,6 +8,7 @@ const MainControlSection = ({
   loading,
   showForm,
   session,
+  circuitId,
   onMainToggle,
   onSubmit,
   onCancelForm,
@@ -59,7 +60,9 @@ const MainControlSection = ({
           <p style={{ color: '#52525B', fontSize: 12, margin: '3px 0 0 0' }}>
             {isRunning
               ? `Sesión #${session?.id} en curso — todos los sensores activos`
-              : 'Activa todos los sensores, bomba y motor'}
+              : circuitId
+                ? `Circuito #${circuitId} · Activa todos los sensores, bomba y motor`
+                : 'Activa todos los sensores, bomba y motor'}
           </p>
         </div>
       </div>
@@ -69,11 +72,12 @@ const MainControlSection = ({
         <ToggleSwitch
           checked={isRunning}
           onChange={onMainToggle}
-          disabled={loading || (!isRunning && showForm)}
+          disabled={loading || (!isRunning && showForm) || !circuitId}
         />
       </div>
     </div>
 
+    {/* Metadatos de sesión activa */}
     {session && (
       <div
         style={{
@@ -87,7 +91,7 @@ const MainControlSection = ({
       >
         {[
           { label: 'Sesión ID',      value: `#${session.id}` },
-          { label: 'Circuit ID',     value: `#${session.circuit_id}` },
+          { label: 'Circuito',       value: `#${session.circuit_id}` },
           {
             label: 'Inicio real',
             value: session.actual_start
@@ -108,6 +112,30 @@ const MainControlSection = ({
             </p>
           </div>
         ))}
+      </div>
+    )}
+
+    {/* Aviso si el usuario no tiene circuito */}
+    {!circuitId && !session && (
+      <div
+        style={{
+          marginTop:       16,
+          padding:         '10px 14px',
+          borderRadius:    8,
+          backgroundColor: '#F59E0B10',
+          border:          '1px solid #F59E0B25',
+          color:           '#F59E0B',
+          fontSize:        12,
+          display:         'flex',
+          alignItems:      'center',
+          gap:             8,
+        }}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+          <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+        Tu cuenta no tiene un circuito asociado. Contacta al administrador.
       </div>
     )}
 
