@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
 
 const API_KEY  = import.meta.env.VITE_API_KEY_CHATBOT
-const BOT_NAME = import.meta.env.VITE_NAME_CHATBOT ?? 'FermestBot'
+const BOT_NAME = import.meta.env.VITE_NAME_CHATBOT ?? 'Nich-káBot'
 const API_URL  = 'https://api.groq.com/openai/v1/chat/completions'
 
 const SYSTEM_PROMPT = `Eres ${BOT_NAME}, el asistente especializado de Fermest, una plataforma de monitoreo y optimización de fermentación de café con inteligencia artificial.
 
 REGLAS ESTRICTAS:
-- SOLO responde preguntas relacionadas con: fermentación de café, pH, temperatura, tiempo de fermentación, perfiles de sabor, procesos de beneficio húmedo/seco, microbiología de la fermentación, sensores IoT, algoritmos genéticos aplicados al café, y el uso de la plataforma Fermest.
-- Si el usuario pregunta algo fuera de estos temas, responde exactamente: "Solo puedo ayudarte con temas relacionados a la fermentación de café y la plataforma Fermest. ¿Tienes alguna pregunta sobre eso?"
+- SOLO responde preguntas relacionadas con: fermentación de café, pH, temperatura, tiempo de fermentación, perfiles de sabor, procesos de beneficio húmedo/seco, microbiología de la fermentación, sensores IoT, algoritmos genéticos aplicados al café, y el uso de la plataforma Nich-ká.
+- Si el usuario pregunta algo fuera de estos temas, responde exactamente: "Solo puedo ayudarte con temas relacionados a la fermentación de café y la plataforma Nich-ká. ¿Tienes alguna pregunta sobre eso?"
 - Sé conciso, técnico cuando se requiere y siempre responde en español.
 - No saludes con "Hola" repetidamente, ve directo al punto.`
 
@@ -103,7 +103,7 @@ const ChatView = () => {
           </div>
           <div>
             <h1 className="text-white font-bold text-base">{BOT_NAME}</h1>
-            <p className="text-neutral-500 text-xs">Asistente de fermentación de café · Gemini</p>
+            <p className="text-neutral-500 text-xs">Asistente de fermentación de café · Nich-ká</p>
           </div>
           <div className="ml-auto flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
