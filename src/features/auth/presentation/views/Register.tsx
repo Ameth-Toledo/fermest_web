@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, } from 'react-router-dom'
 import { useRegisterViewModel } from '../viewmodels/useRegisterViewModel'
 import { BlurFade } from '../../../../components/ui/blur-fade'
 import { cn } from '../../../../lib/utils'
