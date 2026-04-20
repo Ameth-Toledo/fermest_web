@@ -26,10 +26,13 @@ export const useLoginViewModel = () => {
       }
       const data = await res.json()
       localStorage.setItem('access_token', data.access_token)
-      if (data.user?.profile_image) {
-        localStorage.setItem('profile_image', data.user.profile_image)
-      } else {
-        localStorage.removeItem('profile_image')
+      if (data.user) {
+        localStorage.setItem('user_data', JSON.stringify(data.user))
+        if (data.user.profile_image) {
+          localStorage.setItem('profile_image', data.user.profile_image)
+        } else {
+          localStorage.removeItem('profile_image')
+        }
       }
       navigate('/overview')
     } catch (err: unknown) {

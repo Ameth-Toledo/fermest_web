@@ -199,7 +199,7 @@ const Sidebar = () => {
       <div className="mt-auto px-2">
         <div className="h-px w-full mb-3" style={{ backgroundColor: '#1A1A1D' }} />
         <button
-          onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('profile_image'); navigate('/login') }}
+          onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('profile_image'); localStorage.removeItem('user_data'); navigate('/login') }}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg w-full transition-all duration-200 hover:bg-red-500/10 group"
         >
           <svg
