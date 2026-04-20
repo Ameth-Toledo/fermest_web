@@ -33,7 +33,7 @@ const Characteristics = () => {
               El problema
             </span>
             <h2 className="text-5xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter">
-              ¿Por qué Fermest?
+              ¿Por qué Nich-Ká?
             </h2>
             <div className="w-12 h-1 rounded-full bg-white/40" />
           </div>

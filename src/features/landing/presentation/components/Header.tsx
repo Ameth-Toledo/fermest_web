@@ -25,11 +25,11 @@ const Header = () => {
         <div className="flex items-center gap-3">
           <img
             src="/assets/logo.svg"
-            alt="Fermest Logo"
+            alt="Nich-Ká Logo"
             className="h-8 w-8 object-contain"
           />
           <span className="text-white font-semibold text-lg tracking-wide">
-            Fermest
+            Nich-Ká
           </span>
         </div>
 

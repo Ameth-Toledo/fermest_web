@@ -41,7 +41,7 @@ const Footer = () => {
               className="h-8 w-8 object-contain rounded-lg"
             />
             <span className="text-white font-semibold text-lg tracking-wide">
-              FermEST
+              Nich-Ká
             </span>
           </div>
           <p className="text-neutral-500 text-sm leading-relaxed">
@@ -74,7 +74,7 @@ const Footer = () => {
           <span
             className="absolute bottom-0 whitespace-nowrap font-black text-[clamp(5rem,18vw,14rem)] leading-none text-white/4 tracking-tight"
           >
-            FermEST
+            Nich-Ká
           </span>
         </div>
       </div>

@@ -108,7 +108,7 @@ const Sidebar = () => {
     >
       <div className="mb-10 px-2 flex items-center gap-3">
         <img src="/assets/logo.svg" alt="FermEST" className="h-10 object-contain" />
-        <span className="text-base font-semibold" style={{ color: '#F4F4F5' }}>FermEST</span>
+        <span className="text-base font-semibold" style={{ color: '#F4F4F5' }}>Nich-Ká</span>
       </div>
 
       <nav className="flex flex-col gap-1">

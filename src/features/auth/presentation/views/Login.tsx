@@ -32,20 +32,16 @@ const Login = () => {
   const location = useLocation()
   const { email, setEmail, password, setPassword, loading, error, handleSubmit } = useLoginViewModel()
   const [showPass, setShowPass] = useState(false)
-
-  // Banner de cuenta creada — viene desde Register via navigate state
   const justRegistered = location.state?.registered === true
   const registeredEmail = location.state?.email as string | undefined
 
   return (
     <div className="min-h-screen w-full flex bg-[#0A0A0B]">
-
-      {/* ── Form side ── */}
       <div className="flex-1 flex flex-col justify-center px-12 py-16 max-w-xl">
 
         <Link to="/" className="flex items-center gap-2.5 mb-12">
           <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer" />
-          <span className="text-white font-bold text-lg tracking-tight">Fermest</span>
+          <span className="text-white font-bold text-lg tracking-tight">Nich-Ká</span>
         </Link>
 
         <div className="flex flex-col gap-3 mb-10">
@@ -55,7 +51,6 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Banner de cuenta creada exitosamente */}
         {justRegistered && (
           <div className="flex items-start gap-2.5 rounded-lg px-4 py-3 mb-6 text-sm text-green-400 bg-green-950/40 border border-green-500/20">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0">
@@ -160,7 +155,6 @@ const Login = () => {
         </p>
       </div>
 
-      {/* ── Image side ── */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden">
         <style>{`
           @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0%); } }

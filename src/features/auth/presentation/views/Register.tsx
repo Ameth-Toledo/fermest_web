@@ -45,14 +45,11 @@ const Register = () => {
 
   return (
     <div className="min-h-screen w-full flex bg-[#0A0A0B]">
-
-      {/* ── Form side ── */}
       <div className="flex-1 flex flex-col justify-center px-12 py-12 max-w-xl overflow-y-auto">
-
         <BlurFade delay={0} duration={0.4} direction="up">
           <Link to="/" className="flex items-center gap-2.5 mb-12">
             <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer" />
-            <span className="text-white font-bold text-lg tracking-tight">Fermest</span>
+            <span className="text-white font-bold text-lg tracking-tight">Nich-Ká</span>
           </Link>
         </BlurFade>
 
@@ -66,8 +63,6 @@ const Register = () => {
         </BlurFade>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
-          {/* Nombre + Apellido */}
           <BlurFade delay={0.14} duration={0.4} direction="up">
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
@@ -91,7 +86,6 @@ const Register = () => {
             </div>
           </BlurFade>
 
-          {/* Email */}
           <BlurFade delay={0.20} duration={0.4} direction="up">
             <div className="flex flex-col gap-1.5">
               <label className={labelBase}>Correo electrónico</label>
@@ -104,7 +98,6 @@ const Register = () => {
             </div>
           </BlurFade>
 
-          {/* Contraseña */}
           <BlurFade delay={0.26} duration={0.4} direction="up">
             <div className="flex flex-col gap-1.5">
               <label className={labelBase}>Contraseña</label>
@@ -123,7 +116,6 @@ const Register = () => {
             </div>
           </BlurFade>
 
-          {/* Confirmar contraseña */}
           <BlurFade delay={0.32} duration={0.4} direction="up">
             <div className="flex flex-col gap-1.5">
               <label className={labelBase}>Confirmar contraseña</label>
@@ -150,7 +142,6 @@ const Register = () => {
             </div>
           </BlurFade>
 
-          {/* Error */}
           {error && (
             <BlurFade delay={0} duration={0.3} direction="up">
               <div className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-red-400 bg-red-950/40 border border-red-500/20">
@@ -162,7 +153,6 @@ const Register = () => {
             </BlurFade>
           )}
 
-          {/* Submit */}
           <BlurFade delay={0.38} duration={0.4} direction="up">
             <button
               type="submit"
@@ -193,7 +183,6 @@ const Register = () => {
         </BlurFade>
       </div>
 
-      {/* ── Image side ── */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden">
         <style>{`
           @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0%); } }
