@@ -12,6 +12,11 @@ import FermentationView from '../../features/fermentation/presentation/view/Ferm
 import SensorsView from '../../features/sensors/presentation/view/SensorsView'
 import Register from '../../features/auth/presentation/views/Register'
 import ChatView from '../../features/chat/presentation/view/ChatView'
+import OverviewView from '../../features/home/presentation/view/OverviewView'
+import EfficiencyCalculatorView from '../../features/efficiency/presentation/view/EfficiencyCalculatorView'
+import FermentationReportsView from '../../features/fermentation-reports/presentation/view/FermentationReportsView'
+import AddUserView from '../../features/users/presentation/view/AddUserView'
+import ManageUsersView from '../../features/users/presentation/view/ManageUsersView'
 
 const AppRouter = () => {
   return (
@@ -22,6 +27,9 @@ const AppRouter = () => {
         <Route path="/register" element={<Register />} />
         
         <Route element={<Layout />}>
+          <Route path="/overview" element={<OverviewView />} />
+          <Route path="/efficiency-calculator" element={<EfficiencyCalculatorView />} />
+          <Route path="/fermentation-reports" element={<FermentationReportsView />} />
           <Route path="/dashboard" element={<DashboardView />} />
           <Route path="/experiment/:id" element={<ExperimentView />} />
           <Route path="/experiment/:id/best-per-generation" element={<BestPerGenerationView />} />
@@ -31,6 +39,8 @@ const AppRouter = () => {
           <Route path="/fermentation" element={<FermentationView />} />
           <Route path="/chat" element={<ChatView />} />
           <Route path="/grafics" element={<SensorsView />} />
+          <Route path="/users/add" element={<AddUserView />} />
+          <Route path="/users/manage" element={<ManageUsersView />} />
         </Route>
       </Routes>
     </BrowserRouter>

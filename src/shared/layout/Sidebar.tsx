@@ -48,7 +48,6 @@ const Sidebar = () => {
         onMouseLeave={() => setHoveredLabel(null)}
         className="flex items-center gap-3 py-2.5 rounded-lg text-left transition-all w-full"
         style={{
-          // Sub-items son más estrechos: tienen margen izquierdo y ancho reducido
           marginLeft:      indented ? '12px' : '0px',
           width:           indented ? 'calc(100% - 12px)' : '100%',
           paddingLeft:     indented ? '10px' : '0.75rem',
@@ -112,10 +111,7 @@ const Sidebar = () => {
       </div>
 
       <nav className="flex flex-col gap-1">
-        {/* Items sin grupo */}
         {soloItems.map(item => renderNavButton(item, false))}
-
-        {/* Grupos colapsables */}
         {groups.map(group => {
           const groupItems  = nav.filter(item => item.group === group)
           const firstItem   = groupItems[0]
@@ -179,13 +175,11 @@ const Sidebar = () => {
                 </svg>
               </button>
 
-              {/* Sub-items del grupo */}
               <div
                 style={{
                   maxHeight:  isOpen ? `${groupItems.length * 52}px` : '0px',
                   overflow:   'hidden',
                   transition: 'max-height 0.25s ease',
-                  // Línea vertical izquierda que conecta los sub-items
                   borderLeft:  '1px solid #1F1F22',
                   marginLeft:  '20px',
                   paddingLeft: '0px',
