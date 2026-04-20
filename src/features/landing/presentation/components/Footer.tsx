@@ -8,10 +8,10 @@ const footerLinks = {
     { label: "Equipo", href: "#team" },
   ],
   Redes: [
-    { label: "Facebook", href: "#" },
-    { label: "Instagram", href: "#" },
-    { label: "Twitter", href: "#" },
-    { label: "LinkedIn", href: "#" },
+    { label: "Facebook", href: "https://www.facebook.com/share/17AH5RJtvN/", target: "_blank" },
+    { label: "Instagram", href: "https://www.instagram.com/nich_ka_space?utm_source=qr&igsh=MTJvZHc4bmlpZ3k5", target: "_blank" },
+    { label: "Tiktok", href: "https://www.tiktok.com/@nich_ka_space?_r=1&_t=ZS-95hawcvOw6R", target: "_blank" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/nich-k%C3%A1/about/" },
   ],
   Legal: [
     { label: "Privacidad", href: "#" },
@@ -37,7 +37,7 @@ const Footer = () => {
           <div className="flex items-center gap-3">
             <img
               src="/assets/logo.svg"
-              alt="Fermest Logo"
+              alt="Nich-ká Logo"
               className="h-8 w-8 object-contain rounded-lg"
             />
             <span className="text-white font-semibold text-lg tracking-wide">
@@ -45,7 +45,7 @@ const Footer = () => {
             </span>
           </div>
           <p className="text-neutral-500 text-sm leading-relaxed">
-            © {new Date().getFullYear()} Fermest. <br />
+            © {new Date().getFullYear()} Nich-ká. <br />
             Todos los derechos reservados.
           </p>
         </div>

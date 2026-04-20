@@ -33,7 +33,7 @@ const TEAM = [
     name: "Solar Martínez",
     role: "Frontend Developer",
     initials: "SM",
-    photo: "/assets/devs/solardev.png",
+    photo: "/assets/devs/lyzdev.jpeg",
     color: "#fb923c",
     bg: "from-orange-950 to-orange-800",
   },
