@@ -26,7 +26,12 @@ export const useLoginViewModel = () => {
       }
       const data = await res.json()
       localStorage.setItem('access_token', data.access_token)
-      navigate('/dashboard')
+      if (data.user?.profile_image) {
+        localStorage.setItem('profile_image', data.user.profile_image)
+      } else {
+        localStorage.removeItem('profile_image')
+      }
+      navigate('/overview')
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error al iniciar sesión')
     } finally {

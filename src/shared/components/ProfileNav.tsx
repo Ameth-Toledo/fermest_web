@@ -11,6 +11,8 @@ const ProfileNav = () => {
     .join('')
     .toUpperCase() ?? '?'
 
+  const profileImage = localStorage.getItem('profile_image')
+
   return (
     <button
       onClick={() => navigate('/profile')}
@@ -21,12 +23,21 @@ const ProfileNav = () => {
         cursor: 'pointer',
       }}
     >
-      <div
-        className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold"
-        style={{ backgroundColor: '#16A34A33', color: '#22C55E' }}
-      >
-        {initials}
-      </div>
+      {profileImage ? (
+        <img
+          src={profileImage}
+          alt="avatar"
+          className="w-7 h-7 rounded-full object-cover"
+          style={{ border: '1px solid #22C55E30', flexShrink: 0 }}
+        />
+      ) : (
+        <div
+          className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+          style={{ backgroundColor: '#16A34A33', color: '#22C55E' }}
+        >
+          {initials}
+        </div>
+      )}
       <div className="text-left">
         <p className="text-xs font-medium leading-none mb-0.5" style={{ color: '#F4F4F5' }}>
           {user?.name ?? 'Usuario'}

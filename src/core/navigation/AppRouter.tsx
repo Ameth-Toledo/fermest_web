@@ -17,6 +17,7 @@ import EfficiencyCalculatorView from '../../features/efficiency/presentation/vie
 import FermentationReportsView from '../../features/fermentation-reports/presentation/view/FermentationReportsView'
 import AddUserView from '../../features/users/presentation/view/AddUserView'
 import ManageUsersView from '../../features/users/presentation/view/ManageUsersView'
+import ProfileView from '../../features/profile/presentation/view/ProfileView'
 
 const AppRouter = () => {
   return (
@@ -41,6 +42,7 @@ const AppRouter = () => {
           <Route path="/grafics" element={<SensorsView />} />
           <Route path="/users/add" element={<AddUserView />} />
           <Route path="/users/manage" element={<ManageUsersView />} />
+          <Route path="/profile" element={<ProfileView />} />
         </Route>
       </Routes>
     </BrowserRouter>
