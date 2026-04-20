@@ -55,17 +55,18 @@ const Sidebar = () => {
           backgroundColor: isActive
             ? '#16A34A22'
             : isHovered
-              ? '#1C1C20'
+              ? '#22C55E0D'
               : 'transparent',
           borderLeft: isActive
             ? '2px solid #22C55E'
             : isHovered
-              ? '2px solid #2A2A2E'
+              ? '2px solid #22C55E55'
               : '2px solid transparent',
-          cursor:  isDisabled ? 'not-allowed' : 'pointer',
-          opacity: isDisabled ? 0.3 : 1,
-          transform: isHovered && !isActive ? 'translateX(2px)' : 'translateX(0)',
-          transition: 'background-color 0.15s, border-color 0.15s, transform 0.15s, opacity 0.15s',
+          cursor:     isDisabled ? 'not-allowed' : 'pointer',
+          opacity:    isDisabled ? 0.3 : 1,
+          transform:  isHovered && !isActive ? 'translateX(3px)' : 'translateX(0)',
+          boxShadow:  isHovered && !isActive ? 'inset 0 0 12px rgba(34,197,94,0.04)' : 'none',
+          transition: 'background-color 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s, opacity 0.15s',
         }}
       >
         <svg
@@ -92,7 +93,7 @@ const Sidebar = () => {
           >
             {item.label}
           </p>
-          <p style={{ color: isHovered ? '#52525B' : '#3F3F46', fontSize: '10px', transition: 'color 0.15s' }}>
+          <p style={{ color: isHovered ? '#52525B' : '#3F3F46', fontSize: '10px', transition: 'color 0.18s' }}>
             {item.description}
           </p>
         </div>
@@ -133,15 +134,16 @@ const Sidebar = () => {
                   backgroundColor: isAnyActive
                     ? '#16A34A22'
                     : isGroupHovered
-                      ? '#1C1C20'
+                      ? '#22C55E0D'
                       : 'transparent',
                   borderLeft: isAnyActive
                     ? '2px solid #22C55E'
                     : isGroupHovered
-                      ? '2px solid #2A2A2E'
+                      ? '2px solid #22C55E55'
                       : '2px solid transparent',
                   cursor:     'pointer',
-                  transition: 'background-color 0.15s, border-color 0.15s',
+                  transform:  isGroupHovered && !isAnyActive ? 'translateX(3px)' : 'translateX(0)',
+                  transition: 'background-color 0.18s, border-color 0.18s, transform 0.18s',
                 }}
               >
                 <svg
@@ -162,7 +164,7 @@ const Sidebar = () => {
                   >
                     {group}
                   </p>
-                  <p style={{ color: isGroupHovered ? '#52525B' : '#3F3F46', fontSize: '10px', transition: 'color 0.15s' }}>
+                  <p style={{ color: isGroupHovered ? '#52525B' : '#3F3F46', fontSize: '10px', transition: 'color 0.18s' }}>
                     {firstItem.groupDescription ?? ''}
                   </p>
                 </div>
@@ -177,7 +179,7 @@ const Sidebar = () => {
 
               <div
                 style={{
-                  maxHeight:  isOpen ? `${groupItems.length * 52}px` : '0px',
+                  maxHeight:  isOpen ? `${groupItems.length * 72}px` : '0px',
                   overflow:   'hidden',
                   transition: 'max-height 0.25s ease',
                   borderLeft:  '1px solid #1F1F22',

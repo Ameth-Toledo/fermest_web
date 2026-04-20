@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useLoginViewModel } from '../viewmodels/useLoginViewModel'
 import { cn } from '../../../../lib/utils'
 import { PointerHighlight } from '../../../../components/ui/pointer-highlight'
@@ -33,10 +33,10 @@ const Login = () => {
 
       <div className="flex-1 flex flex-col justify-center px-12 py-16 max-w-xl">
 
-        <div className="flex items-center gap-2.5 mb-12">
-          <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain" />
+        <Link to="/" className="flex items-center gap-2.5 mb-12">
+          <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer"/>
           <span className="text-white font-bold text-lg tracking-tight">Fermest</span>
-        </div>
+        </Link>
 
         <div className="flex flex-col gap-3 mb-10">
           <h1 className="text-4xl font-black text-white tracking-tight">¡Bienvenido de nuevo!</h1>

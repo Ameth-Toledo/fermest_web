@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useRegisterViewModel } from '../viewmodels/useRegisterViewModel'
 import { BlurFade } from '../../../../components/ui/blur-fade'
 import { cn } from '../../../../lib/utils'
@@ -29,10 +29,10 @@ const Register = () => {
       <div className="flex-1 flex flex-col justify-center px-12 py-12 max-w-xl overflow-y-auto">
 
         <BlurFade delay={0} duration={0.4} direction="up">
-          <div className="flex items-center gap-2.5 mb-10">
-            <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain" />
+          <Link to="/" className="flex items-center gap-2.5 mb-12">
+            <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer"/>
             <span className="text-white font-bold text-lg tracking-tight">Fermest</span>
-          </div>
+          </Link>
         </BlurFade>
 
         <BlurFade delay={0.08} duration={0.4} direction="up">
