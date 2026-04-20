@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AuthRepositoryImpl } from '../../data/repositories/AuthRepositoryImpl'
 
-const BASE_URL = import.meta.env.VITE_API_URL
+const repository = new AuthRepositoryImpl()
 
 export const useLoginViewModel = () => {
   const navigate = useNavigate()
+
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading]   = useState(false)
@@ -15,27 +17,18 @@ export const useLoginViewModel = () => {
     setError(null)
     setLoading(true)
     try {
-      const res = await fetch(`${BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data?.detail ?? 'Credenciales incorrectas')
-      }
-      const data = await res.json()
-      localStorage.setItem('access_token', data.access_token)
-      if (data.user) {
-        localStorage.setItem('user_data', JSON.stringify(data.user))
-        if (data.user.profile_image) {
-          localStorage.setItem('profile_image', data.user.profile_image)
-        } else {
-          localStorage.removeItem('profile_image')
-        }
-      }
-      navigate('/overview')
-    } catch (err: unknown) {
+      const data = await repository.login({ email, password })
+
+      // Guardar tokens
+      localStorage.setItem('access_token',  data.access_token)
+      localStorage.setItem('refresh_token', data.refresh_token)
+
+      // Guardar datos del usuario — useAuth los leerá desde aquí
+      // El JWT solo incluye sub, role y circuit_id; name y email NO están en el payload
+      localStorage.setItem('user_data', JSON.stringify(data.user))
+
+      navigate('/dashboard')
+    } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al iniciar sesión')
     } finally {
       setLoading(false)
