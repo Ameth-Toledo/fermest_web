@@ -1,0 +1,46 @@
+import type {
+  LoginRequest,
+  RegisterRequest,
+  RefreshTokenRequest,
+  TokenResponse,
+  AccessTokenResponse,
+  RegisterResponse,
+} from '../../domain/models/Auth'
+
+const BASE_URL = import.meta.env.VITE_API_URL
+
+const HEADERS = {
+  'Content-Type':               'application/json',
+  'ngrok-skip-browser-warning': 'true',
+}
+
+async function handleResponse<T>(res: Response): Promise<T> {
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data?.detail ?? `HTTP ${res.status}`)
+  }
+  return res.json()
+}
+
+export const authApi = {
+  login: (data: LoginRequest): Promise<TokenResponse> =>
+    fetch(`${BASE_URL}/auth/login`, {
+      method:  'POST',
+      headers: HEADERS,
+      body:    JSON.stringify(data),
+    }).then(handleResponse<TokenResponse>),
+
+  register: (data: RegisterRequest): Promise<RegisterResponse> =>
+    fetch(`${BASE_URL}/auth/register`, {
+      method:  'POST',
+      headers: HEADERS,
+      body:    JSON.stringify(data),
+    }).then(handleResponse<RegisterResponse>),
+
+  refreshToken: (data: RefreshTokenRequest): Promise<AccessTokenResponse> =>
+    fetch(`${BASE_URL}/auth/refresh`, {
+      method:  'POST',
+      headers: HEADERS,
+      body:    JSON.stringify(data),
+    }).then(handleResponse<AccessTokenResponse>),
+}

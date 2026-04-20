@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAuth } from '../../../../core/hooks/useAuth'
+import { userAuth } from '../../../../core/hooks/userAuth'
 import { avatar as AVATARS } from '../../../../core/avatars/avatars'
 
 const STYLES = `
@@ -13,9 +13,7 @@ const STYLES = `
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     cursor: pointer;
   }
-  .avatar-option:hover {
-    transform: scale(1.06);
-  }
+  .avatar-option:hover { transform: scale(1.06); }
 `
 
 const inputStyle: React.CSSProperties = {
@@ -48,22 +46,20 @@ const readonlyStyle: React.CSSProperties = {
   cursor:          'default',
 }
 
-type InfoForm = {
-  name:      string
-  last_name: string
-  email:     string
-}
-
-type PasswordForm = {
-  current: string
-  next:    string
-  confirm: string
-}
+type InfoForm = { name: string; last_name: string; email: string }
+type PasswordForm = { current: string; next: string; confirm: string }
 
 const avatarList = Object.values(AVATARS)
 
+// Mapea el rol que viene del backend a un label legible
+const ROLE_LABELS: Record<string, string> = {
+  admin:      'Administrador',
+  profesor:   'Profesor',
+  estudiante: 'Estudiante',
+}
+
 const ProfileView = () => {
-  const { user } = useAuth()
+  const { user } = userAuth()
 
   const savedImage = localStorage.getItem('profile_image') ?? null
 
@@ -72,17 +68,17 @@ const ProfileView = () => {
     last_name: user?.last_name ?? '',
     email:     user?.email     ?? '',
   })
-  const [pwForm,    setPwForm]    = useState<PasswordForm>({ current: '', next: '', confirm: '' })
-  const [editingInfo,  setEditingInfo]  = useState(false)
-  const [loadingInfo,  setLoadingInfo]  = useState(false)
-  const [loadingPw,    setLoadingPw]    = useState(false)
-  const [successInfo,  setSuccessInfo]  = useState(false)
-  const [successPw,    setSuccessPw]    = useState(false)
-  const [errorInfo,    setErrorInfo]    = useState<string | null>(null)
-  const [errorPw,      setErrorPw]      = useState<string | null>(null)
-  const [showCurrent,  setShowCurrent]  = useState(false)
-  const [showNext,     setShowNext]     = useState(false)
-  const [showConfirm,  setShowConfirm]  = useState(false)
+  const [pwForm,         setPwForm]         = useState<PasswordForm>({ current: '', next: '', confirm: '' })
+  const [editingInfo,    setEditingInfo]    = useState(false)
+  const [loadingInfo,    setLoadingInfo]    = useState(false)
+  const [loadingPw,      setLoadingPw]      = useState(false)
+  const [successInfo,    setSuccessInfo]    = useState(false)
+  const [successPw,      setSuccessPw]      = useState(false)
+  const [errorInfo,      setErrorInfo]      = useState<string | null>(null)
+  const [errorPw,        setErrorPw]        = useState<string | null>(null)
+  const [showCurrent,    setShowCurrent]    = useState(false)
+  const [showNext,       setShowNext]       = useState(false)
+  const [showConfirm,    setShowConfirm]    = useState(false)
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(savedImage)
   const [pickingAvatar,  setPickingAvatar]  = useState(false)
 
@@ -90,19 +86,22 @@ const ProfileView = () => {
     .filter(Boolean).map(s => s[0]).join('').toUpperCase() || '?'
 
   const pwMismatch  = pwForm.confirm !== '' && pwForm.next !== pwForm.confirm
-  const pwValid     = pwForm.current && pwForm.next && pwForm.next === pwForm.confirm && pwForm.next.length >= 6
+  const pwValid     = !!(pwForm.current && pwForm.next && pwForm.next === pwForm.confirm && pwForm.next.length >= 6)
   const infoChanged = infoForm.name !== (user?.name ?? '') || infoForm.last_name !== (user?.last_name ?? '') || infoForm.email !== (user?.email ?? '')
 
-  const setInfo = (key: keyof InfoForm, val: string) =>
-    setInfoForm(prev => ({ ...prev, [key]: val }))
-  const setPw = (key: keyof PasswordForm, val: string) =>
-    setPwForm(prev => ({ ...prev, [key]: val }))
+  const setInfo = (key: keyof InfoForm, val: string) => setInfoForm(prev => ({ ...prev, [key]: val }))
+  const setPw   = (key: keyof PasswordForm, val: string) => setPwForm(prev => ({ ...prev, [key]: val }))
+
+  // Rol legible — user.role viene como "admin" | "profesor" | "estudiante"
+  const roleLabel = user?.role ? (ROLE_LABELS[user.role] ?? user.role) : '—'
+  const roleColor = user?.role === 'admin' ? '#A78BFA' : user?.role === 'profesor' ? '#3B82F6' : '#22C55E'
 
   const handleSaveInfo = async () => {
     if (!infoChanged) return
     setLoadingInfo(true)
     setErrorInfo(null)
     try {
+      // TODO: PUT /api/users/{user.id} con infoForm
       await new Promise(r => setTimeout(r, 900))
       setSuccessInfo(true)
       setEditingInfo(false)
@@ -119,6 +118,7 @@ const ProfileView = () => {
     setLoadingPw(true)
     setErrorPw(null)
     try {
+      // TODO: PUT /api/users/{user.id}/password con pwForm
       await new Promise(r => setTimeout(r, 900))
       setSuccessPw(true)
       setPwForm({ current: '', next: '', confirm: '' })
@@ -134,7 +134,7 @@ const ProfileView = () => {
     setSelectedAvatar(path)
     localStorage.setItem('profile_image', path)
     setPickingAvatar(false)
-    // TODO: llamar API PUT /api/users/{id} con { profile_image: path }
+    // TODO: PUT /api/users/{user.id} con { profile_image: path }
   }
 
   const EyeBtn = ({ show, onToggle }: { show: boolean; onToggle: () => void }) => (
@@ -164,42 +164,31 @@ const ProfileView = () => {
     <div style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '48px' }}>
       <style>{STYLES}</style>
 
+      {/* Header */}
       <div style={{ marginBottom: 40 }}>
-        <p style={{ color: '#22C55E', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0 0 12px 0' }}>
-          Cuenta
-        </p>
-        <h1 style={{ color: '#F4F4F5', fontSize: 36, fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
-          Mi Perfil
-        </h1>
+        <p style={{ color: '#22C55E', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Cuenta</p>
+        <h1 style={{ color: '#F4F4F5', fontSize: 36, fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>Mi Perfil</h1>
         <div style={{ marginTop: 12, height: 1, width: 96, backgroundColor: '#22C55E', opacity: 0.4 }} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: 24, maxWidth: 860, alignItems: 'start' }}>
 
-        {/* Columna izquierda */}
+        {/* ── Columna izquierda ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
           {/* Avatar card */}
           <div style={{ padding: 28, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-
-            {/* Imagen o iniciales */}
             <div style={{ position: 'relative' }}>
               {selectedAvatar ? (
-                <img
-                  src={selectedAvatar}
-                  alt="Avatar"
-                  style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'contain', border: '2px solid #22C55E30', backgroundColor: '#FFFFFF' }}
-                />
+                <img src={selectedAvatar} alt="Avatar"
+                  style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'contain', border: '2px solid #22C55E30', backgroundColor: '#FFFFFF' }} />
               ) : (
                 <div style={{ width: 88, height: 88, borderRadius: '50%', backgroundColor: '#16A34A22', border: '2px solid #22C55E30', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 700, color: '#22C55E', letterSpacing: '-0.02em' }}>
                   {initials}
                 </div>
               )}
-              <button
-                onClick={() => setPickingAvatar(p => !p)}
-                title="Cambiar avatar"
-                style={{ position: 'absolute', bottom: 0, right: 0, width: 26, height: 26, borderRadius: '50%', backgroundColor: '#22C55E', border: '2px solid #0A0A0B', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
-              >
+              <button onClick={() => setPickingAvatar(p => !p)} title="Cambiar avatar"
+                style={{ position: 'absolute', bottom: 0, right: 0, width: 26, height: 26, borderRadius: '50%', backgroundColor: '#22C55E', border: '2px solid #0A0A0B', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A0A0B" strokeWidth="2.5" strokeLinecap="round">
                   <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -214,7 +203,6 @@ const ProfileView = () => {
               <p style={{ color: '#52525B', fontSize: 12, margin: 0 }}>{infoForm.email}</p>
             </div>
 
-            {/* Avatar picker */}
             {pickingAvatar && (
               <div style={{ width: '100%', borderTop: '1px solid #1F1F22', paddingTop: 16 }}>
                 <p style={{ color: '#3F3F46', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 12px 0' }}>
@@ -222,24 +210,10 @@ const ProfileView = () => {
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
                   {avatarList.map(path => (
-                    <button
-                      key={path}
-                      className="avatar-option"
-                      onClick={() => handleSelectAvatar(path)}
-                      style={{
-                        padding:      0,
-                        background:   'none',
-                        border:       `2px solid ${selectedAvatar === path ? '#22C55E' : '#1F1F22'}`,
-                        borderRadius: '50%',
-                        cursor:       'pointer',
-                        boxShadow:    selectedAvatar === path ? '0 0 0 3px rgba(34,197,94,0.2)' : 'none',
-                      }}
-                    >
-                      <img
-                        src={path}
-                        alt="avatar"
-                        style={{ width: '100%', aspectRatio: '1', borderRadius: '50%', objectFit: 'contain', display: 'block', backgroundColor: '#FFFFFF' }}
-                      />
+                    <button key={path} className="avatar-option" onClick={() => handleSelectAvatar(path)}
+                      style={{ padding: 0, background: 'none', border: `2px solid ${selectedAvatar === path ? '#22C55E' : '#1F1F22'}`, borderRadius: '50%', cursor: 'pointer', boxShadow: selectedAvatar === path ? '0 0 0 3px rgba(34,197,94,0.2)' : 'none' }}>
+                      <img src={path} alt="avatar"
+                        style={{ width: '100%', aspectRatio: '1', borderRadius: '50%', objectFit: 'contain', display: 'block', backgroundColor: '#FFFFFF' }} />
                     </button>
                   ))}
                 </div>
@@ -247,15 +221,29 @@ const ProfileView = () => {
             )}
           </div>
 
-          {/* Info de solo lectura */}
+          {/* Info de cuenta (solo lectura) */}
           <div style={{ padding: 24, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22', display: 'flex', flexDirection: 'column', gap: 14 }}>
             <p style={{ color: '#3F3F46', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', margin: 0 }}>
               Información de cuenta
             </p>
             {[
-              { label: 'Rol',           value: user?.role_name  ?? '—', color: user?.role_name === 'Administrador' ? '#A78BFA' : '#22C55E' },
-              { label: 'Circuito',      value: user?.circuit_id ? `#${user.circuit_id}` : '—', color: '#A1A1AA' },
-              { label: 'Miembro desde', value: user?.created_at ?? '—', color: '#A1A1AA' },
+              {
+                label: 'Rol',
+                // user.role viene como "admin" | "profesor" | "estudiante" desde el backend
+                value: roleLabel,
+                color: roleColor,
+              },
+              {
+                label: 'Circuito',
+                value: user?.circuit_id ? `#${user.circuit_id}` : '—',
+                color: '#A1A1AA',
+              },
+              {
+                label: 'ID de usuario',
+                // created_at no viene en el login response — mostramos el ID como alternativa útil
+                value: user?.id ? `#${user.id}` : '—',
+                color: '#A1A1AA',
+              },
             ].map(item => (
               <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: '1px solid #17171A' }}>
                 <span style={{ color: '#52525B', fontSize: 11 }}>{item.label}</span>
@@ -265,7 +253,7 @@ const ProfileView = () => {
           </div>
         </div>
 
-        {/* Columna derecha */}
+        {/* ── Columna derecha ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
           {/* Info personal */}

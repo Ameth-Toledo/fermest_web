@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { FermentationRepositoryImpl } from '../../data/repositories/FermentationRepositoryImpl'
 import { sensorApi } from '../../../sensors/data/api/sensorApi'
-import { useAuth } from '../../../../core/hooks/useAuth'
+import { userAuth } from '../../../../core/hooks/userAuth'
 import type { FermentationSession, FermentationReport } from '../../domain/models/Fermentation'
 import type { SensorKey, BackendSensorType, SensorToggleState } from '../../../sensors/domain/models/Sensor'
 import { ALL_SENSORS_OFF, ALL_SENSORS_ON } from '../../../sensors/domain/models/Sensor'
@@ -10,7 +10,7 @@ import type { FermentationFormData } from '../types/FermentationFormData'
 const repository = new FermentationRepositoryImpl()
 
 export const useFermentationViewModel = () => {
-  const { user } = useAuth()
+  const { user } = userAuth()
 
   const [loading, setLoading]               = useState(false)
   const [error, setError]                   = useState<string | null>(null)

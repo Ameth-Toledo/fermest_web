@@ -1,12 +1,12 @@
 import { useNavigate }    from 'react-router-dom'
-import { useAuth }        from '../../../../core/hooks/useAuth'
+import { userAuth }        from '../../../../core/hooks/userAuth'
 import { STATS }          from '../constants/stats'
 import { QUICK_ACTIONS }  from '../constants/quickActions'
 import { OVERVIEW_STYLES } from '../constants/styles'
 
 const OverviewView = () => {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user } = userAuth()
 
   const now  = new Date()
   const date = now.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useLoginViewModel } from '../viewmodels/useLoginViewModel'
 import { cn } from '../../../../lib/utils'
 import { PointerHighlight } from '../../../../components/ui/pointer-highlight'
@@ -24,17 +24,27 @@ const COL3 = [
   'https://images.unsplash.com/photo-1559525839-8c4c01c1dee2?w=600&q=80',
 ]
 
+const EyeIcon = ({ open }: { open: boolean }) => open
+  ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+  : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+
 const Login = () => {
+  const location = useLocation()
   const { email, setEmail, password, setPassword, loading, error, handleSubmit } = useLoginViewModel()
   const [showPass, setShowPass] = useState(false)
+
+  // Banner de cuenta creada — viene desde Register via navigate state
+  const justRegistered = location.state?.registered === true
+  const registeredEmail = location.state?.email as string | undefined
 
   return (
     <div className="min-h-screen w-full flex bg-[#0A0A0B]">
 
+      {/* ── Form side ── */}
       <div className="flex-1 flex flex-col justify-center px-12 py-16 max-w-xl">
 
         <Link to="/" className="flex items-center gap-2.5 mb-12">
-          <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer"/>
+          <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer" />
           <span className="text-white font-bold text-lg tracking-tight">Fermest</span>
         </Link>
 
@@ -44,6 +54,20 @@ const Login = () => {
             Monitorea y optimiza la fermentación de tu café con inteligencia artificial en tiempo real.
           </p>
         </div>
+
+        {/* Banner de cuenta creada exitosamente */}
+        {justRegistered && (
+          <div className="flex items-start gap-2.5 rounded-lg px-4 py-3 mb-6 text-sm text-green-400 bg-green-950/40 border border-green-500/20">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            <span>
+              Cuenta creada correctamente.{' '}
+              {registeredEmail && <span className="text-green-300">{registeredEmail}</span>}
+              {' '}ya puede iniciar sesión.
+            </span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
@@ -59,7 +83,9 @@ const Login = () => {
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <label className="text-sm text-neutral-400 font-medium">Contraseña</label>
-              <a href="#" className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">¿Olvidaste tu contraseña?</a>
+              <a href="#" className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">
+                ¿Olvidaste tu contraseña?
+              </a>
             </div>
             <div className="relative">
               <input
@@ -70,26 +96,31 @@ const Login = () => {
               />
               <button type="button" onClick={() => setShowPass(p => !p)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-neutral-400 transition-colors">
-                {showPass
-                  ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                }
+                <EyeIcon open={showPass} />
               </button>
             </div>
           </div>
 
           {error && (
             <div className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-red-400 bg-red-950/40 border border-red-500/20">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
               {error}
             </div>
           )}
 
-          <button type="submit" disabled={loading}
-            className={cn('w-full rounded-lg py-3 text-sm font-semibold text-black mt-1 transition-all duration-200 bg-white hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed')}>
+          <button
+            type="submit"
+            disabled={loading}
+            className={cn('w-full rounded-lg py-3 text-sm font-semibold text-black mt-1 transition-all duration-200 bg-white hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed')}
+          >
             {loading
               ? <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                  </svg>
                   Iniciando sesión...
                 </span>
               : 'Iniciar sesión'
@@ -123,54 +154,40 @@ const Login = () => {
 
         <p className="text-center text-sm text-neutral-600 mt-8">
           ¿No tienes cuenta?{' '}
-          <Link to="/register" className="text-white hover:text-neutral-200 font-medium transition-colors">Regístrate</Link>
+          <Link to="/register" className="text-white hover:text-neutral-200 font-medium transition-colors">
+            Regístrate
+          </Link>
         </p>
       </div>
 
+      {/* ── Image side ── */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden">
         <style>{`
           @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0%); } }
           @keyframes scrollUp   { from { transform: translateY(0%);   } to { transform: translateY(-50%); } }
         `}</style>
 
-        <div className="absolute inset-0" style={{background:'linear-gradient(135deg,#0a1a0f 0%,#0f2d1a 30%,#1a4a2a 60%,#2d6b3f 100%)'}} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg,#0a1a0f 0%,#0f2d1a 30%,#1a4a2a 60%,#2d6b3f 100%)' }} />
 
         <div className="absolute inset-0 flex gap-2.5 px-5 overflow-hidden">
-          <div className="flex-1 overflow-hidden">
-            <div style={{animation:'scrollDown 20s linear infinite'}}>
-              {[...COL1,...COL1].map((src,i) => (
-                <div key={i} className="mb-2.5 rounded-xl overflow-hidden">
-                  <img src={src} alt="" className="w-full object-cover" style={{filter:'brightness(0.65) saturate(0.85)'}} />
-                </div>
-              ))}
+          {[COL1, COL2, COL3].map((col, ci) => (
+            <div key={ci} className="flex-1 overflow-hidden">
+              <div style={{ animation: `${ci % 2 === 0 ? 'scrollDown' : 'scrollUp'} ${20 + ci * 3}s linear infinite` }}>
+                {[...col, ...col].map((src, i) => (
+                  <div key={i} className="mb-2.5 rounded-xl overflow-hidden">
+                    <img src={src} alt="" className="w-full object-cover" style={{ filter: 'brightness(0.65) saturate(0.85)' }} />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <div style={{animation:'scrollUp 26s linear infinite'}}>
-              {[...COL2,...COL2].map((src,i) => (
-                <div key={i} className="mb-2.5 rounded-xl overflow-hidden">
-                  <img src={src} alt="" className="w-full object-cover" style={{filter:'brightness(0.65) saturate(0.85)'}} />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <div style={{animation:'scrollDown 23s linear infinite'}}>
-              {[...COL3,...COL3].map((src,i) => (
-                <div key={i} className="mb-2.5 rounded-xl overflow-hidden">
-                  <img src={src} alt="" className="w-full object-cover" style={{filter:'brightness(0.65) saturate(0.85)'}} />
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
 
-        <div className="absolute inset-x-0 top-0 h-28 pointer-events-none" style={{background:'linear-gradient(to bottom,#0a1a0f,transparent)'}} />
-        <div className="absolute inset-x-0 bottom-0 h-28 pointer-events-none" style={{background:'linear-gradient(to top,#0a1a0f,transparent)'}} />
+        <div className="absolute inset-x-0 top-0 h-28 pointer-events-none" style={{ background: 'linear-gradient(to bottom,#0a1a0f,transparent)' }} />
+        <div className="absolute inset-x-0 bottom-0 h-28 pointer-events-none" style={{ background: 'linear-gradient(to top,#0a1a0f,transparent)' }} />
 
         <div className="absolute top-8 left-0 z-10 w-full">
-          <div className="absolute inset-0"
-            style={{background:'radial-gradient(ellipse 70% 200% at 0% 50%, rgba(5,15,8,0.88) 0%, rgba(5,15,8,0.55) 40%, rgba(5,15,8,0.15) 65%, transparent 85%)'}} />
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 70% 200% at 0% 50%, rgba(5,15,8,0.88) 0%, rgba(5,15,8,0.55) 40%, rgba(5,15,8,0.15) 65%, transparent 85%)' }} />
           <div className="relative flex flex-col gap-2 font-black tracking-tight leading-tight px-10 py-6">
             <span className="text-4xl text-white/90">pH, temperatura y perfil de sabor</span>
             <span className="text-4xl text-white/90">monitoreados con</span>
@@ -185,7 +202,7 @@ const Login = () => {
                 rotateDirection="top"
                 staggerDuration={0.03}
                 staggerFrom="first"
-                transition={{type:'spring', damping:25, stiffness:160}}
+                transition={{ type: 'spring', damping: 25, stiffness: 160 }}
               >
                 inteligencia artificial
               </Text3DFlip>
@@ -193,7 +210,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-
     </div>
   )
 }

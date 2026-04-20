@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useRegisterViewModel } from '../viewmodels/useRegisterViewModel'
 import { BlurFade } from '../../../../components/ui/blur-fade'
 import { cn } from '../../../../lib/utils'
@@ -10,7 +10,6 @@ const COL1 = [
   'https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=600&q=80',
   'https://images.unsplash.com/photo-1611077543764-4b6a1fe68b25?w=600&q=80',
 ]
-
 const COL2 = [
   'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80',
   'https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&q=80',
@@ -18,19 +17,41 @@ const COL2 = [
   'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&q=80',
 ]
 
+const EyeIcon = ({ open }: { open: boolean }) => open
+  ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+  : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+
 const Register = () => {
-  const { name, setName, email, setEmail, password, setPassword, confirm, setConfirm, loading, error, handleSubmit } = useRegisterViewModel()
+  const {
+    name,      setName,
+    lastName,  setLastName,
+    email,     setEmail,
+    password,  setPassword,
+    confirm,   setConfirm,
+    loading,
+    error,
+    handleSubmit,
+  } = useRegisterViewModel()
+
   const [showPass, setShowPass]       = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+
+  const inputBase = cn(
+    'w-full rounded-lg px-4 py-3 text-sm text-white placeholder:text-neutral-600',
+    'bg-neutral-900 border border-neutral-800 outline-none',
+    'focus:border-green-500/60 focus:ring-1 focus:ring-green-500/20 transition-all duration-200'
+  )
+  const labelBase = 'text-sm text-neutral-400 font-medium'
 
   return (
     <div className="min-h-screen w-full flex bg-[#0A0A0B]">
 
+      {/* ── Form side ── */}
       <div className="flex-1 flex flex-col justify-center px-12 py-12 max-w-xl overflow-y-auto">
 
         <BlurFade delay={0} duration={0.4} direction="up">
           <Link to="/" className="flex items-center gap-2.5 mb-12">
-            <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer"/>
+            <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer" />
             <span className="text-white font-bold text-lg tracking-tight">Fermest</span>
           </Link>
         </BlurFade>
@@ -46,72 +67,81 @@ const Register = () => {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-          <BlurFade delay={0.16} duration={0.4} direction="up">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm text-neutral-400 font-medium">Nombre completo</label>
-              <input
-                type="text" required autoComplete="name"
-                value={name} onChange={e => setName(e.target.value)}
-                placeholder="Tu nombre"
-                className="w-full rounded-lg px-4 py-3 text-sm text-white placeholder:text-neutral-600 bg-neutral-900 border border-neutral-800 outline-none focus:border-green-500/60 focus:ring-1 focus:ring-green-500/20 transition-all duration-200"
-              />
+          {/* Nombre + Apellido */}
+          <BlurFade delay={0.14} duration={0.4} direction="up">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className={labelBase}>Nombre</label>
+                <input
+                  type="text" required autoComplete="given-name"
+                  value={name} onChange={e => setName(e.target.value)}
+                  placeholder="Tu nombre"
+                  className={inputBase}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className={labelBase}>Apellido</label>
+                <input
+                  type="text" required autoComplete="family-name"
+                  value={lastName} onChange={e => setLastName(e.target.value)}
+                  placeholder="Tu apellido"
+                  className={inputBase}
+                />
+              </div>
             </div>
           </BlurFade>
 
-          <BlurFade delay={0.22} duration={0.4} direction="up">
+          {/* Email */}
+          <BlurFade delay={0.20} duration={0.4} direction="up">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm text-neutral-400 font-medium">Correo electrónico</label>
+              <label className={labelBase}>Correo electrónico</label>
               <input
                 type="email" required autoComplete="email"
                 value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="tu@correo.com"
-                className="w-full rounded-lg px-4 py-3 text-sm text-white placeholder:text-neutral-600 bg-neutral-900 border border-neutral-800 outline-none focus:border-green-500/60 focus:ring-1 focus:ring-green-500/20 transition-all duration-200"
+                className={inputBase}
               />
             </div>
           </BlurFade>
 
-          <BlurFade delay={0.28} duration={0.4} direction="up">
+          {/* Contraseña */}
+          <BlurFade delay={0.26} duration={0.4} direction="up">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm text-neutral-400 font-medium">Contraseña</label>
+              <label className={labelBase}>Contraseña</label>
               <div className="relative">
                 <input
                   type={showPass ? 'text' : 'password'} required autoComplete="new-password"
                   value={password} onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-lg px-4 py-3 pr-11 text-sm text-white placeholder:text-neutral-600 bg-neutral-900 border border-neutral-800 outline-none focus:border-green-500/60 focus:ring-1 focus:ring-green-500/20 transition-all duration-200"
+                  className={cn(inputBase, 'pr-11')}
                 />
                 <button type="button" onClick={() => setShowPass(p => !p)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-neutral-400 transition-colors">
-                  {showPass
-                    ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                    : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  }
+                  <EyeIcon open={showPass} />
                 </button>
               </div>
             </div>
           </BlurFade>
 
-          <BlurFade delay={0.34} duration={0.4} direction="up">
+          {/* Confirmar contraseña */}
+          <BlurFade delay={0.32} duration={0.4} direction="up">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm text-neutral-400 font-medium">Confirmar contraseña</label>
+              <label className={labelBase}>Confirmar contraseña</label>
               <div className="relative">
                 <input
                   type={showConfirm ? 'text' : 'password'} required autoComplete="new-password"
                   value={confirm} onChange={e => setConfirm(e.target.value)}
                   placeholder="••••••••"
                   className={cn(
-                    'w-full rounded-lg px-4 py-3 pr-11 text-sm text-white placeholder:text-neutral-600 bg-neutral-900 border outline-none transition-all duration-200',
+                    inputBase, 'pr-11',
                     confirm && password !== confirm
-                      ? 'border-red-500/50 focus:border-red-500/70 focus:ring-1 focus:ring-red-500/20'
-                      : 'border-neutral-800 focus:border-green-500/60 focus:ring-1 focus:ring-green-500/20'
+                      ? 'border-red-500/50 focus:border-red-500/70 focus:ring-red-500/20'
+                      : ''
                   )}
                 />
                 <button type="button" onClick={() => setShowConfirm(p => !p)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-neutral-400 transition-colors">
-                  {showConfirm
-                    ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                    : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  }
+                  <EyeIcon open={showConfirm} />
                 </button>
               </div>
               {confirm && password !== confirm && (
@@ -120,102 +150,83 @@ const Register = () => {
             </div>
           </BlurFade>
 
+          {/* Error */}
           {error && (
             <BlurFade delay={0} duration={0.3} direction="up">
               <div className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-red-400 bg-red-950/40 border border-red-500/20">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
                 {error}
               </div>
             </BlurFade>
           )}
 
-          <BlurFade delay={0.40} duration={0.4} direction="up">
-            <button type="submit" disabled={loading}
-              className={cn('w-full rounded-lg py-3 text-sm font-semibold text-black mt-1 transition-all duration-200 bg-white hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed')}>
+          {/* Submit */}
+          <BlurFade delay={0.38} duration={0.4} direction="up">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg py-3 text-sm font-semibold text-black mt-1 transition-all duration-200 bg-white hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               {loading
                 ? <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                    </svg>
                     Creando cuenta...
                   </span>
                 : 'Crear cuenta'
               }
             </button>
           </BlurFade>
-
         </form>
 
-        <BlurFade delay={0.46} duration={0.4} direction="up">
-          <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-px bg-neutral-800" />
-            <span className="text-neutral-600 text-xs">o regístrate con</span>
-            <div className="flex-1 h-px bg-neutral-800" />
-          </div>
-        </BlurFade>
-
-        <BlurFade delay={0.52} duration={0.4} direction="up">
-          <div className="grid grid-cols-2 gap-3">
-            <button type="button" className="flex items-center justify-center gap-2.5 rounded-lg py-3 text-sm font-medium text-white bg-neutral-900 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-800 transition-all duration-200">
-              <svg width="18" height="18" viewBox="0 0 24 24">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-              </svg>
-              Google
-            </button>
-            <button type="button" className="flex items-center justify-center gap-2.5 rounded-lg py-3 text-sm font-medium text-white bg-neutral-900 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-800 transition-all duration-200">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
-              </svg>
-              GitHub
-            </button>
-          </div>
-        </BlurFade>
-
-        <BlurFade delay={0.58} duration={0.4} direction="up">
+        <BlurFade delay={0.44} duration={0.4} direction="up">
           <p className="text-center text-sm text-neutral-600 mt-6">
             ¿Ya tienes cuenta?{' '}
-            <Link to="/login" className="text-white hover:text-neutral-200 font-medium transition-colors">Inicia sesión</Link>
+            <Link to="/login" className="text-white hover:text-neutral-200 font-medium transition-colors">
+              Inicia sesión
+            </Link>
           </p>
         </BlurFade>
-
       </div>
 
+      {/* ── Image side ── */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden">
         <style>{`
           @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0%); } }
           @keyframes scrollUp   { from { transform: translateY(0%);   } to { transform: translateY(-50%); } }
         `}</style>
 
-        <div className="absolute inset-0" style={{background:'linear-gradient(135deg,#0a1a0f 0%,#0f2d1a 30%,#1a4a2a 60%,#2d6b3f 100%)'}} />
-        <div className="absolute inset-0" style={{background:'radial-gradient(ellipse 80% 60% at 50% 50%,rgba(15,142,77,0.25),transparent 70%)'}} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg,#0a1a0f 0%,#0f2d1a 30%,#1a4a2a 60%,#2d6b3f 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 50%,rgba(15,142,77,0.25),transparent 70%)' }} />
 
         <div className="absolute inset-0 flex gap-3 px-6 overflow-hidden">
           <div className="flex-1 overflow-hidden">
-            <div style={{animation:'scrollDown 22s linear infinite'}}>
+            <div style={{ animation: 'scrollDown 22s linear infinite' }}>
               {[...COL1, ...COL1].map((src, i) => (
                 <div key={i} className="mb-3 rounded-xl overflow-hidden">
-                  <img src={src} alt="" className="w-full object-cover rounded-xl" style={{filter:'brightness(0.65) saturate(0.8)'}} />
+                  <img src={src} alt="" className="w-full object-cover rounded-xl" style={{ filter: 'brightness(0.65) saturate(0.8)' }} />
                 </div>
               ))}
             </div>
           </div>
-
           <div className="flex-1 overflow-hidden">
-            <div style={{animation:'scrollUp 26s linear infinite'}}>
+            <div style={{ animation: 'scrollUp 26s linear infinite' }}>
               {[...COL2, ...COL2].map((src, i) => (
                 <div key={i} className="mb-3 rounded-xl overflow-hidden">
-                  <img src={src} alt="" className="w-full object-cover rounded-xl" style={{filter:'brightness(0.65) saturate(0.8)'}} />
+                  <img src={src} alt="" className="w-full object-cover rounded-xl" style={{ filter: 'brightness(0.65) saturate(0.8)' }} />
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none" style={{background:'linear-gradient(to bottom,#0a1a0f,transparent)'}} />
-        <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style={{background:'linear-gradient(to top,#0a1a0f,transparent)'}} />
+        <div className="absolute inset-x-0 top-0 h-24 pointer-events-none" style={{ background: 'linear-gradient(to bottom,#0a1a0f,transparent)' }} />
+        <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style={{ background: 'linear-gradient(to top,#0a1a0f,transparent)' }} />
       </div>
-
     </div>
   )
 }
