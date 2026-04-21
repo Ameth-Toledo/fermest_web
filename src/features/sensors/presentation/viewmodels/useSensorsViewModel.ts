@@ -33,12 +33,12 @@ interface SensorsViewModelOptions {
 }
 
 export const useSensorsViewModel = (options?: SensorsViewModelOptions) => {
-  const [circuitId, setCircuitId]       = useState<number>(options?.autoCircuitId ?? 1)
-  const [wsStatus, setWsStatus]         = useState<WsStatus>('disconnected')
-  const [chartData, setChartData]       = useState<SensorChartData>(emptyChartData())
+  const [circuitId, setCircuitId] = useState<number>(options?.autoCircuitId ?? 1)
+  const [wsStatus, setWsStatus] = useState<WsStatus>('disconnected')
+  const [chartData, setChartData] = useState<SensorChartData>(emptyChartData())
   const [latestValues, setLatestValues] = useState<Partial<Record<BackendSensorType, number>>>({})
-  const [loading, setLoading]           = useState(false)
-  const [error, setError]               = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const wsRef = useRef<WebSocket | null>(null)
 
@@ -63,7 +63,7 @@ export const useSensorsViewModel = (options?: SensorsViewModelOptions) => {
         if (result.status === 'fulfilled') {
           const sensorType = SENSOR_META[i].key
           next[sensorType] = result.value.readings.map(r => ({
-            time:  formatTime(r.timestamp),
+            time: formatTime(r.timestamp),
             value: r.value,
           }))
           const last = result.value.readings.at(-1)
@@ -85,9 +85,9 @@ export const useSensorsViewModel = (options?: SensorsViewModelOptions) => {
     const ws = createSensorWebSocket(id)
     wsRef.current = ws
 
-    ws.onopen    = () => setWsStatus('connected')
-    ws.onerror   = () => setWsStatus('error')
-    ws.onclose   = () => { setWsStatus('disconnected'); wsRef.current = null }
+    ws.onopen = () => setWsStatus('connected')
+    ws.onerror = () => setWsStatus('error')
+    ws.onclose = () => { setWsStatus('disconnected'); wsRef.current = null }
     ws.onmessage = (event: MessageEvent) => {
       try {
         const msg: WSMessage = JSON.parse(event.data)
@@ -116,8 +116,10 @@ export const useSensorsViewModel = (options?: SensorsViewModelOptions) => {
 
   // ── Auto-conectar cuando llega un circuitId desde el contexto de fermentación
   useEffect(() => {
-    if (!options?.autoCircuitId) return
-    applyCircuit(options.autoCircuitId, options.autoSessionId)
+    const id = options?.autoCircuitId
+    const sessionId = options?.autoSessionId
+    if (!id) return
+    applyCircuit(id, sessionId)
     return () => { wsRef.current?.close() }
   }, [options?.autoCircuitId, options?.autoSessionId])
 
