@@ -1,4 +1,4 @@
-import { useFermentationViewModel } from '../viewmodels/useFermentationViewModel'
+import { useFermentation } from '../context/FermentationContext'
 import type { SensorKey } from '../../../sensors/domain/models/Sensor'
 import MainControlSection from '../components/MainControlSection'
 import SensorControlSection from '../components/SensorControlSection'
@@ -17,7 +17,7 @@ const FermentationView = () => {
     startFermentation,
     stopFermentation,
     toggleSensor,
-  } = useFermentationViewModel()
+  } = useFermentation()
 
   const handleMainToggle = () => {
     if (isRunning) {

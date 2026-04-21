@@ -6,14 +6,34 @@ import {
   type DeviceState,
 } from '../../data/api/commandsWebSocket'
 
+interface ConnectOptions {
+  /** Estado inicial con el que se pre-carga el stateRef (no se envía al abrir). */
+  initialState?: Partial<DeviceState>
+  /** Callback invocado en onopen, después de aplicar el initialState. */
+  onConnected?: () => void
+}
+
 export const useCommandsWebSocket = () => {
   const wsRef        = useRef<WebSocket | null>(null)
   const stateRef     = useRef<DeviceState>({ ...DEFAULT_STATE })
   const pendingRef   = useRef<Partial<DeviceState> | null>(null)
 
-  const connect = useCallback((circuitId: number, onConnected?: () => void) => {
+  /**
+   * Actualiza el estado interno sin transmitir nada por el WS.
+   * Se usa al restaurar una sesión activa para que el primer toggle
+   * después de reconectar no apague todos los otros dispositivos.
+   */
+  const syncState = useCallback((changes: Partial<DeviceState>) => {
+    stateRef.current = { ...stateRef.current, ...changes }
+  }, [])
+
+  const connect = useCallback((circuitId: number, options?: ConnectOptions | (() => void)) => {
+    // Soporte para firma antigua: connect(circuitId, onConnected)
+    const opts: ConnectOptions =
+      typeof options === 'function' ? { onConnected: options } : (options ?? {})
+
     if (wsRef.current) wsRef.current.close()
-    stateRef.current  = { ...DEFAULT_STATE }
+    stateRef.current  = { ...DEFAULT_STATE, ...(opts.initialState ?? {}) }
     pendingRef.current = null
 
     const ws = createCommandsWebSocket(circuitId)
@@ -27,7 +47,7 @@ export const useCommandsWebSocket = () => {
         ws.send(JSON.stringify(stateRef.current))
         pendingRef.current = null
       }
-      onConnected?.()
+      opts.onConnected?.()
     }
 
     ws.onerror = (e) => console.error('[WS:Commands] Error', e)
@@ -76,5 +96,5 @@ export const useCommandsWebSocket = () => {
     sendCommand({ ...DEFAULT_STATE })
   }, [sendCommand])
 
-  return { connect, disconnect, toggleDevice, sendAllOn, sendAllOff }
+  return { connect, disconnect, toggleDevice, sendAllOn, sendAllOff, syncState }
 }
