@@ -27,7 +27,7 @@ export const useLoginViewModel = () => {
       // El JWT solo incluye sub, role y circuit_id; name y email NO están en el payload
       localStorage.setItem('user_data', JSON.stringify(data.user))
 
-      navigate('/dashboard')
+      navigate('/overview')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al iniciar sesión')
     } finally {
