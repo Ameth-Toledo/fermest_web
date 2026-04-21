@@ -24,6 +24,7 @@ export interface AuthUser {
   role:          string
   circuit_id:    number | null
   profile_image: string | null
+  activation_code: string | null
 }
 
 export interface TokenResponse {

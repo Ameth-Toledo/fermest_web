@@ -3,6 +3,6 @@ export interface UserRequest {
   last_name:       string
   email:           string
   password:        string
-  role:            string  
+  role:            string
   activation_code: string
 }

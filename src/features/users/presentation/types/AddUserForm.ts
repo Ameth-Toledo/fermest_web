@@ -5,5 +5,4 @@ export interface AddUserForm {
   password:        string
   confirm:         string
   role:            string
-  activation_code: string
 }

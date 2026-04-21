@@ -6,15 +6,14 @@ const EyeIcon = ({ open }: { open: boolean }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
     {open
       ? <><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" /><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" /><line x1="1" y1="1" x2="23" y2="23" /></>
-      : <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>}
+      : <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>
+    }
   </svg>
 )
 
 const SectionLabel = ({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) => (
   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 20 }}>
-    <div style={{ marginTop: 2, flexShrink: 0 }}>
-      {icon}
-    </div>
+    <div style={{ marginTop: 2, flexShrink: 0 }}>{icon}</div>
     <div>
       <p style={{ color: '#F4F4F5', fontSize: 13, fontWeight: 600, margin: '0 0 2px 0' }}>{title}</p>
       <p style={{ color: '#3F3F46', fontSize: 11, margin: 0 }}>{description}</p>
@@ -31,44 +30,48 @@ const AddUserView = () => {
     showPassword, setShowPassword,
     showConfirm,  setShowConfirm,
     handleSubmit,
+    isProfesor,
   } = useAddUserViewModel()
 
   const emailUser   = form.email.includes('@') ? form.email.split('@')[0] : form.email
   const emailDomain = form.email.includes('@') ? '@' + form.email.split('@')[1] : ''
-
-  const applyDomain = (domain: string) => {
-    set('email', emailUser + domain)
-  }
 
   const iconColor = '#FFF'
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '40px 48px' }}>
       <style>{ADD_USER_STYLES}</style>
+      <style>{`@keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }`}</style>
 
+      {/* ── Header ── */}
       <div style={{ marginBottom: 40 }}>
         <p style={{ color: '#22C55E', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0 0 12px 0' }}>
           Gestión de Usuarios
         </p>
         <h1 style={{ color: '#F4F4F5', fontSize: 36, fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
-          Agregar Usuario
+          {isProfesor ? 'Agregar Estudiante' : 'Agregar Usuario'}
         </h1>
         <div style={{ marginTop: 12, height: 1, width: 96, backgroundColor: '#22C55E', opacity: 0.4 }} />
       </div>
 
+      {/* ── Alertas ── */}
       {success && (
         <div style={{ marginBottom: 24, padding: '14px 18px', borderRadius: 12, backgroundColor: '#22C55E10', border: '1px solid #22C55E30', color: '#22C55E', fontSize: 13, display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: '#22C55E20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
           </div>
-          Usuario creado exitosamente.
+          {isProfesor ? 'Estudiante creado exitosamente.' : 'Usuario creado exitosamente.'}
         </div>
       )}
 
       {error && (
         <div style={{ marginBottom: 24, padding: '14px 18px', borderRadius: 12, backgroundColor: '#F43F5E10', border: '1px solid #F43F5E30', color: '#F43F5E', fontSize: 13, display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: '#F43F5E20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
           </div>
           {error}
         </div>
@@ -76,6 +79,7 @@ const AddUserView = () => {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
+        {/* ── Información personal ── */}
         <div style={{ padding: '28px 32px', borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
           <SectionLabel
             icon={
@@ -86,6 +90,7 @@ const AddUserView = () => {
             title="Información personal"
             description="Nombre completo y correo electrónico del usuario"
           />
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div>
@@ -106,7 +111,7 @@ const AddUserView = () => {
                 <input
                   className="add-user-input"
                   type="email"
-                  placeholder="juan@fermest.com"
+                  placeholder="juan@gmail.com"
                   value={form.email}
                   onChange={e => set('email', e.target.value)}
                   style={{ ...inputStyle, flex: 1 }}
@@ -117,7 +122,7 @@ const AddUserView = () => {
                     return (
                       <button
                         key={domain}
-                        onClick={() => applyDomain(domain)}
+                        onClick={() => set('email', emailUser + domain)}
                         style={{
                           padding:         '6px 10px',
                           borderRadius:    6,
@@ -141,6 +146,7 @@ const AddUserView = () => {
           </div>
         </div>
 
+        {/* ── Seguridad ── */}
         <div style={{ padding: '28px 32px', borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
           <SectionLabel
             icon={
@@ -180,6 +186,7 @@ const AddUserView = () => {
           </div>
         </div>
 
+        {/* ── Rol y acceso ── */}
         <div style={{ padding: '28px 32px', borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
           <SectionLabel
             icon={
@@ -188,27 +195,47 @@ const AddUserView = () => {
               </svg>
             }
             title="Rol y acceso"
-            description="Define el rol del usuario y el circuito al que pertenece"
+            description={isProfesor
+              ? 'Los profesores solo pueden registrar cuentas de tipo Estudiante'
+              : 'Define el nivel de permisos del nuevo usuario'
+            }
           />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            <div>
+
+          {isProfesor ? (
+            /* Profesor — rol fijo, solo lectura */
+            <div style={{
+              display:         'inline-flex',
+              alignItems:      'center',
+              gap:             8,
+              padding:         '8px 16px',
+              borderRadius:    8,
+              backgroundColor: '#38BDF815',
+              border:          '1px solid #38BDF828',
+            }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />
+              </svg>
+              <span style={{ color: '#38BDF8', fontSize: 12, fontWeight: 600 }}>Estudiante</span>
+            </div>
+          ) : (
+            /* Admin — selector completo */
+            <div style={{ maxWidth: 320 }}>
               <label style={labelStyle}>Rol</label>
-              <select value={form.role} onChange={e => set('role', e.target.value)}
-                style={{ ...inputStyle, cursor: 'pointer', colorScheme: 'dark' }}>
+              <select
+                value={form.role}
+                onChange={e => set('role', e.target.value)}
+                style={{ ...inputStyle, cursor: 'pointer', colorScheme: 'dark' }}
+              >
                 {ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
               </select>
             </div>
-            <div>
-              <label style={labelStyle}>Código de activación</label>
-              <input className="add-user-input" placeholder="Ej: ABC-123" value={form.activation_code}
-                onChange={e => set('activation_code', e.target.value)} style={inputStyle} />
-            </div>
-          </div>
+          )}
         </div>
 
+        {/* ── Acción ── */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, paddingTop: 4 }}>
           <p style={{ color: '#3F3F46', fontSize: 11, margin: 0 }}>
-            {!isValid ? 'Completa todos los campos para continuar' : 'Todo listo para crear el usuario'}
+            {!isValid ? 'Completa todos los campos para continuar' : 'Todo listo para continuar'}
           </p>
           <button
             onClick={handleSubmit}
@@ -235,21 +262,19 @@ const AddUserView = () => {
                   style={{ animation: 'spin 1s linear infinite' }}>
                   <path d="M21 12a9 9 0 11-6.219-8.56" />
                 </svg>
-                Creando usuario...
+                Creando...
               </>
             ) : (
               <>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <path d="M12 5v14M5 12h14" />
                 </svg>
-                Crear usuario
+                {isProfesor ? 'Crear estudiante' : 'Crear usuario'}
               </>
             )}
           </button>
         </div>
       </div>
-
-      <style>{`@keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }`}</style>
     </div>
   )
 }

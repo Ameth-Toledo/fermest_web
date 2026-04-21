@@ -1,26 +1,43 @@
-import { useState }           from 'react'
-import { UserRepositoryImpl } from '../../data/repositories/UserRepositoryImpl'
-import type { AddUserForm }   from '../types/AddUserForm'
+import { useState, useEffect }  from 'react'
+import { UserRepositoryImpl }   from '../../data/repositories/UserRepositoryImpl'
+import { userAuth }             from '../../../../core/hooks/userAuth'
+import type { AddUserForm }     from '../types/AddUserForm'
 
 const repo = new UserRepositoryImpl()
 
 const initialForm: AddUserForm = {
-  name:            '',
-  last_name:       '',
-  email:           '',
-  password:        '',
-  confirm:         '',
-  role:            'estudiante',
-  activation_code: '',
+  name:      '',
+  last_name: '',
+  email:     '',
+  password:  '',
+  confirm:   '',
+  role:      'estudiante',
 }
 
 export const useAddUserViewModel = () => {
-  const [form,    setForm]    = useState<AddUserForm>(initialForm)
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error,   setError]   = useState<string | null>(null)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirm,  setShowConfirm]  = useState(false)
+  const { user } = userAuth()
+
+  // Si es profesor, el rol queda fijo en 'estudiante'
+  const userRole    = user?.role ?? ''
+  const isProfesor  = userRole === 'profesor'
+
+  const [form,           setForm]           = useState<AddUserForm>(initialForm)
+  const [activationCode, setActivationCode] = useState<string | null>(null)
+  const [loading,        setLoading]        = useState(false)
+  const [success,        setSuccess]        = useState(false)
+  const [error,          setError]          = useState<string | null>(null)
+  const [showPassword,   setShowPassword]   = useState(false)
+  const [showConfirm,    setShowConfirm]    = useState(false)
+
+  useEffect(() => {
+    if (!user?.circuit_id) return
+    fetch(`${import.meta.env.VITE_API_URL}/circuits/${user.circuit_id}/`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+    })
+      .then(r => r.json())
+      .then(data => setActivationCode(data.activation_code ?? null))
+      .catch(() => setError('No se pudo obtener el código del circuito.'))
+  }, [user?.circuit_id])
 
   const set = (key: keyof AddUserForm, value: string) =>
     setForm(prev => ({ ...prev, [key]: value }))
@@ -28,12 +45,11 @@ export const useAddUserViewModel = () => {
   const mismatch = form.confirm !== '' && form.password !== form.confirm
   const isValid  = !!(
     form.name && form.last_name && form.email &&
-    form.password && !mismatch &&
-    form.role && form.activation_code
+    form.password && !mismatch && form.role && activationCode
   )
 
   const handleSubmit = async () => {
-    if (!isValid) return
+    if (!isValid || !activationCode) return
     setLoading(true)
     setError(null)
     try {
@@ -42,8 +58,8 @@ export const useAddUserViewModel = () => {
         last_name:       form.last_name,
         email:           form.email,
         password:        form.password,
-        role:            form.role,
-        activation_code: form.activation_code,
+        role:            isProfesor ? 'estudiante' : form.role,
+        activation_code: activationCode,
       })
       setSuccess(true)
       setForm(initialForm)
@@ -61,5 +77,6 @@ export const useAddUserViewModel = () => {
     showPassword, setShowPassword,
     showConfirm,  setShowConfirm,
     handleSubmit,
+    isProfesor,
   }
 }
