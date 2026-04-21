@@ -1,22 +1,26 @@
-import { useState, useEffect }    from 'react'
-import { UserRepositoryImpl }     from '../../data/repositories/UserRepositoryImpl'
-import type { User, Role }        from '../../models/entities/User'
-import type { EditUserForm }      from '../types/EditUserForm'
+import { useState, useEffect }  from 'react'
+import { UserRepositoryImpl }   from '../../data/repositories/UserRepositoryImpl'
+import { userAuth }             from '../../../../core/hooks/userAuth'
+import type { User, Role }      from '../../models/entities/User'
+import type { EditUserForm }    from '../types/EditUserForm'
 
 const repo = new UserRepositoryImpl()
 
 export const useManageUsersViewModel = () => {
-  const [users,      setUsers]     = useState<User[]>([])
-  const [loading,    setLoading]   = useState(true)
-  const [error,      setError]     = useState<string | null>(null)
-  const [search,     setSearch]    = useState('')
-  const [roleFilter, setRoleFilter]= useState('')
-  const [editing,    setEditing]   = useState<number | null>(null)
-  const [editForm,   setEditForm]  = useState<EditUserForm | null>(null)
-  const [deleteId,   setDeleteId]  = useState<number | null>(null)
-  const [success,    setSuccess]   = useState<string | null>(null)
-  const [saving,     setSaving]    = useState(false)
-  const [deleting,   setDeleting]  = useState(false)
+  const { user } = userAuth()
+  const isProfesor = (user?.role ?? '') === 'profesor'
+
+  const [users,      setUsers]      = useState<User[]>([])
+  const [loading,    setLoading]    = useState(true)
+  const [error,      setError]      = useState<string | null>(null)
+  const [search,     setSearch]     = useState('')
+  const [roleFilter, setRoleFilter] = useState('')
+  const [editing,    setEditing]    = useState<number | null>(null)
+  const [editForm,   setEditForm]   = useState<EditUserForm | null>(null)
+  const [deleteId,   setDeleteId]   = useState<number | null>(null)
+  const [success,    setSuccess]    = useState<string | null>(null)
+  const [saving,     setSaving]     = useState(false)
+  const [deleting,   setDeleting]   = useState(false)
 
   useEffect(() => {
     repo.getAll()
@@ -33,7 +37,10 @@ export const useManageUsersViewModel = () => {
       u.email.toLowerCase().includes(q)     ||
       u.role_name?.toLowerCase().includes(q)
     )
-    const matchRole = roleFilter === '' || u.role_name === roleFilter
+    // Profesor solo ve estudiantes
+    const matchRole = isProfesor
+      ? u.role_name === 'Estudiante'
+      : roleFilter === '' || u.role_name === roleFilter
     return matchSearch && matchRole
   })
 
@@ -53,10 +60,7 @@ export const useManageUsersViewModel = () => {
     })
   }
 
-  const cancelEdit = () => {
-    setEditing(null)
-    setEditForm(null)
-  }
+  const cancelEdit = () => { setEditing(null); setEditForm(null) }
 
   const saveEdit = async () => {
     if (!editForm || editing === null) return
@@ -68,7 +72,9 @@ export const useManageUsersViewModel = () => {
         email:     editForm.email,
         role:      editForm.role_name.toLowerCase(),
       })
-      setUsers(prev => prev.map(u => u.id === editing ? { ...u, ...updated, role_name: updated.role_name ?? u.role_name } : u))
+      setUsers(prev => prev.map(u =>
+        u.id === editing ? { ...u, ...updated, role_name: updated.role_name ?? u.role_name } : u
+      ))
       setEditing(null)
       setEditForm(null)
       flash('Usuario actualizado correctamente.')
@@ -105,5 +111,6 @@ export const useManageUsersViewModel = () => {
     startEdit, cancelEdit, saveEdit, saving,
     deleteId, setDeleteId, confirmDelete, deleting,
     success,
+    isProfesor,
   }
 }

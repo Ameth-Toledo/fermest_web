@@ -35,6 +35,7 @@ const readUserFromStorage = (): AuthUser | null => {
     role:          payload.role       ?? 'estudiante',
     circuit_id:    payload.circuit_id ?? null,
     profile_image: null,
+    activation_code: payload.activation_code ?? null,
   }
 }
 
