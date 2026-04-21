@@ -1,5 +1,6 @@
 import { useManageUsersViewModel } from '../viewmodels/useManageUsersViewModel'
 import { MANAGE_USERS_STYLES, ROLE_CONFIG } from '../constants/manageUsersStyles'
+import type { Role } from '../../models/entities/User'
 
 const inputStyle: React.CSSProperties = {
   width:           '100%',
@@ -219,9 +220,9 @@ const ManageUsersView = () => {
                         borderRadius:    999,
                         fontSize:        11,
                         fontWeight:      500,
-                        color:           ROLE_CONFIG[u.role_name ?? '']?.color ?? '#71717A',
-                        backgroundColor: `${ROLE_CONFIG[u.role_name ?? '']?.color ?? '#71717A'}15`,
-                        border:          `1px solid ${ROLE_CONFIG[u.role_name ?? '']?.color ?? '#71717A'}30`,
+                        color:           ROLE_CONFIG[u.role_name as Role]?.color ?? '#71717A',
+                        backgroundColor: `${ROLE_CONFIG[u.role_name as Role]?.color ?? '#71717A'}15`,
+                        border:          `1px solid ${ROLE_CONFIG[u.role_name as Role]?.color ?? '#71717A'}30`,
                       }}>
                         {u.role_name}
                       </span>

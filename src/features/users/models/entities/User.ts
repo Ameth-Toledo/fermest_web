@@ -1,3 +1,5 @@
+export type Role = 'Administrador' | 'Profesor' | 'Estudiante'
+
 export interface User {
   id:            number
   name:          string

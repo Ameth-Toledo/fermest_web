@@ -1,6 +1,6 @@
 import { useState, useEffect }    from 'react'
 import { UserRepositoryImpl }     from '../../data/repositories/UserRepositoryImpl'
-import type { User }              from '../../models/entities/User'
+import type { User, Role }        from '../../models/entities/User'
 import type { EditUserForm }      from '../types/EditUserForm'
 
 const repo = new UserRepositoryImpl()
@@ -48,7 +48,7 @@ export const useManageUsersViewModel = () => {
       name:       u.name,
       last_name:  u.last_name,
       email:      u.email,
-      role_name:  u.role_name ?? '',
+      role_name:  (u.role_name ?? 'Estudiante') as Role,
       circuit_id: u.circuit_id !== null ? String(u.circuit_id) : '',
     })
   }
