@@ -1,4 +1,4 @@
-const footerLinks = {
+const footerLinks: Record<string, { label: string; href: string; target?: string }[]> = {
   Páginas: [
     { label: "Inicio", href: "#" },
     { label: "Características", href: "#features" },
@@ -11,7 +11,7 @@ const footerLinks = {
     { label: "Facebook", href: "https://www.facebook.com/share/17AH5RJtvN/", target: "_blank" },
     { label: "Instagram", href: "https://www.instagram.com/nich_ka_space?utm_source=qr&igsh=MTJvZHc4bmlpZ3k5", target: "_blank" },
     { label: "Tiktok", href: "https://www.tiktok.com/@nich_ka_space?_r=1&_t=ZS-95hawcvOw6R", target: "_blank" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/company/nich-k%C3%A1/about/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/nich-k%C3%A1/about/", target: "_blank" },
   ],
   Legal: [
     { label: "Privacidad", href: "#" },
@@ -58,6 +58,8 @@ const Footer = () => {
                 <li key={link.label}>
                   <a
                     href={link.href}
+                    target={link.target}
+                    rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
                     className="text-neutral-500 text-sm hover:text-white transition-colors duration-200"
                   >
                     {link.label}
