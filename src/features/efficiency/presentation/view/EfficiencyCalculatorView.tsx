@@ -32,7 +32,7 @@ const EfficiencyCalculatorView = () => {
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '48px' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '48px', display: 'flex', flexDirection: 'column' }}>
       <style>{EFFICIENCY_STYLES}</style>
 
       <div style={{ marginBottom: 40 }}>
@@ -45,20 +45,21 @@ const EfficiencyCalculatorView = () => {
         <div style={{ marginTop: 12, height: 1, width: 96, backgroundColor: '#22C55E', opacity: 0.4 }} />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 900 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, flex: 1 }}>
 
+        {/* columna izquierda */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div
             className="efficiency-card"
-            style={{ padding: 28, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22' }}
+            style={{ padding: 28, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22', flex: 1 }}
           >
-            <p style={{ color: '#52525B', fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0 0 24px 0' }}>
+            <p style={{ color: '#52525B', fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0 0 32px 0' }}>
               Parámetros de entrada
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
               <div>
-                <label style={{ display: 'block', color: '#71717A', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
+                <label style={{ display: 'block', color: '#71717A', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
                   Azúcar Inicial
                 </label>
                 <div style={{ position: 'relative' }}>
@@ -76,13 +77,13 @@ const EfficiencyCalculatorView = () => {
                     g/L
                   </span>
                 </div>
-                <p style={{ color: '#3F3F46', fontSize: 10, margin: '6px 0 0 2px' }}>
+                <p style={{ color: '#3F3F46', fontSize: 10, margin: '8px 0 0 2px' }}>
                   Concentración de sustrato antes de fermentar
                 </p>
               </div>
 
               <div>
-                <label style={{ display: 'block', color: '#71717A', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
+                <label style={{ display: 'block', color: '#71717A', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
                   Etanol Detectado
                 </label>
                 <div style={{ position: 'relative' }}>
@@ -100,35 +101,36 @@ const EfficiencyCalculatorView = () => {
                     g/L
                   </span>
                 </div>
-                <p style={{ color: '#3F3F46', fontSize: 10, margin: '6px 0 0 2px' }}>
+                <p style={{ color: '#3F3F46', fontSize: 10, margin: '8px 0 0 2px' }}>
                   Etanol medido al final del proceso
                 </p>
               </div>
             </div>
-          </div>
 
-          {hasResult && (
-            <div style={{ padding: '16px 20px', borderRadius: 12, backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
-              <p style={{ color: '#52525B', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 12px 0' }}>
-                Referencia teórica
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {[
-                  { label: 'Azúcar inicial',       value: `${azucar} g/L` },
-                  { label: 'Etanol teórico máx.',  value: `${etanolTeorico.toFixed(2)} g/L` },
-                  { label: 'Etanol detectado',     value: `${etanol} g/L` },
-                  { label: 'Rendimiento',          value: `${eficienciaPct}%` },
-                ].map(item => (
-                  <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: '#52525B', fontSize: 12 }}>{item.label}</span>
-                    <span style={{ color: '#A1A1AA', fontSize: 12, fontWeight: 500 }}>{item.value}</span>
-                  </div>
-                ))}
+            {hasResult && (
+              <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid #1F1F22' }}>
+                <p style={{ color: '#52525B', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 16px 0' }}>
+                  Referencia teórica
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {[
+                    { label: 'Azúcar inicial',      value: `${azucar} g/L` },
+                    { label: 'Etanol teórico máx.', value: `${etanolTeorico.toFixed(2)} g/L` },
+                    { label: 'Etanol detectado',    value: `${etanol} g/L` },
+                    { label: 'Rendimiento',         value: `${eficienciaPct}%` },
+                  ].map(item => (
+                    <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#52525B', fontSize: 12 }}>{item.label}</span>
+                      <span style={{ color: '#A1A1AA', fontSize: 12, fontWeight: 500 }}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
+        {/* columna derecha */}
         <div
           className="efficiency-card"
           style={{
@@ -138,30 +140,40 @@ const EfficiencyCalculatorView = () => {
             border:          `1px solid ${hasResult ? `${color}30` : '#1F1F22'}`,
             display:         'flex',
             flexDirection:   'column',
-            gap:             28,
+            justifyContent:  'space-between',
           }}
         >
           <p style={{ color: '#52525B', fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', margin: 0 }}>
             Resultado
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 8 }}>
+          {/* número grande centrado */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 10, padding: '40px 0' }}>
             <p style={{ color: '#3F3F46', fontSize: 13, margin: 0 }}>Eficiencia actual</p>
-            <p style={{ color: hasResult ? color : '#2A2A2D', fontSize: 72, fontWeight: 800, margin: 0, letterSpacing: '-0.04em', lineHeight: 1, transition: 'color 0.4s' }}>
+            <p style={{
+              color:          hasResult ? color : '#2A2A2D',
+              fontSize:       96,
+              fontWeight:     800,
+              margin:         0,
+              letterSpacing:  '-0.04em',
+              lineHeight:     1,
+              transition:     'color 0.4s',
+            }}>
               {eficienciaPct}
-              <span style={{ fontSize: 32, fontWeight: 600 }}>%</span>
+              <span style={{ fontSize: 40, fontWeight: 600 }}>%</span>
             </p>
-            <p style={{ color: labelColor, fontSize: 12, margin: 0, fontWeight: 500, transition: 'color 0.4s' }}>
+            <p style={{ color: labelColor, fontSize: 13, margin: 0, fontWeight: 500, transition: 'color 0.4s' }}>
               {text}
             </p>
           </div>
 
+          {/* barra */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
               <span style={{ color: '#3F3F46', fontSize: 10 }}>0%</span>
               <span style={{ color: '#3F3F46', fontSize: 10 }}>100%</span>
             </div>
-            <div style={{ height: 10, borderRadius: 999, backgroundColor: '#1A1A1D', overflow: 'hidden' }}>
+            <div style={{ height: 12, borderRadius: 999, backgroundColor: '#1A1A1D', overflow: 'hidden' }}>
               <div
                 className="efficiency-bar-fill"
                 style={{
@@ -174,22 +186,22 @@ const EfficiencyCalculatorView = () => {
                 }}
               />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12 }}>
               {[
                 { label: 'Bajo',      range: '0–50%',   color: '#F43F5E' },
                 { label: 'Aceptable', range: '50–80%',  color: '#F59E0B' },
                 { label: 'Óptimo',   range: '80–100%', color: '#22C55E' },
               ].map(r => (
-                <div key={r.label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: r.color }} />
+                <div key={r.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: r.color }} />
                   <span style={{ color: '#3F3F46', fontSize: 10 }}>{r.label} {r.range}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <p style={{ color: '#2A2A2D', fontSize: 10, margin: 0, textAlign: 'center', lineHeight: 1.5 }}>
-            Fórmula: (Etanol detectado / Etanol teórico) × 100{'\n'}Etanol teórico = Azúcar × 0.511
+          <p style={{ color: '#2A2A2D', fontSize: 10, margin: '20px 0 0 0', textAlign: 'center', lineHeight: 1.6 }}>
+            Fórmula: (Etanol detectado / Etanol teórico) × 100<br />Etanol teórico = Azúcar × 0.511
           </p>
         </div>
       </div>

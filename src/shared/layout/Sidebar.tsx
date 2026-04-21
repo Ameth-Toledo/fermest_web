@@ -2,13 +2,18 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import { useExperimentStore } from '../../core/store/useExperimentStore'
 import { nav } from '../../core/navigation/navItems'
+import { userAuth } from '../../core/hooks/userAuth'
 
 const Sidebar = () => {
   const { experimentId, individualId } = useExperimentStore()
+  const { user } = userAuth()
   const navigate  = useNavigate()
   const location  = useLocation()
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({ Experimento: true })
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null)
+
+  const role = user?.role?.toLowerCase() ?? 'estudiante'
+  const visibleNav = nav.filter(item => item.allowedRoles.includes(role))
 
   const resolveePath = (path: string) => {
     if (path.includes('/simulation/:id')) {
@@ -24,9 +29,9 @@ const Sidebar = () => {
     setOpenGroups(prev => ({ ...prev, [group]: !prev[group] }))
   }
 
-  const soloItems = nav.filter(item => !item.group)
+  const soloItems = visibleNav.filter(item => !item.group)
 
-  const groups = nav
+  const groups = visibleNav
     .filter(item => item.group)
     .reduce<string[]>((acc, item) => {
       if (!acc.includes(item.group!)) acc.push(item.group!)
@@ -114,10 +119,10 @@ const Sidebar = () => {
       <nav className="flex flex-col gap-1">
         {soloItems.map(item => renderNavButton(item, false))}
         {groups.map(group => {
-          const groupItems  = nav.filter(item => item.group === group)
-          const firstItem   = groupItems[0]
-          const isOpen      = openGroups[group] ?? false
-          const isAnyActive = groupItems.some(item => {
+          const groupItems     = visibleNav.filter(item => item.group === group)
+          const firstItem      = groupItems[0]
+          const isOpen         = openGroups[group] ?? false
+          const isAnyActive    = groupItems.some(item => {
             const resolved = resolveePath(item.path)
             return resolved && location.pathname === resolved
           })
@@ -179,13 +184,13 @@ const Sidebar = () => {
 
               <div
                 style={{
-                  maxHeight:  isOpen ? `${groupItems.length * 72}px` : '0px',
-                  overflow:   'hidden',
-                  transition: 'max-height 0.25s ease',
-                  borderLeft:  '1px solid #1F1F22',
-                  marginLeft:  '20px',
-                  paddingLeft: '0px',
-                  marginTop:   isOpen ? '2px' : '0px',
+                  maxHeight:    isOpen ? `${groupItems.length * 72}px` : '0px',
+                  overflow:     'hidden',
+                  transition:   'max-height 0.25s ease',
+                  borderLeft:   '1px solid #1F1F22',
+                  marginLeft:   '20px',
+                  paddingLeft:  '0px',
+                  marginTop:    isOpen ? '2px' : '0px',
                   marginBottom: isOpen ? '2px' : '0px',
                 }}
               >
@@ -199,7 +204,12 @@ const Sidebar = () => {
       <div className="mt-auto px-2">
         <div className="h-px w-full mb-3" style={{ backgroundColor: '#1A1A1D' }} />
         <button
-          onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('profile_image'); localStorage.removeItem('user_data'); navigate('/login') }}
+          onClick={() => {
+            localStorage.removeItem('access_token')
+            localStorage.removeItem('refresh_token')
+            localStorage.removeItem('user_data')
+            navigate('/login')
+          }}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg w-full transition-all duration-200 hover:bg-red-500/10 group"
         >
           <svg
