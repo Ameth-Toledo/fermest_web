@@ -1,8 +1,8 @@
-export type UserRequest = {
-  name:       string
-  last_name:  string
-  email:      string
-  password:   string
-  role_id:    number
-  circuit_id: number | null
+export interface UserRequest {
+  name:            string
+  last_name:       string
+  email:           string
+  password:        string
+  role:            string  
+  activation_code: string
 }

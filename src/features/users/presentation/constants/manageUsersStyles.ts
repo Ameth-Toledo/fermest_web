@@ -23,5 +23,6 @@ export const MANAGE_USERS_STYLES = `
 
 export const ROLE_CONFIG: Record<Role, { color: string }> = {
   Administrador: { color: '#A78BFA' },
-  Operador:      { color: '#22C55E' },
+  Profesor:      { color: '#22C55E' },
+  Estudiante:    { color: '#38BDF8' },
 }
