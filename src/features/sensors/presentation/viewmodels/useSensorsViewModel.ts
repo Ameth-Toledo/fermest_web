@@ -10,16 +10,11 @@ import type {
 import { SENSOR_META } from '../../domain/models/Sensor'
 
 const repository = new SensorRepositoryImpl()
-
 const MAX_CHART_POINTS = 50
 
 const emptyChartData = (): SensorChartData => {
   const data = {} as Record<BackendSensorType, ChartPoint[]>
-
-  SENSOR_META.forEach(s => {
-    data[s.key] = []
-  })
-
+  SENSOR_META.forEach(s => { data[s.key] = [] })
   return data as SensorChartData
 }
 
@@ -30,8 +25,15 @@ const formatTime = (iso: string): string => {
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected' | 'error'
 
-export const useSensorsViewModel = () => {
-  const [circuitId, setCircuitId]       = useState<number>(1)
+interface SensorsViewModelOptions {
+  /** Si se pasa, el hook se auto-conecta al montar y cuando cambie */
+  autoCircuitId?: number
+  /** Si se pasa, el historial inicial se filtra por esta sesión */
+  autoSessionId?: number
+}
+
+export const useSensorsViewModel = (options?: SensorsViewModelOptions) => {
+  const [circuitId, setCircuitId]       = useState<number>(options?.autoCircuitId ?? 1)
   const [wsStatus, setWsStatus]         = useState<WsStatus>('disconnected')
   const [chartData, setChartData]       = useState<SensorChartData>(emptyChartData())
   const [latestValues, setLatestValues] = useState<Partial<Record<BackendSensorType, number>>>({})
@@ -40,7 +42,6 @@ export const useSensorsViewModel = () => {
 
   const wsRef = useRef<WebSocket | null>(null)
 
-  // ── Append a point to a sensor's chart (capped at MAX_CHART_POINTS) ─────────
   const appendPoint = useCallback((sensorType: BackendSensorType, value: number, timestamp: string) => {
     const point: ChartPoint = { time: formatTime(timestamp), value }
     setChartData(prev => ({
@@ -50,7 +51,6 @@ export const useSensorsViewModel = () => {
     setLatestValues(prev => ({ ...prev, [sensorType]: value }))
   }, [])
 
-  // ── Load history for all sensors ─────────────────────────────────────────────
   const loadHistory = useCallback(async (id: number, sessionId?: number) => {
     setLoading(true)
     setError(null)
@@ -78,35 +78,25 @@ export const useSensorsViewModel = () => {
     }
   }, [])
 
-  // ── WebSocket connect / disconnect ────────────────────────────────────────────
   const connectWs = useCallback((id: number) => {
-    if (wsRef.current) {
-      wsRef.current.close()
-    }
+    if (wsRef.current) wsRef.current.close()
     setWsStatus('connecting')
 
     const ws = createSensorWebSocket(id)
     wsRef.current = ws
 
-    ws.onopen = () => setWsStatus('connected')
-
+    ws.onopen    = () => setWsStatus('connected')
+    ws.onerror   = () => setWsStatus('error')
+    ws.onclose   = () => { setWsStatus('disconnected'); wsRef.current = null }
     ws.onmessage = (event: MessageEvent) => {
       try {
         const msg: WSMessage = JSON.parse(event.data)
         if (msg.type === 'sensor_data') {
           appendPoint(msg.sensor_type, msg.value, msg.timestamp)
         }
-        // sensor_deactivated → no chart action needed, fermentation handles that
       } catch {
-        // malformed message — ignore
+        // mensaje malformado — ignorar
       }
-    }
-
-    ws.onerror = () => setWsStatus('error')
-
-    ws.onclose = () => {
-      setWsStatus('disconnected')
-      wsRef.current = null
     }
   }, [appendPoint])
 
@@ -116,19 +106,25 @@ export const useSensorsViewModel = () => {
     setWsStatus('disconnected')
   }, [])
 
-  // ── Cleanup on unmount ────────────────────────────────────────────────────────
-  useEffect(() => {
-    return () => { wsRef.current?.close() }
-  }, [])
-
-  // ── Apply circuit change ──────────────────────────────────────────────────────
-  const applyCircuit = useCallback((id: number) => {
+  const applyCircuit = useCallback((id: number, sessionId?: number) => {
     setCircuitId(id)
     setChartData(emptyChartData())
     setLatestValues({})
-    loadHistory(id)
+    loadHistory(id, sessionId)
     connectWs(id)
   }, [loadHistory, connectWs])
+
+  // ── Auto-conectar cuando llega un circuitId desde el contexto de fermentación
+  useEffect(() => {
+    if (!options?.autoCircuitId) return
+    applyCircuit(options.autoCircuitId, options.autoSessionId)
+    return () => { wsRef.current?.close() }
+  }, [options?.autoCircuitId, options?.autoSessionId])
+
+  // ── Cleanup al desmontar (uso manual sin autoCircuitId)
+  useEffect(() => {
+    return () => { wsRef.current?.close() }
+  }, [])
 
   return {
     circuitId,

@@ -1,10 +1,13 @@
 import { useSensorsViewModel } from '../viewmodels/useSensorsViewModel'
+import { useFermentation } from '../../../fermentation/presentation/context/FermentationContext'
 import { SENSOR_META } from '../../domain/models/Sensor'
 import WsIndicator from '../components/WsIndicator'
 import SensorCard from '../components/SensorCard'
 import CircuitInput from '../components/CircuitInput'
 
 const SensorsView = () => {
+  const { session, circuitId: ferCircuitId } = useFermentation()
+
   const {
     circuitId,
     wsStatus,
@@ -15,7 +18,10 @@ const SensorsView = () => {
     setCircuitId,
     applyCircuit,
     disconnectWs,
-  } = useSensorsViewModel()
+  } = useSensorsViewModel({
+    autoCircuitId: ferCircuitId ?? undefined,
+    autoSessionId: session?.id,
+  })
 
   const isConnected = wsStatus === 'connected'
 
@@ -59,7 +65,7 @@ const SensorsView = () => {
         <CircuitInput
           value={circuitId}
           onChange={setCircuitId}
-          onApply={() => applyCircuit(circuitId)}
+          onApply={() => applyCircuit(circuitId, session?.id)}
           loading={loading}
         />
 

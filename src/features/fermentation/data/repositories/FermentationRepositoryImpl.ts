@@ -31,4 +31,8 @@ export class FermentationRepositoryImpl implements FermentationRepository {
   async getReportHistory(): Promise<ReportHistory[]> {
     return fermentationApi.getHistory()
   }
+
+  async getActiveSession(): Promise<FermentationSession | null> {
+    return fermentationApi.getActive()
+  }
 }

@@ -18,6 +18,7 @@ import FermentationReportsView from '../../features/fermentation-reports/present
 import AddUserView from '../../features/users/presentation/view/AddUserView'
 import ManageUsersView from '../../features/users/presentation/view/ManageUsersView'
 import ProfileView from '../../features/profile/presentation/view/ProfileView'
+import { FermentationProvider } from '../../features/fermentation/presentation/context/FermentationContext'
 
 const AppRouter = () => {
   return (
@@ -26,8 +27,8 @@ const AppRouter = () => {
         <Route path="/" element={<LandingView />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        
-        <Route element={<Layout />}>
+
+        <Route element={<FermentationProvider><Layout /></FermentationProvider>}>
           <Route path="/overview" element={<OverviewView />} />
           <Route path="/efficiency-calculator" element={<EfficiencyCalculatorView />} />
           <Route path="/fermentation-reports" element={<FermentationReportsView />} />
