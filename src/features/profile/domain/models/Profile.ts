@@ -1,0 +1,30 @@
+export interface UpdateUserRequest {
+  name?:          string
+  last_name?:     string
+  email?:         string
+  password?:      string
+  profile_image?: string
+}
+
+export interface ActivateCircuitRequest {
+  activation_code: string
+}
+
+export interface ActivateCircuitResponse {
+  access_token: string
+  token_type:   string
+  circuit_id:   number
+}
+
+export interface UserProfile {
+  id:            number
+  name:          string
+  last_name:     string
+  email:         string
+  role_id:       number
+  role_name:     string | null
+  circuit_id:    number | null
+  created_by:    number | null
+  created_at:    string | null
+  profile_image: string | null
+}

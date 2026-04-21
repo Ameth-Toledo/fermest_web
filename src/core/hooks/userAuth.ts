@@ -1,51 +1,61 @@
-import { useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import type { AuthUser } from '../../features/auth/domain/models/Auth'
 
+export const USER_UPDATED_EVENT = 'user_data_updated'
+
 const parseJwt = (token: string) => {
-  try {
-    return JSON.parse(atob(token.split('.')[1]))
-  } catch {
-    return null
+  try { return JSON.parse(atob(token.split('.')[1])) }
+  catch { return null }
+}
+
+const readUserFromStorage = (): AuthUser | null => {
+  const token = localStorage.getItem('access_token')
+  if (!token) return null
+
+  const stored = localStorage.getItem('user_data')
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored) as AuthUser
+      // Siempre combinar con el JWT actual para tener circuit_id fresco
+      const payload = parseJwt(token)
+      return {
+        ...parsed,
+        circuit_id: payload?.circuit_id ?? parsed.circuit_id ?? null,
+      }
+    } catch { /* fallback */ }
+  }
+
+  const payload = parseJwt(token)
+  if (!payload) return null
+  return {
+    id:            Number(payload.sub),
+    name:          '',
+    last_name:     '',
+    email:         '',
+    role:          payload.role       ?? 'estudiante',
+    circuit_id:    payload.circuit_id ?? null,
+    profile_image: null,
   }
 }
 
+export const notifyUserUpdated = () =>
+  window.dispatchEvent(new Event(USER_UPDATED_EVENT))
+
 export const userAuth = () => {
-  const token = localStorage.getItem('access_token')
+  const [user, setUser] = useState<AuthUser | null>(readUserFromStorage)
 
-  const user = useMemo((): AuthUser | null => {
-    if (!token) return null
+  useEffect(() => {
+    const handler = () => setUser(readUserFromStorage())
+    window.addEventListener(USER_UPDATED_EVENT, handler)
+    return () => window.removeEventListener(USER_UPDATED_EVENT, handler)
+  }, [])
 
-    // user_data se persiste completo en el login desde la respuesta del servidor.
-    // El JWT solo incluye: sub, role, circuit_id — NO name ni email.
-    const stored = localStorage.getItem('user_data')
-    if (stored) {
-      try {
-        return JSON.parse(stored) as AuthUser
-      } catch {
-        // Si user_data está corrompido, caemos al JWT como fallback
-      }
-    }
-
-    // Fallback: solo lo que viene en el payload del JWT
-    const payload = parseJwt(token)
-    if (!payload) return null
-
-    return {
-      id:            Number(payload.sub),
-      name:          '',
-      last_name:     '',
-      email:         '',
-      role:          payload.role      ?? 'estudiante',
-      circuit_id:    payload.circuit_id ?? null,
-      profile_image: null,
-    }
-  }, [token])
-
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
     localStorage.removeItem('user_data')
-  }
+    setUser(null)
+  }, [])
 
-  return { user, token, logout }
+  return { user, token: localStorage.getItem('access_token'), logout }
 }
