@@ -34,7 +34,6 @@ const ROLE_LABELS: Record<string, string> = {
 
 const avatarList = Object.values(AVATARS)
 
-// ── Subcomponentes ────────────────────────────────────────────────────────────
 const EyeBtn = ({ show, onToggle }: { show: boolean; onToggle: () => void }) => (
   <button type="button" onClick={onToggle}
     style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#52525B', padding: 0 }}>
@@ -58,7 +57,6 @@ const Flash = ({ msg, type }: { msg: string; type: 'success' | 'error' }) => {
   )
 }
 
-// ── Vista principal ───────────────────────────────────────────────────────────
 const ProfileView = () => {
   const {
     user, infoForm, pwForm, selectedAvatar, pickingAvatar,
@@ -81,33 +79,28 @@ const ProfileView = () => {
   const roleColor = user?.role === 'admin' ? '#A78BFA' : user?.role === 'profesor' ? '#3B82F6' : '#22C55E'
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '48px' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '40px 48px' }}>
       <style>{STYLES}</style>
 
-      {/* Header */}
-      <div style={{ marginBottom: 40 }}>
-        <p style={{ color: '#22C55E', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0 0 12px 0' }}>Cuenta</p>
-        <h1 style={{ color: '#F4F4F5', fontSize: 36, fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>Mi Perfil</h1>
-        <div style={{ marginTop: 12, height: 1, width: 96, backgroundColor: '#22C55E', opacity: 0.4 }} />
+      <div style={{ marginBottom: 32 }}>
+        <p style={{ color: '#22C55E', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0 0 10px 0' }}>Cuenta</p>
+        <h1 style={{ color: '#F4F4F5', fontSize: 32, fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>Mi Perfil</h1>
+        <div style={{ marginTop: 10, height: 1, width: 80, backgroundColor: '#22C55E', opacity: 0.4 }} />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: 24, maxWidth: 860, alignItems: 'start' }}>
-
-        {/* ── Columna izquierda ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 24, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-          {/* Avatar */}
-          <div style={{ padding: 28, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <div style={{ padding: 32, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
             <div style={{ position: 'relative' }}>
               {selectedAvatar ? (
-                <img src={selectedAvatar} alt="Avatar" style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'contain', border: '2px solid #22C55E30', backgroundColor: '#FFFFFF' }} />
+                <img src={selectedAvatar} alt="Avatar" style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'contain', border: '2px solid #22C55E40', backgroundColor: '#FFFFFF' }} />
               ) : (
-                <div style={{ width: 88, height: 88, borderRadius: '50%', backgroundColor: '#16A34A22', border: '2px solid #22C55E30', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 700, color: '#22C55E' }}>
+                <div style={{ width: 100, height: 100, borderRadius: '50%', backgroundColor: '#16A34A22', border: '2px solid #22C55E30', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, fontWeight: 700, color: '#22C55E' }}>
                   {initials}
                 </div>
               )}
               <button onClick={() => setPickingAvatar(!pickingAvatar)} title="Cambiar avatar"
-                style={{ position: 'absolute', bottom: 0, right: 0, width: 26, height: 26, borderRadius: '50%', backgroundColor: '#22C55E', border: '2px solid #0A0A0B', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
+                style={{ position: 'absolute', bottom: 2, right: 2, width: 28, height: 28, borderRadius: '50%', backgroundColor: '#22C55E', border: '2px solid #111113', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A0A0B" strokeWidth="2.5" strokeLinecap="round">
                   <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -116,8 +109,11 @@ const ProfileView = () => {
             </div>
 
             <div style={{ textAlign: 'center' }}>
-              <p style={{ color: '#F4F4F5', fontSize: 15, fontWeight: 600, margin: '0 0 4px 0' }}>{infoForm.name} {infoForm.last_name}</p>
-              <p style={{ color: '#52525B', fontSize: 12, margin: 0 }}>{infoForm.email}</p>
+              <p style={{ color: '#F4F4F5', fontSize: 16, fontWeight: 600, margin: '0 0 4px 0' }}>{infoForm.name} {infoForm.last_name}</p>
+              <p style={{ color: '#52525B', fontSize: 12, margin: '0 0 10px 0' }}>{infoForm.email}</p>
+              <span style={{ display: 'inline-block', padding: '3px 12px', borderRadius: 999, fontSize: 11, fontWeight: 500, color: roleColor, backgroundColor: `${roleColor}15`, border: `1px solid ${roleColor}30` }}>
+                {roleLabel}
+              </span>
             </div>
 
             {pickingAvatar && (
@@ -135,32 +131,31 @@ const ProfileView = () => {
             )}
           </div>
 
-          {/* Info de cuenta (solo lectura) */}
-          <div style={{ padding: 24, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22', display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <p style={{ color: '#3F3F46', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', margin: 0 }}>Información de cuenta</p>
+          <div style={{ padding: 24, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
+            <p style={{ color: '#3F3F46', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 16px 0' }}>Información de cuenta</p>
             {[
-              { label: 'Rol',        value: roleLabel,                              color: roleColor                          },
-              { label: 'Circuito',   value: circuitId ? `#${circuitId}` : '—',     color: circuitId ? '#22C55E' : '#52525B'  },
-              { label: 'ID usuario', value: user?.id ? `#${user.id}` : '—',        color: '#A1A1AA'                          },
-            ].map(item => (
-              <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: '1px solid #17171A' }}>
-                <span style={{ color: '#52525B', fontSize: 11 }}>{item.label}</span>
+              { label: 'Rol',        value: roleLabel,                          color: roleColor                          },
+              { label: 'Circuito',   value: circuitId ? `#${circuitId}` : '—', color: circuitId ? '#22C55E' : '#52525B'  },
+              { label: 'ID usuario', value: user?.id ? `#${user.id}` : '—',    color: '#A1A1AA'                          },
+            ].map((item, i, arr) => (
+              <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i < arr.length - 1 ? '1px solid #17171A' : 'none' }}>
+                <span style={{ color: '#52525B', fontSize: 12 }}>{item.label}</span>
                 <span style={{ color: item.color, fontSize: 12, fontWeight: 500, fontFamily: 'monospace' }}>{item.value}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ── Columna derecha ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-
-          {/* Info personal */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div style={{ padding: 28, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-              <p style={{ color: '#F4F4F5', fontSize: 14, fontWeight: 600, margin: 0 }}>Información personal</p>
+              <div>
+                <p style={{ color: '#F4F4F5', fontSize: 14, fontWeight: 600, margin: '0 0 2px 0' }}>Información personal</p>
+                <p style={{ color: '#52525B', fontSize: 12, margin: 0 }}>Actualiza tu nombre y correo</p>
+              </div>
               {!editingInfo && (
                 <button onClick={() => setEditingInfo(true)}
-                  style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 8, border: '1px solid #2A2A2D', backgroundColor: 'transparent', color: '#71717A', fontSize: 12, fontFamily: 'Poppins, sans-serif', cursor: 'pointer' }}>
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 8, border: '1px solid #2A2A2D', backgroundColor: 'transparent', color: '#71717A', fontSize: 12, fontFamily: 'Poppins, sans-serif', cursor: 'pointer', transition: 'border-color 0.2s, color 0.2s' }}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -204,14 +199,18 @@ const ProfileView = () => {
             </div>
           </div>
 
-          {/* ── Activar circuito — solo si NO tiene circuito asignado ── */}
           {!hasCircuit && (
-            <div style={{ padding: 28, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
-              <div style={{ marginBottom: 20 }}>
-                <p style={{ color: '#F4F4F5', fontSize: 14, fontWeight: 600, margin: '0 0 4px 0' }}>Código de activación</p>
-                <p style={{ color: '#52525B', fontSize: 12, margin: 0 }}>
-                  Vincula tu cuenta al biorreactor. Este paso solo ocurre una vez.
-                </p>
+            <div style={{ padding: 28, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #22C55E20' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 20 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 10, backgroundColor: '#22C55E15', border: '1px solid #22C55E25', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="1.5" strokeLinecap="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+                <div>
+                  <p style={{ color: '#F4F4F5', fontSize: 14, fontWeight: 600, margin: '0 0 4px 0' }}>Código de activación</p>
+                  <p style={{ color: '#52525B', fontSize: 12, margin: 0 }}>Vincula tu cuenta al biorreactor. Este paso solo ocurre una vez.</p>
+                </div>
               </div>
 
               {successActivation && <Flash msg={`Circuito #${circuitId} vinculado correctamente.`} type="success" />}
@@ -231,24 +230,24 @@ const ProfileView = () => {
                   />
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
                     <span style={{ color: '#3F3F46', fontSize: 10 }}>Código impreso en tu dispositivo</span>
-                    <span style={{ color: activationCode.length === 8 ? '#22C55E' : '#3F3F46', fontSize: 10, fontFamily: 'monospace' }}>
-                      {activationCode.length}/8
-                    </span>
+                    <span style={{ color: activationCode.length === 8 ? '#22C55E' : '#3F3F46', fontSize: 10, fontFamily: 'monospace' }}>{activationCode.length}/8</span>
                   </div>
                 </div>
                 <button
                   onClick={handleActivateCircuit}
                   disabled={loadingActivation || activationCode.length !== 8}
-                  style={{ padding: '11px 22px', borderRadius: 10, border: 'none', backgroundColor: loadingActivation || activationCode.length !== 8 ? '#16A34A30' : '#22C55E', color: loadingActivation || activationCode.length !== 8 ? '#3F3F46' : '#0A0A0B', fontSize: 13, fontWeight: 600, cursor: loadingActivation || activationCode.length !== 8 ? 'not-allowed' : 'pointer', fontFamily: 'Poppins, sans-serif', transition: 'all 0.2s', whiteSpace: 'nowrap', marginBottom: 22 }}>
+                  style={{ padding: '11px 24px', borderRadius: 10, border: 'none', backgroundColor: loadingActivation || activationCode.length !== 8 ? '#16A34A30' : '#22C55E', color: loadingActivation || activationCode.length !== 8 ? '#3F3F46' : '#0A0A0B', fontSize: 13, fontWeight: 600, cursor: loadingActivation || activationCode.length !== 8 ? 'not-allowed' : 'pointer', fontFamily: 'Poppins, sans-serif', transition: 'all 0.2s', whiteSpace: 'nowrap', marginBottom: 22 }}>
                   {loadingActivation ? 'Activando...' : 'Activar'}
                 </button>
               </div>
             </div>
           )}
 
-          {/* Cambiar contraseña */}
           <div style={{ padding: 28, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22' }}>
-            <p style={{ color: '#F4F4F5', fontSize: 14, fontWeight: 600, margin: '0 0 24px 0' }}>Cambiar contraseña</p>
+            <div style={{ marginBottom: 24 }}>
+              <p style={{ color: '#F4F4F5', fontSize: 14, fontWeight: 600, margin: '0 0 2px 0' }}>Cambiar contraseña</p>
+              <p style={{ color: '#52525B', fontSize: 12, margin: 0 }}>Usa una contraseña segura de al menos 6 caracteres</p>
+            </div>
 
             {successPw && <Flash msg="Contraseña actualizada correctamente." type="success" />}
             {errorPw   && <Flash msg={errorPw} type="error" />}
