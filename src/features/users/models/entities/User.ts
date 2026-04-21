@@ -1,11 +1,12 @@
-export type Role = 'Administrador' | 'Operador'
-
-export type User = {
-  id:         number
-  name:       string
-  last_name:  string
-  email:      string
-  role_name:  Role
-  circuit_id: number | null
-  created_at: string
+export interface User {
+  id:            number
+  name:          string
+  last_name:     string
+  email:         string
+  role_id:       number
+  role_name:     string
+  circuit_id:    number | null
+  created_by:    number | null
+  created_at:    string | null
+  profile_image: string | null
 }
