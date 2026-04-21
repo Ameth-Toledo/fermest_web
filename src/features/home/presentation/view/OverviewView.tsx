@@ -4,7 +4,6 @@ import { STATS }                from '../constants/stats'
 import { QUICK_ACTIONS }        from '../constants/quickActions'
 import { OVERVIEW_STYLES }      from '../constants/styles'
 import { useSensorsViewModel }  from '../../../sensors/presentation/viewmodels/useSensorsViewModel'
-import { SENSOR_META }          from '../../../sensors/domain/models/Sensor'
 
 const OverviewView = () => {
   const navigate   = useNavigate()
@@ -19,18 +18,9 @@ const OverviewView = () => {
   const now  = new Date()
   const date = now.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
-  const activeSensors = SENSOR_META.filter(s => latestValues[s.key] !== undefined).length
   const tempValue     = latestValues['temperature']
   const isLive        = wsStatus === 'connected'
 
-  const statValues: Record<string, string> = {
-    'Fermentaciones': '—',
-    'Sensores activos': user?.circuit_id
-      ? `${activeSensors} / ${SENSOR_META.length}`
-      : '—',
-    'Temperatura': tempValue !== undefined ? `${tempValue.toFixed(1)} °C` : '—',
-    'Experimentos': '—',
-  }
 
   const visibleStats   = STATS.filter(s => s.allowedRoles.includes(role))
   const visibleActions = QUICK_ACTIONS.filter(a => a.allowedRoles.includes(role))
