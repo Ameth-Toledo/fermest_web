@@ -58,7 +58,7 @@ export const SENSOR_META: SensorMeta[] = [
   { key: 'alcohol',      label: 'Alcohol',      unit: '%v/v',  color: '#22C55E', description: 'Concentración etanol'    },
   { key: 'conductivity', label: 'Conductividad',unit: 'mS/cm', color: '#3B82F6', description: 'Conductividad iónica'    },
   { key: 'turbidity',    label: 'Turbidez',     unit: 'NTU',   color: '#A78BFA', description: 'Densidad óptica'         },
-  { key: 'ph',           label: 'pH',           unit: 'pH',    color: '#F43F5E', description: 'Potencial de hidrógeno'  },
+  //{ key: 'ph',           label: 'pH',           unit: 'pH',    color: '#F43F5E', description: 'Potencial de hidrógeno'  },
   { key: 'rpm',          label: 'Motor RPM',    unit: 'rpm',   color: '#06B6D4', description: 'Velocidad de agitación'  },
 ]
 

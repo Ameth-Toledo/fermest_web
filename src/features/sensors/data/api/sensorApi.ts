@@ -3,10 +3,11 @@ import type { SensorReading, SensorHistoryResponse, BackendSensorType } from '..
 const BASE_URL = import.meta.env.VITE_API_URL
 const WS_URL   = import.meta.env.VITE_WS_URL ?? BASE_URL?.replace(/^http/, 'ws')
 
-const HEADERS = {
-  'Content-Type':             'application/json',
+const getHeaders = () => ({
+  'Content-Type':               'application/json',
   'ngrok-skip-browser-warning': 'true',
-}
+  'Authorization':              `Bearer ${localStorage.getItem('access_token') ?? ''}`,
+})
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -16,7 +17,6 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return res.json()
 }
 
-// ── REST ──────────────────────────────────────────────────────────────────────
 export const sensorApi = {
   getHistory: (
     circuitId:  number,
@@ -31,7 +31,7 @@ export const sensorApi = {
     if (toDt)      params.set('to_dt', toDt)
     const query = params.toString() ? `?${params}` : ''
     return fetch(`${BASE_URL}/sensors/${circuitId}/${sensorType}/history${query}`, {
-      headers: HEADERS,
+      headers: getHeaders(),
     }).then(handleResponse<SensorHistoryResponse>)
   },
 
@@ -40,13 +40,9 @@ export const sensorApi = {
     sensorType: BackendSensorType,
   ): Promise<SensorReading | null> =>
     fetch(`${BASE_URL}/sensors/${circuitId}/${sensorType}/latest`, {
-      headers: HEADERS,
+      headers: getHeaders(),
     }).then(handleResponse<SensorReading | null>),
 
-  // ── Sensor command (toggle on/off) ─────────────────────────────────────────
-  // TODO: reemplazar con el endpoint real del circuito cuando esté disponible
-  // Ejemplo esperado: POST /circuits/{circuitId}/sensors/{sensorType}/toggle
-  //   body: { active: boolean }
   toggleSensor: async (
     circuitId:  number,
     sensorType: BackendSensorType,
@@ -54,7 +50,7 @@ export const sensorApi = {
   ): Promise<void> => {
     await fetch(`${BASE_URL}/circuits/${circuitId}/sensors/${sensorType}/toggle`, {
       method:  'POST',
-      headers: HEADERS,
+      headers: getHeaders(),
       body:    JSON.stringify({ active }),
     }).then(res => {
       if (!res.ok) throw new Error(`Error al ${active ? 'activar' : 'desactivar'} ${sensorType}`)
@@ -62,6 +58,5 @@ export const sensorApi = {
   },
 }
 
-// ── WebSocket factory ─────────────────────────────────────────────────────────
 export const createSensorWebSocket = (circuitId: number): WebSocket =>
   new WebSocket(`${WS_URL}/ws/sensors/${circuitId}`)

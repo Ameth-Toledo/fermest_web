@@ -1,72 +1,125 @@
-import type {
-  ScheduleFermentationRequest,
-  StopFermentationRequest,
-  FermentationSession,
-  FermentationReport,
-  ReportHistory,
-} from '../../domain/models/Fermentation'
-
+// src/features/fermentation/data/api/fermentationApi.ts
 const BASE_URL = import.meta.env.VITE_API_URL
 
-const HEADERS = () => ({
-  'Content-Type': 'application/json',
+const getHeaders = () => ({
+  'Content-Type':               'application/json',
   'ngrok-skip-browser-warning': 'true',
-  ...(localStorage.getItem('access_token')
-    ? { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
-    : {}),
+  'Authorization':              `Bearer ${localStorage.getItem('access_token') ?? ''}`,
 })
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    const message = await res.text().catch(() => `HTTP ${res.status}`)
-    throw new Error(message)
+    const msg = await res.text().catch(() => `HTTP ${res.status}`)
+    throw new Error(msg)
   }
   return res.json()
 }
 
+// ── Tipos ─────────────────────────────────────────────────────────────────────
+
+export type FermentationSessionResponse = {
+  id:              number
+  circuit_id:      number
+  user_id:         number
+  formula_id:      number
+  scheduled_start: string
+  scheduled_end:   string
+  actual_start:    string | null
+  actual_end:      string | null
+  status:          string
+  interrupted_by:  number | null
+  created_at:      string | null
+}
+
+export type FermentationReportData = {
+  id:                          number
+  session_id:                  number
+  initial_sugar:               number
+  final_sugar:                 number | null
+  ethanol_detected:            number | null
+  theoretical_ethanol:         number | null
+  efficiency:                  number | null
+  alcohol_initial:             number | null
+  alcohol_final:               number | null
+  alcohol_last_reading:        number | null
+  density_initial:             number | null
+  density_final:               number | null
+  density_last_reading:        number | null
+  conductivity_initial:        number | null
+  conductivity_final:          number | null
+  conductivity_last_reading:   number | null
+  ph_initial:                  number | null
+  ph_final:                    number | null
+  ph_last_reading:             number | null
+  temperature_initial:         number | null
+  temperature_final:           number | null
+  temperature_last_reading:    number | null
+  turbidity_initial:           number | null
+  turbidity_final:             number | null
+  turbidity_last_reading:      number | null
+  rpm_initial:                 number | null
+  rpm_final:                   number | null
+  rpm_last_reading:            number | null
+  notes:                       string | null
+  generated_at:                string | null
+}
+
+export type ReportHistoryItem = {
+  id:          number
+  report_id:   number
+  user_id:     number
+  action:      string
+  occurred_at: string | null
+}
+
+// ── API ───────────────────────────────────────────────────────────────────────
+
 export const fermentationApi = {
-  schedule: (data: ScheduleFermentationRequest): Promise<FermentationSession> =>
+  scheduleFermentation: (body: {
+    circuit_id:      number
+    scheduled_start: string
+    scheduled_end:   string
+    initial_sugar:   number
+  }): Promise<FermentationSessionResponse> =>
     fetch(`${BASE_URL}/fermentation/schedule`, {
-      method: 'POST',
-      headers: HEADERS(),
-      body: JSON.stringify(data),
-    }).then(handleResponse<FermentationSession>),
+      method:  'POST',
+      headers: getHeaders(),
+      body:    JSON.stringify(body),
+    }).then(handleResponse<FermentationSessionResponse>),
 
-  start: (sessionId: number): Promise<FermentationSession> =>
+  startFermentation: (sessionId: number): Promise<FermentationSessionResponse> =>
     fetch(`${BASE_URL}/fermentation/${sessionId}/start`, {
-      method: 'POST',
-      headers: HEADERS(),
-    }).then(handleResponse<FermentationSession>),
+      method:  'POST',
+      headers: getHeaders(),
+    }).then(handleResponse<FermentationSessionResponse>),
 
-  stop: (sessionId: number, data: StopFermentationRequest): Promise<FermentationSession> =>
+  stopFermentation: (
+    sessionId:   number,
+    interrupted: boolean,
+  ): Promise<FermentationSessionResponse> =>
     fetch(`${BASE_URL}/fermentation/${sessionId}/stop`, {
-      method: 'POST',
-      headers: HEADERS(),
-      body: JSON.stringify(data),
-    }).then(handleResponse<FermentationSession>),
+      method:  'POST',
+      headers: getHeaders(),
+      body:    JSON.stringify({ interrupted }),
+    }).then(handleResponse<FermentationSessionResponse>),
 
-  getReport: (sessionId: number): Promise<FermentationReport> =>
+  getActiveSession: (): Promise<FermentationSessionResponse | null> =>
+    fetch(`${BASE_URL}/fermentation/active`, {
+      headers: getHeaders(),
+    }).then(handleResponse<FermentationSessionResponse | null>),
+
+  getSessionsHistory: (): Promise<FermentationSessionResponse[]> =>
+    fetch(`${BASE_URL}/fermentation/sessions`, {
+      headers: getHeaders(),
+    }).then(handleResponse<FermentationSessionResponse[]>),
+
+  getReportBySessionId: (sessionId: number): Promise<FermentationReportData> =>
     fetch(`${BASE_URL}/fermentation/${sessionId}/report`, {
-      headers: HEADERS(),
-    }).then(handleResponse<FermentationReport>),
+      headers: getHeaders(),
+    }).then(handleResponse<FermentationReportData>),
 
-  getHistory: (): Promise<ReportHistory[]> =>
+  getReportHistory: (): Promise<ReportHistoryItem[]> =>
     fetch(`${BASE_URL}/fermentation/history`, {
-      headers: HEADERS(),
-    }).then(handleResponse<ReportHistory[]>),
-
-  getActive: async (): Promise<FermentationSession | null> => {
-    const res = await fetch(`${BASE_URL}/fermentation/active`, {
-      headers: HEADERS(),
-    })
-    if (!res.ok) {
-      const body = await res.text().catch(() => '')
-      console.warn('[fermentationApi.getActive] HTTP', res.status, body)
-      return null
-    }
-    const data = await res.json()
-    console.log('[fermentationApi.getActive] response:', data)
-    // El backend puede devolver `null` literal cuando no hay sesión activa
-    return data ?? null
-  },
+      headers: getHeaders(),
+    }).then(handleResponse<ReportHistoryItem[]>),
 }
