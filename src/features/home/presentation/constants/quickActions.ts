@@ -4,7 +4,7 @@ export const QUICK_ACTIONS = [
     description:  'Configura y ejecuta el algoritmo genético',
     path:         '/dashboard',
     color:        '#22C55E',
-    allowedRoles: ['administrador', 'profesor'],
+    allowedRoles: ['admin', 'docente'],
     icon:         'M12 4v16m8-8H4',
   },
   {
@@ -12,7 +12,7 @@ export const QUICK_ACTIONS = [
     description:  'Activa sensores y controla el proceso',
     path:         '/fermentation',
     color:        '#3B82F6',
-    allowedRoles: ['administrador', 'profesor'],
+    allowedRoles: ['admin', 'docente'],
     icon:         'M13 10V3L4 14h7v7l9-11h-7z',
   },
   {
@@ -20,7 +20,7 @@ export const QUICK_ACTIONS = [
     description:  'Monitoreo en tiempo real vía WebSocket',
     path:         '/grafics',
     color:        '#F59E0B',
-    allowedRoles: ['administrador', 'profesor', 'estudiante'],
+    allowedRoles: ['admin', 'docente', 'estudiante'],
     icon:         'M3 3v18h18M7 16l4-4 4 4 4-8',
   },
   {
@@ -28,7 +28,7 @@ export const QUICK_ACTIONS = [
     description:  'Consulta al asistente FermestBot',
     path:         '/chat',
     color:        '#A78BFA',
-    allowedRoles: ['administrador', 'profesor', 'estudiante'],
+    allowedRoles: ['admin', 'docente', 'estudiante'],
     icon:         'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z',
   },
 ]
