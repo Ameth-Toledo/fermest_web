@@ -1,10 +1,36 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import { cn } from "../../../../lib/utils";
 import Scales from "../../../../components/ui/scales";
 import Text3DFlip from "../../../../components/ui/text-3d-flip";
 import { TechComponent } from "./ui/TechComponent";
 
-const TEAM = [
+type ContactType = "github" | "linkedin" | "web" | "whatsapp" | "facebook";
+
+type ContactLink = {
+  type: ContactType;
+  url: string;
+};
+
+type TeamMember = {
+  name: string;
+  role: string;
+  initials: string;
+  photo: string;
+  color: string;
+  bg: string;
+  links?: ContactLink[];
+};
+
+const CONTACT_ICONS: Record<ContactType, string> = {
+  github:   "/assets/icons/github.svg",
+  linkedin: "/assets/icons/linkedin.svg",
+  whatsapp: "/assets/icons/whatsapp.svg",
+  facebook: "/assets/icons/facebook.svg",
+  web:      "/assets/icons/web.svg",
+};
+
+const TEAM: TeamMember[] = [
   {
     name: "Ameth Toledo",
     role: "FullStack & IoT",
@@ -12,6 +38,12 @@ const TEAM = [
     photo: "/assets/devs/amethdev.png",
     color: "#4ade80",
     bg: "from-emerald-950 to-emerald-800",
+    links: [
+      { type: "github", url: "https://github.com/Ameth-Toledo" },
+      { type: "web", url: "https://www.amethdev.pro/" },
+      { type: "linkedin", url: "https://www.linkedin.com/in/ameth-de-jes%C3%BAs-m%C3%A9ndez-toledo/" },
+      { type: "whatsapp", url: "https://wa.me/529613037813" },
+    ],
   },
   {
     name: "Victor Pérez",
@@ -20,42 +52,43 @@ const TEAM = [
     photo: "/assets/devs/fabriciodev.png",
     color: "#38bdf8",
     bg: "from-sky-950 to-sky-800",
+    links: [
+      { type: "github",   url: "https://github.com/victor" },
+      { type: "linkedin", url: "https://linkedin.com/in/victor" },
+    ],
   },
   {
-    name: "Milton Pérez",
-    role: "Backend Developer",
-    initials: "MP",
-    photo: "/assets/devs/miltondev.png",
-    color: "#a78bfa",
-    bg: "from-violet-950 to-violet-800",
-  },
-  {
-    name: "Solar Martínez",
+    name: "Melissa Corral",
     role: "Frontend Developer",
-    initials: "SM",
-    photo: "/assets/devs/lyzdev.jpeg",
-    color: "#fb923c",
-    bg: "from-orange-950 to-orange-800",
-  },
-  {
-    name: "Alonso Hernández",
-    role: "Dr. Matemáticas & Biomasa",
-    initials: "AH",
-    photo: "/assets/devs/alonsodev.png",
-    color: "#fbbf24",
-    bg: "from-amber-950 to-amber-800",
-  },
-  {
-    name: "Carlos Díaz",
-    role: "Dr. Biotecnología",
-    initials: "CD",
-    photo: "/assets/devs/carlosdev.png",
-    color: "#4ade80",
-    bg: "from-emerald-950 to-emerald-800",
+    initials: "MC",
+    photo: "/assets/devs/melissadev.png",
+    color: "#f472b6",
+    bg: "from-pink-950 to-pink-800",
+    links: [
+      { type: "github",   url: "https://github.com/melissa" },
+      { type: "facebook", url: "https://facebook.com/melissa" },
+    ],
   },
 ];
 
-const MemberCard = ({ member }: { member: typeof TEAM[0] }) => {
+const ContactIcon = ({ link }: { link: ContactLink }) => (
+  <a
+    href={link.url}
+    target="_blank"
+    rel="noopener noreferrer"
+    title={link.type}
+    className="w-9 h-9 flex items-center justify-center"
+  >
+    <img
+      src={CONTACT_ICONS[link.type]}
+      alt={link.type}
+      className="w-5 h-5 object-contain"
+      style={{ filter: "brightness(0) invert(1)", opacity: 0.6 }}
+    />
+  </a>
+);
+
+const MemberCard = ({ member }: { member: TeamMember }) => {
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -75,7 +108,10 @@ const MemberCard = ({ member }: { member: typeof TEAM[0] }) => {
         </div>
 
         <div
-          className={cn("relative z-20 w-full h-full rounded-xl overflow-hidden flex items-center justify-center", `bg-gradient-to-br ${member.bg}`)}
+          className={cn(
+            "relative z-20 w-full h-full rounded-xl overflow-hidden flex items-center justify-center",
+            `bg-gradient-to-br ${member.bg}`
+          )}
           style={{ border: `1px solid ${member.color}20` }}
         >
           {!imgError ? (
@@ -108,9 +144,19 @@ const MemberCard = ({ member }: { member: typeof TEAM[0] }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 pt-2">
-        <h3 className="text-lg font-black text-white tracking-tight">{member.name}</h3>
-        <p className="text-xs font-medium" style={{ color: `${member.color}90` }}>{member.role}</p>
+      <div className="flex flex-col gap-3 pt-2 w-full">
+        <div className="flex flex-col gap-1">
+          <h3 className="text-lg font-black text-white tracking-tight">{member.name}</h3>
+          <p className="text-xs font-medium" style={{ color: `${member.color}90` }}>{member.role}</p>
+        </div>
+
+        {member.links && member.links.length > 0 && (
+          <div className="flex items-center gap-1">
+            {member.links.map((link) => (
+              <ContactIcon key={link.type} link={link} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -120,18 +166,31 @@ const Equipment = () => (
   <section id="team" className="relative w-full overflow-hidden bg-bg">
     <div
       className="pointer-events-none absolute inset-0 select-none bg-size-[40px_40px]"
-      style={{ backgroundImage: "linear-gradient(to right,#111 1px,transparent 1px),linear-gradient(to bottom,#111 1px,transparent 1px)" }}
+      style={{
+        backgroundImage:
+          "linear-gradient(to right,#111 1px,transparent 1px),linear-gradient(to bottom,#111 1px,transparent 1px)",
+      }}
     />
     <div
       className="pointer-events-none absolute inset-0"
-      style={{ background: "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(15,142,77,0.07), transparent)" }}
+      style={{
+        background:
+          "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(15,142,77,0.07), transparent)",
+      }}
     />
 
     <div className="relative z-10 mx-auto max-w-7xl px-6 py-28 flex flex-col gap-24">
-
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div className="flex flex-col gap-4">
-          <span className="text-xs uppercase tracking-[0.3em] text-green-500/70 font-medium">El equipo</span>
+        <motion.div
+          className="flex flex-col gap-4"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98] }}
+        >
+          <span className="text-xs uppercase tracking-[0.3em] text-green-500/70 font-medium">
+            El equipo
+          </span>
           <h2 className="text-5xl md:text-6xl font-black leading-[0.95] tracking-tighter">
             <Text3DFlip
               className="bg-transparent justify-start"
@@ -146,7 +205,8 @@ const Equipment = () => (
             </Text3DFlip>
           </h2>
           <div className="w-12 h-1 rounded-full bg-green-500/40 mt-1" />
-        </div>
+        </motion.div>
+
         <div className="flex flex-col items-end gap-4">
           <TechComponent />
           <p className="max-w-sm text-neutral-500 text-sm leading-relaxed md:text-right">
@@ -156,17 +216,18 @@ const Equipment = () => (
       </div>
 
       <div className="flex flex-wrap justify-center gap-x-8 gap-y-14">
-        {TEAM.slice(0, 3).map(member => (
-          <MemberCard key={member.name} member={member} />
+        {TEAM.map((member, i) => (
+          <motion.div
+            key={member.name}
+            initial={{ opacity: 0, y: 40, scale: 0.96 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.55, delay: i * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
+          >
+            <MemberCard member={member} />
+          </motion.div>
         ))}
       </div>
-
-      <div className="flex flex-wrap justify-center gap-x-8 gap-y-14">
-        {TEAM.slice(3).map(member => (
-          <MemberCard key={member.name} member={member} />
-        ))}
-      </div>
-
     </div>
   </section>
 );
