@@ -19,6 +19,7 @@ import AddUserView from '../../features/users/presentation/view/AddUserView'
 import ManageUsersView from '../../features/users/presentation/view/ManageUsersView'
 import ProfileView from '../../features/profile/presentation/view/ProfileView'
 import { FermentationProvider } from '../../features/fermentation/presentation/context/FermentationContext'
+import PrivateRoute from './PrivateRoute'
 
 const AppRouter = () => {
   return (
@@ -28,22 +29,31 @@ const AppRouter = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route element={<FermentationProvider><Layout /></FermentationProvider>}>
-          <Route path="/overview" element={<OverviewView />} />
-          <Route path="/efficiency-calculator" element={<EfficiencyCalculatorView />} />
-          <Route path="/fermentation-reports" element={<FermentationReportsView />} />
-          <Route path="/dashboard" element={<DashboardView />} />
-          <Route path="/experiment/:id" element={<ExperimentView />} />
-          <Route path="/experiment/:id/best-per-generation" element={<BestPerGenerationView />} />
-          <Route path="/simulation/:id" element={<SimulationView />} />
-          <Route path="/experiment/:id/charts" element={<ChartsView />} />
-          <Route path="/results/:id" element={<ResultsView />} />
-          <Route path="/fermentation" element={<FermentationView />} />
-          <Route path="/chat" element={<ChatView />} />
-          <Route path="/grafics" element={<SensorsView />} />
-          <Route path="/users/add" element={<AddUserView />} />
-          <Route path="/users/manage" element={<ManageUsersView />} />
-          <Route path="/profile" element={<ProfileView />} />
+        <Route element={<PrivateRoute />}>
+          <Route element={<FermentationProvider><Layout /></FermentationProvider>}>
+
+            {/* Todos los roles autenticados */}
+            <Route path="/overview" element={<OverviewView />} />
+            <Route path="/grafics" element={<SensorsView />} />
+            <Route path="/efficiency-calculator" element={<EfficiencyCalculatorView />} />
+            <Route path="/fermentation-reports" element={<FermentationReportsView />} />
+            <Route path="/chat" element={<ChatView />} />
+            <Route path="/profile" element={<ProfileView />} />
+
+            {/* Solo admin y profesor */}
+            <Route element={<PrivateRoute allowedRoles={['admin', 'profesor']} />}>
+              <Route path="/dashboard" element={<DashboardView />} />
+              <Route path="/experiment/:id" element={<ExperimentView />} />
+              <Route path="/experiment/:id/best-per-generation" element={<BestPerGenerationView />} />
+              <Route path="/simulation/:id" element={<SimulationView />} />
+              <Route path="/experiment/:id/charts" element={<ChartsView />} />
+              <Route path="/results/:id" element={<ResultsView />} />
+              <Route path="/fermentation" element={<FermentationView />} />
+              <Route path="/users/add" element={<AddUserView />} />
+              <Route path="/users/manage" element={<ManageUsersView />} />
+            </Route>
+
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
