@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Ripple } from "../../../../components/ui/ripple";
+import { motion } from "motion/react";
 
 const POSTS = [
   {
@@ -126,13 +127,19 @@ const Blog = () => (
 
       {/* header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div className="flex flex-col gap-4">
+        <motion.div
+          className="flex flex-col gap-4"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98] }}
+        >
           <span className="text-xs uppercase tracking-[0.3em] text-white/60 font-medium">Nuestro blog</span>
           <h2 className="text-5xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter">
             Historias y consejos
           </h2>
           <div className="w-12 h-1 rounded-full bg-white/40" />
-        </div>
+        </motion.div>
         <p className="max-w-xs text-white/50 text-sm leading-relaxed md:text-right">
           Casos de éxito, guías prácticas y ciencia detrás de la fermentación del café.
         </p>
@@ -140,7 +147,17 @@ const Blog = () => (
 
       {/* cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {POSTS.map(post => <BlogCard key={post.title} post={post} />)}
+        {POSTS.map((post, i) => (
+          <motion.div
+            key={post.title}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.55, delay: i * 0.14, ease: [0.21, 0.47, 0.32, 0.98] }}
+          >
+            <BlogCard post={post} />
+          </motion.div>
+        ))}
       </div>
 
     </div>

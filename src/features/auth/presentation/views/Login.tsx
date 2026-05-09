@@ -1,9 +1,19 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { useLoginViewModel } from '../viewmodels/useLoginViewModel'
 import { cn } from '../../../../lib/utils'
 import { PointerHighlight } from '../../../../components/ui/pointer-highlight'
 import Text3DFlip from '../../../../components/ui/text-3d-flip'
+
+const panel = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+}
+const item = {
+  hidden:   { opacity: 0, y: 18 },
+  visible:  { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] as [number, number, number, number] } },
+}
 
 const COL1 = [
   'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80',
@@ -37,22 +47,29 @@ const Login = () => {
 
   return (
     <div className="min-h-screen w-full flex bg-[#0A0A0B]">
-      <div className="flex-1 flex flex-col justify-center px-12 py-16 max-w-xl">
+      <motion.div
+        className="flex-1 flex flex-col justify-center px-12 py-16 max-w-xl"
+        variants={panel}
+        initial="hidden"
+        animate="visible"
+      >
 
-        <Link to="/" className="flex items-center gap-2.5 mb-12">
-          <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer" />
-          <span className="text-white font-bold text-lg tracking-tight">Nich-Ká</span>
-        </Link>
+        <motion.div variants={item}>
+          <Link to="/" className="flex items-center gap-2.5 mb-12">
+            <img src="/assets/logo.svg" alt="Fermest" className="w-8 h-8 object-contain cursor-pointer" />
+            <span className="text-white font-bold text-lg tracking-tight">Nich-Ká</span>
+          </Link>
+        </motion.div>
 
-        <div className="flex flex-col gap-3 mb-10">
+        <motion.div variants={item} className="flex flex-col gap-3 mb-10">
           <h1 className="text-4xl font-black text-white tracking-tight">¡Bienvenido de nuevo!</h1>
           <p className="text-neutral-500 text-sm leading-relaxed max-w-sm">
             Monitorea y optimiza la fermentación de tu café con inteligencia artificial en tiempo real.
           </p>
-        </div>
+        </motion.div>
 
         {justRegistered && (
-          <div className="flex items-start gap-2.5 rounded-lg px-4 py-3 mb-6 text-sm text-green-400 bg-green-950/40 border border-green-500/20">
+          <motion.div variants={item} className="flex items-start gap-2.5 rounded-lg px-4 py-3 mb-6 text-sm text-green-400 bg-green-950/40 border border-green-500/20">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0">
               <path d="M20 6L9 17l-5-5" />
             </svg>
@@ -61,10 +78,10 @@ const Login = () => {
               {registeredEmail && <span className="text-green-300">{registeredEmail}</span>}
               {' '}ya puede iniciar sesión.
             </span>
-          </div>
+          </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <motion.form variants={item} onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm text-neutral-400 font-medium">Correo electrónico</label>
             <input
@@ -121,15 +138,15 @@ const Login = () => {
               : 'Iniciar sesión'
             }
           </button>
-        </form>
+        </motion.form>
 
-        <div className="flex items-center gap-3 my-6">
+        <motion.div variants={item} className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-neutral-800" />
           <span className="text-neutral-600 text-xs">o</span>
           <div className="flex-1 h-px bg-neutral-800" />
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <motion.div variants={item} className="grid grid-cols-2 gap-3">
           <button type="button" className="flex items-center justify-center gap-2.5 rounded-lg py-3 text-sm font-medium text-white bg-neutral-900 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-800 transition-all duration-200">
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -145,15 +162,15 @@ const Login = () => {
             </svg>
             GitHub
           </button>
-        </div>
+        </motion.div>
 
-        <p className="text-center text-sm text-neutral-600 mt-8">
+        <motion.p variants={item} className="text-center text-sm text-neutral-600 mt-8">
           ¿No tienes cuenta?{' '}
           <Link to="/register" className="text-white hover:text-neutral-200 font-medium transition-colors">
             Regístrate
           </Link>
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
 
       <div className="hidden lg:flex flex-1 relative overflow-hidden">
         <style>{`
@@ -162,11 +179,12 @@ const Login = () => {
         `}</style>
 
         <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg,#0a1a0f 0%,#0f2d1a 30%,#1a4a2a 60%,#2d6b3f 100%)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(15,142,77,0.22), transparent), radial-gradient(ellipse 50% 40% at 20% 20%, rgba(74,222,128,0.08), transparent)' }} />
 
         <div className="absolute inset-0 flex gap-2.5 px-5 overflow-hidden">
           {[COL1, COL2, COL3].map((col, ci) => (
             <div key={ci} className="flex-1 overflow-hidden">
-              <div style={{ animation: `${ci % 2 === 0 ? 'scrollDown' : 'scrollUp'} ${20 + ci * 3}s linear infinite` }}>
+              <div style={{ animation: `${ci % 2 === 0 ? 'scrollDown' : 'scrollUp'} ${10 + ci * 2}s linear infinite` }}>
                 {[...col, ...col].map((src, i) => (
                   <div key={i} className="mb-2.5 rounded-xl overflow-hidden">
                     <img src={src} alt="" className="w-full object-cover" style={{ filter: 'brightness(0.65) saturate(0.85)' }} />
@@ -182,7 +200,12 @@ const Login = () => {
 
         <div className="absolute top-8 left-0 z-10 w-full">
           <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 70% 200% at 0% 50%, rgba(5,15,8,0.88) 0%, rgba(5,15,8,0.55) 40%, rgba(5,15,8,0.15) 65%, transparent 85%)' }} />
-          <div className="relative flex flex-col gap-2 font-black tracking-tight leading-tight px-10 py-6">
+          <motion.div
+            className="relative flex flex-col gap-2 font-black tracking-tight leading-tight px-10 py-6"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: [0.21, 0.47, 0.32, 0.98] }}
+          >
             <span className="text-4xl text-white/90">pH, temperatura y perfil de sabor</span>
             <span className="text-4xl text-white/90">monitoreados con</span>
             <PointerHighlight
@@ -201,7 +224,7 @@ const Login = () => {
                 inteligencia artificial
               </Text3DFlip>
             </PointerHighlight>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

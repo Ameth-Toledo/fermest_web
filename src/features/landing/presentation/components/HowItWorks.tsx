@@ -2,6 +2,7 @@ import { cn } from "../../../../lib/utils";
 import Text3DFlip from "../../../../components/ui/text-3d-flip";
 import { SparklesCore } from "../../../../components/ui/sparkles";
 import { useEffect, useRef } from "react";
+import { motion } from "motion/react";
 
 const IconArrow = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -308,7 +309,13 @@ const HowItWorks = () => {
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-28 flex flex-col gap-24">
 
-        <div className="flex flex-col gap-4">
+        <motion.div
+          className="flex flex-col gap-4"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98] }}
+        >
           <span className="text-xs uppercase tracking-[0.3em] text-green-500/80 font-medium">El proceso</span>
           <div className="flex items-center gap-8">
             <Text3DFlip
@@ -327,14 +334,18 @@ const HowItWorks = () => {
             </div>
           </div>
           <div className="w-12 h-1 rounded-full bg-green-500/40 mt-1" />
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-          {STEPS.map(({ Icon, tag, title, description, num, offset, iconColor, iconBg, iconBorder, cardBg, cardBorder }) => (
-            <div
+          {STEPS.map(({ Icon, tag, title, description, num, offset, iconColor, iconBg, iconBorder, cardBg, cardBorder }, i) => (
+            <motion.div
               key={tag}
               className={cn("relative flex flex-col gap-6 p-8 rounded-2xl overflow-hidden", offset)}
               style={{ background: cardBg, border: `1px solid ${cardBorder}`, backdropFilter: "blur(12px)" }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.55, delay: i * 0.14, ease: [0.21, 0.47, 0.32, 0.98] }}
             >
               <div className="flex items-center gap-4">
                 <div
@@ -352,7 +363,7 @@ const HowItWorks = () => {
               <span className="text-[72px] font-black leading-none text-white/[0.04] absolute -bottom-2 right-4 select-none">
                 {num}
               </span>
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -386,7 +397,13 @@ const HowItWorks = () => {
           </div>
 
           <div className="relative w-full flex items-stretch gap-0" style={{ height: 320 }}>
-            <div className="relative flex-1">
+            <motion.div
+              className="relative flex-1"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
               <NeuralNetwork />
               <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none">
                 <SparklesCore
@@ -399,23 +416,27 @@ const HowItWorks = () => {
                   speed={0.8}
                 />
               </div>
-            </div>
+            </motion.div>
 
             <div className="flex flex-col justify-around py-4 pl-4 shrink-0 w-52">
               {[
-                { label: "pH óptimo",          sub: "Acidez ideal para el perfil",    n: "01" },
-                { label: "Temperatura",         sub: "°C — rango controlado",          n: "02" },
-                { label: "Tiempo estimado",     sub: "h — duración del lote",          n: "03" },
-              ].map(({ label, sub, n }) => (
-                <div
+                { label: "pH óptimo",      sub: "Acidez ideal para el perfil", n: "01" },
+                { label: "Temperatura",    sub: "°C — rango controlado",       n: "02" },
+                { label: "Tiempo estimado", sub: "h — duración del lote",      n: "03" },
+              ].map(({ label, sub, n }, i) => (
+                <motion.div
                   key={label}
                   className="flex flex-col gap-0.5 rounded-xl px-3 py-2"
                   style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(196,181,253,0.18)", backdropFilter: "blur(8px)" }}
+                  initial={{ opacity: 0, x: 24 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.45, delay: i * 0.12, ease: [0.21, 0.47, 0.32, 0.98] }}
                 >
                   <span className="text-[9px] text-purple-400/50 font-mono">{n}</span>
                   <span className="text-sm font-black text-purple-200 leading-none">{label}</span>
                   <span className="text-[10px] text-purple-300/40">{sub}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
 

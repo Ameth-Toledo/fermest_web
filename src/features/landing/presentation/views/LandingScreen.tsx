@@ -1,3 +1,4 @@
+import { ReactLenis } from "lenis/react";
 import Blog from "../components/Blog";
 import Characteristics from "../components/Characteristics";
 import Equipment from "../components/Equipment";
@@ -8,7 +9,7 @@ import HowItWorks from "../components/HowItWorks";
 
 const LandingView = () => {
     return (
-        <div>
+        <ReactLenis root options={{ lerp: 0.08, duration: 1.2, smoothWheel: true }}>
             <Header/>
             <Hero/>
             <Characteristics/>
@@ -16,7 +17,7 @@ const LandingView = () => {
             <Blog/>
             <Equipment/>
             <Footer/>
-        </div>
+        </ReactLenis>
     );
 }
 
