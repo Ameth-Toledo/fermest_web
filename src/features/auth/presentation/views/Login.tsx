@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { useLoginViewModel } from '../viewmodels/useLoginViewModel'
 import { cn } from '../../../../lib/utils'
 import { PointerHighlight } from '../../../../components/ui/pointer-highlight'
 import Text3DFlip from '../../../../components/ui/text-3d-flip'
+import { useAlert } from '../../../../shared/context/AlertContext'
 
 const panel = {
   hidden: {},
@@ -41,8 +42,15 @@ const EyeIcon = ({ open }: { open: boolean }) => open
 const Login = () => {
   const location = useLocation()
   const { email, setEmail, password, setPassword, loading, error, handleSubmit } = useLoginViewModel()
+  const { showAlert } = useAlert()
   const [showPass, setShowPass] = useState(false)
   const justRegistered = location.state?.registered === true
+
+  useEffect(() => {
+    if (error) {
+      showAlert({ title: 'Error al iniciar sesión', description: error, variant: 'error' })
+    }
+  }, [error])
   const registeredEmail = location.state?.email as string | undefined
 
   return (
@@ -112,15 +120,6 @@ const Login = () => {
               </button>
             </div>
           </div>
-
-          {error && (
-            <div className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-red-400 bg-red-950/40 border border-red-500/20">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-              </svg>
-              {error}
-            </div>
-          )}
 
           <button
             type="submit"

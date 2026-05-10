@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { useRegisterViewModel } from '../viewmodels/useRegisterViewModel'
 import { cn } from '../../../../lib/utils'
 import Text3DFlip from '../../../../components/ui/text-3d-flip'
+import { Checkbox } from '../../../../components/ui/checkbox'
+import { useAlert } from '../../../../shared/context/AlertContext'
 
 const COL1 = [
   'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80',
@@ -31,6 +33,10 @@ const EyeIcon = ({ open }: { open: boolean }) => open
   ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
   : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+type Field = 'name' | 'lastName' | 'email' | 'password' | 'confirm'
+
 const Register = () => {
   const {
     name,      setName,
@@ -43,15 +49,49 @@ const Register = () => {
     handleSubmit,
   } = useRegisterViewModel()
 
-  const [showPass, setShowPass]       = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
+  const { showAlert } = useAlert()
+  const [showPass, setShowPass]           = useState(false)
+  const [showConfirm, setShowConfirm]     = useState(false)
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
+  const [touched, setTouched]             = useState<Partial<Record<Field, boolean>>>({})
+
+  useEffect(() => {
+    if (error) showAlert({ title: 'No se pudo crear la cuenta', description: error, variant: 'error' })
+  }, [error])
+
+  const errors: Record<Field, string> = {
+    name:     !name.trim()                          ? 'El nombre es requerido'         : '',
+    lastName: !lastName.trim()                      ? 'El apellido es requerido'        : '',
+    email:    !email.trim()                         ? 'El correo es requerido'
+            : !EMAIL_RE.test(email)                 ? 'Correo electrónico inválido'     : '',
+    password: !password                             ? 'La contraseña es requerida'
+            : password.length < 8                   ? 'Mínimo 8 caracteres'             : '',
+    confirm:  !confirm                              ? 'Confirma tu contraseña'
+            : password !== confirm                  ? 'Las contraseñas no coinciden'    : '',
+  }
+
+  const touch = (field: Field) => setTouched(prev => ({ ...prev, [field]: true }))
+  const fieldErr = (field: Field) => touched[field] && errors[field]
 
   const inputBase = cn(
     'w-full rounded-lg px-4 py-3 text-sm text-white placeholder:text-neutral-600',
-    'bg-neutral-900 border border-neutral-800 outline-none',
-    'focus:border-green-500/60 focus:ring-1 focus:ring-green-500/20 transition-all duration-200'
+    'bg-neutral-900 border outline-none transition-all duration-200'
+  )
+  const inputCn = (field: Field, extra?: string) => cn(
+    inputBase,
+    extra,
+    fieldErr(field)
+      ? 'border-red-500/50 focus:border-red-500/60 focus:ring-1 focus:ring-red-500/20'
+      : 'border-neutral-800 focus:border-green-500/60 focus:ring-1 focus:ring-green-500/20'
   )
   const labelBase = 'text-sm text-neutral-400 font-medium'
+
+  const onSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    setTouched({ name: true, lastName: true, email: true, password: true, confirm: true })
+    if (Object.values(errors).some(Boolean)) return
+    handleSubmit(e)
+  }
 
   return (
     <div className="min-h-screen w-full flex bg-[#0A0A0B]">
@@ -76,90 +116,108 @@ const Register = () => {
           </p>
         </motion.div>
 
-        <motion.form variants={item} onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <motion.form variants={item} noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className={labelBase}>Nombre</label>
               <input
-                type="text" required autoComplete="given-name"
-                value={name} onChange={e => setName(e.target.value)}
+                type="text" autoComplete="given-name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                onBlur={() => touch('name')}
                 placeholder="Tu nombre"
-                className={inputBase}
+                className={inputCn('name')}
               />
+              {fieldErr('name') && <span className="text-xs text-red-400">{errors.name}</span>}
             </div>
             <div className="flex flex-col gap-1.5">
               <label className={labelBase}>Apellido</label>
               <input
-                type="text" required autoComplete="family-name"
-                value={lastName} onChange={e => setLastName(e.target.value)}
+                type="text" autoComplete="family-name"
+                value={lastName}
+                onChange={e => setLastName(e.target.value)}
+                onBlur={() => touch('lastName')}
                 placeholder="Tu apellido"
-                className={inputBase}
+                className={inputCn('lastName')}
               />
+              {fieldErr('lastName') && <span className="text-xs text-red-400">{errors.lastName}</span>}
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label className={labelBase}>Correo electrónico</label>
             <input
-              type="email" required autoComplete="email"
-              value={email} onChange={e => setEmail(e.target.value)}
+              type="email" autoComplete="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              onBlur={() => touch('email')}
               placeholder="tu@correo.com"
-              className={inputBase}
+              className={inputCn('email')}
             />
+            {fieldErr('email') && <span className="text-xs text-red-400">{errors.email}</span>}
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label className={labelBase}>Contraseña</label>
             <div className="relative">
               <input
-                type={showPass ? 'text' : 'password'} required autoComplete="new-password"
-                value={password} onChange={e => setPassword(e.target.value)}
+                type={showPass ? 'text' : 'password'} autoComplete="new-password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                onBlur={() => touch('password')}
                 placeholder="••••••••"
-                className={cn(inputBase, 'pr-11')}
+                className={inputCn('password', 'pr-11')}
               />
               <button type="button" onClick={() => setShowPass(p => !p)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-neutral-400 transition-colors">
                 <EyeIcon open={showPass} />
               </button>
             </div>
+            {fieldErr('password') && <span className="text-xs text-red-400">{errors.password}</span>}
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label className={labelBase}>Confirmar contraseña</label>
             <div className="relative">
               <input
-                type={showConfirm ? 'text' : 'password'} required autoComplete="new-password"
-                value={confirm} onChange={e => setConfirm(e.target.value)}
+                type={showConfirm ? 'text' : 'password'} autoComplete="new-password"
+                value={confirm}
+                onChange={e => setConfirm(e.target.value)}
+                onBlur={() => touch('confirm')}
                 placeholder="••••••••"
-                className={cn(
-                  inputBase, 'pr-11',
-                  confirm && password !== confirm
-                    ? 'border-red-500/50 focus:border-red-500/70 focus:ring-red-500/20'
-                    : ''
-                )}
+                className={inputCn('confirm', 'pr-11')}
               />
               <button type="button" onClick={() => setShowConfirm(p => !p)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-neutral-400 transition-colors">
                 <EyeIcon open={showConfirm} />
               </button>
             </div>
-            {confirm && password !== confirm && (
-              <span className="text-xs text-red-400 mt-0.5">Las contraseñas no coinciden</span>
-            )}
+            {fieldErr('confirm') && <span className="text-xs text-red-400">{errors.confirm}</span>}
           </div>
 
-          {error && (
-            <div className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-red-400 bg-red-950/40 border border-red-500/20">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-              </svg>
-              {error}
-            </div>
-          )}
+          <div className="flex items-start gap-3 mt-1">
+            <Checkbox
+              id="terms"
+              variant="accent"
+              checked={acceptedTerms}
+              onCheckedChange={(val) => setAcceptedTerms(val === true)}
+            />
+            <label htmlFor="terms" className="text-xs text-neutral-400 leading-relaxed cursor-pointer select-none">
+              He leído y acepto los{' '}
+              <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 underline underline-offset-2 transition-colors">
+                Términos de uso
+              </a>
+              {' '}y la{' '}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 underline underline-offset-2 transition-colors">
+                Política de privacidad
+              </a>{' '}
+              vigentes.
+            </label>
+          </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !acceptedTerms}
             className="w-full rounded-lg py-3 text-sm font-semibold text-black mt-1 transition-all duration-200 bg-white hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading
@@ -175,7 +233,31 @@ const Register = () => {
           </button>
         </motion.form>
 
-        <motion.p variants={item} className="text-center text-sm text-neutral-600 mt-6">
+        <motion.div variants={item} className="flex items-center gap-3 my-5">
+          <div className="flex-1 h-px bg-neutral-800" />
+          <span className="text-neutral-600 text-xs">o regístrate con</span>
+          <div className="flex-1 h-px bg-neutral-800" />
+        </motion.div>
+
+        <motion.div variants={item} className="grid grid-cols-2 gap-3">
+          <button type="button" className="flex items-center justify-center gap-2.5 rounded-lg py-3 text-sm font-medium text-white bg-neutral-900 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-800 transition-all duration-200">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Google
+          </button>
+          <button type="button" className="flex items-center justify-center gap-2.5 rounded-lg py-3 text-sm font-medium text-white bg-neutral-900 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-800 transition-all duration-200">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            GitHub
+          </button>
+        </motion.div>
+
+        <motion.p variants={item} className="text-center text-sm text-neutral-600 mt-5">
           ¿Ya tienes cuenta?{' '}
           <Link to="/login" className="text-white hover:text-neutral-200 font-medium transition-colors">
             Inicia sesión
