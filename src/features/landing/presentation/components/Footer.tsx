@@ -14,9 +14,9 @@ const footerLinks: Record<string, { label: string; href: string; target?: string
     { label: "LinkedIn", href: "https://www.linkedin.com/company/nich-k%C3%A1/about/", target: "_blank" },
   ],
   Legal: [
-    { label: "Privacidad", href: "#" },
-    { label: "Términos de uso", href: "#" },
-    { label: "Cookies", href: "#" },
+    { label: "Privacidad", href: "/privacy" },
+    { label: "Términos de uso", href: "/terms" },
+    { label: "Cookies", href: "/cookies" },
   ],
   Cuenta: [
     { label: "Registrarse", href: "/register" },

@@ -2,12 +2,12 @@ import { useState } from "react";
 import { cn } from "../../../../lib/utils";
 
 const navLinks = [
-  { label: "Inicio", href: "#" },
-  { label: "Características", href: "#features" },
-  //{ label: "Precios", href: "#pricing" },
-  { label: "¿Como funciona?", href: "#how-it-works" },
-  { label: "Blog", href: "#blog" },
-  { label: "Equipo", href: "#team" },
+  { label: "Inicio", href: "/" },
+  { label: "Características", href: "/#features" },
+  //{ label: "Precios", href: "/#pricing" },
+  { label: "¿Como funciona?", href: "/#how-it-works" },
+  { label: "Blog", href: "/#blog" },
+  { label: "Equipo", href: "/#team" },
 ];
 
 const Header = () => {

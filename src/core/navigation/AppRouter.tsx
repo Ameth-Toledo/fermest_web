@@ -7,6 +7,9 @@ import SimulationView from '../../features/dashboard/presentation/view/Simulatio
 import ResultsView from '../../features/dashboard/presentation/view/ResultsView'
 import ChartsView from '../../features/dashboard/presentation/view/ChartsView'
 import LandingView from '../../features/landing/presentation/views/LandingScreen'
+import PrivacyView from '../../features/landing/presentation/views/PrivacyView'
+import TermsView from '../../features/landing/presentation/views/TermsView'
+import CookiesView from '../../features/landing/presentation/views/CookiesView'
 import Login from '../../features/auth/presentation/views/Login'
 import FermentationView from '../../features/fermentation/presentation/view/FermentationView'
 import SensorsView from '../../features/sensors/presentation/view/SensorsView'
@@ -26,6 +29,9 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingView />} />
+        <Route path="/privacy" element={<PrivacyView />} />
+        <Route path="/terms" element={<TermsView />} />
+        <Route path="/cookies" element={<CookiesView />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
