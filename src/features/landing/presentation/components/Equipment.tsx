@@ -63,7 +63,7 @@ const TEAM: TeamMember[] = [
     name: "Melissa Corral",
     role: "Frontend Developer",
     initials: "MC",
-    photo: "/assets/devs/melissadev.jpg",
+    photo: "/assets/devs/melissadev.png",
     color: "#f472b6",
     bg: "from-pink-950 to-pink-800",
     links: [
