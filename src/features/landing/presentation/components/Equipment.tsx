@@ -53,20 +53,23 @@ const TEAM: TeamMember[] = [
     color: "#38bdf8",
     bg: "from-sky-950 to-sky-800",
     links: [
-      { type: "github",   url: "https://github.com/victor" },
-      { type: "linkedin", url: "https://linkedin.com/in/victor" },
+      { type: "github",   url: "https://github.com/FabricioPRZ" },
+      { type: "web",      url: "https://fabricio-prz-dev.vercel.app/" },
+      { type: "linkedin", url: "https://linkedin.com/in/fabricio-prz" },
+      { type: "whatsapp", url: "https://wa.me/529619009651" }
     ],
   },
   {
     name: "Melissa Corral",
     role: "Frontend Developer",
     initials: "MC",
-    photo: "/assets/devs/melissadev.png",
+    photo: "/assets/devs/melissadev.jpg",
     color: "#f472b6",
     bg: "from-pink-950 to-pink-800",
     links: [
-      { type: "github",   url: "https://github.com/melissa" },
-      { type: "facebook", url: "https://facebook.com/melissa" },
+      { type: "github",   url: "https://github.com/MelissaZarate08" },
+      { type: "web",      url: "https://melissazarate08.github.io/Portafolio-KMCZ/" },
+      { type: "linkedin", url: "https://www.linkedin.com/in/karla-melissa-corral-z%C3%A1rate-274b5529b" },
     ],
   },
 ];
