@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useState, type ReactNode, type ReactElement } from 'react'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose,
 } from '../../components/ui/dialog'
@@ -19,7 +19,7 @@ interface AlertContextValue {
 
 const AlertContext = createContext<AlertContextValue | null>(null)
 
-const variantStyles: Record<AlertVariant, { icon: JSX.Element; iconBg: string; titleColor: string; border: string }> = {
+const variantStyles: Record<AlertVariant, { icon: ReactElement; iconBg: string; titleColor: string; border: string }> = {
   error: {
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
