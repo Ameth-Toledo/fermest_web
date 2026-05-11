@@ -11,6 +11,7 @@ import PrivacyView from '../../features/landing/presentation/views/PrivacyView'
 import TermsView from '../../features/landing/presentation/views/TermsView'
 import CookiesView from '../../features/landing/presentation/views/CookiesView'
 import Login from '../../features/auth/presentation/views/Login'
+import ForgotPassword from '../../features/auth/presentation/views/ForgotPassword'
 import FermentationView from '../../features/fermentation/presentation/view/FermentationView'
 import SensorsView from '../../features/sensors/presentation/view/SensorsView'
 import Register from '../../features/auth/presentation/views/Register'
@@ -21,6 +22,7 @@ import FermentationReportsView from '../../features/fermentation-reports/present
 import AddUserView from '../../features/users/presentation/view/AddUserView'
 import ManageUsersView from '../../features/users/presentation/view/ManageUsersView'
 import ProfileView from '../../features/profile/presentation/view/ProfileView'
+import SupportView from '../../features/support/presentation/view/SupportView'
 import { FermentationProvider } from '../../features/fermentation/presentation/context/FermentationContext'
 import PrivateRoute from './PrivateRoute'
 
@@ -34,29 +36,33 @@ const AppRouter = () => {
         <Route path="/cookies" element={<CookiesView />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        {/* Soporte - sin auth (acceso por rol soporte) */}
+        <Route path="/support" element={<SupportView />} />
 
         <Route element={<PrivateRoute />}>
           <Route element={<FermentationProvider><Layout /></FermentationProvider>}>
 
             {/* Todos los roles autenticados */}
-            <Route path="/overview" element={<OverviewView />} />
-            <Route path="/grafics" element={<SensorsView />} />
+            <Route path="/overview"              element={<OverviewView />} />
+            <Route path="/grafics"               element={<SensorsView />} />
             <Route path="/efficiency-calculator" element={<EfficiencyCalculatorView />} />
-            <Route path="/fermentation-reports" element={<FermentationReportsView />} />
-            <Route path="/chat" element={<ChatView />} />
-            <Route path="/profile" element={<ProfileView />} />
+            <Route path="/fermentation-reports"  element={<FermentationReportsView />} />
+            <Route path="/chat"                  element={<ChatView />} />
+            <Route path="/profile"               element={<ProfileView />} />
 
             {/* Solo admin y profesor */}
             <Route element={<PrivateRoute allowedRoles={['admin', 'profesor']} />}>
-              <Route path="/dashboard" element={<DashboardView />} />
-              <Route path="/experiment/:id" element={<ExperimentView />} />
+              <Route path="/dashboard"             element={<DashboardView />} />
+              <Route path="/experiment/:id"        element={<ExperimentView />} />
               <Route path="/experiment/:id/best-per-generation" element={<BestPerGenerationView />} />
-              <Route path="/simulation/:id" element={<SimulationView />} />
+              <Route path="/simulation/:id"        element={<SimulationView />} />
               <Route path="/experiment/:id/charts" element={<ChartsView />} />
-              <Route path="/results/:id" element={<ResultsView />} />
-              <Route path="/fermentation" element={<FermentationView />} />
-              <Route path="/users/add" element={<AddUserView />} />
-              <Route path="/users/manage" element={<ManageUsersView />} />
+              <Route path="/results/:id"           element={<ResultsView />} />
+              <Route path="/fermentation"          element={<FermentationView />} />
+              <Route path="/users/add"             element={<AddUserView />} />
+              <Route path="/users/manage"          element={<ManageUsersView />} />
             </Route>
 
           </Route>

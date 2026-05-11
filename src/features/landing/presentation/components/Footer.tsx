@@ -1,3 +1,6 @@
+import { useState } from "react";
+import ContactChat from "./ContactChat";
+
 const footerLinks: Record<string, { label: string; href: string; target?: string }[]> = {
   Páginas: [
     { label: "Inicio", href: "#" },
@@ -21,18 +24,20 @@ const footerLinks: Record<string, { label: string; href: string; target?: string
   Cuenta: [
     { label: "Registrarse", href: "/register" },
     { label: "Iniciar sesión", href: "/login" },
-    { label: "Olvidé mi contraseña", href: "#" },
+    { label: "Olvidé mi contraseña", href: "/forgot-password" },
   ],
 };
 
 const Footer = () => {
+  const [chatOpen, setChatOpen] = useState(false);
+
   return (
     <footer className="relative w-full bg-bg overflow-hidden">
       <div className="mx-auto max-w-7xl px-6">
         <div className="h-px w-full bg-white/10" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 py-16 grid grid-cols-1 md:grid-cols-5 gap-12">
+      <div className="mx-auto max-w-7xl px-6 py-16 grid grid-cols-1 md:grid-cols-6 gap-12">
         <div className="md:col-span-1 flex flex-col gap-4">
           <div className="flex items-center gap-3">
             <img
@@ -69,6 +74,22 @@ const Footer = () => {
             </ul>
           </div>
         ))}
+
+        <div className="flex flex-col gap-4">
+          <h3 className="text-white text-sm font-semibold">Soporte</h3>
+          <ul className="flex flex-col gap-3">
+            <li>
+              <button
+                onClick={() => setChatOpen(true)}
+                className="text-neutral-500 text-sm hover:text-white transition-colors duration-200 text-left"
+              >
+                Contactar soporte
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <ContactChat open={chatOpen} onClose={() => setChatOpen(false)} />
       </div>
 
       <div className="relative w-full select-none overflow-hidden h-40 md:h-56">
