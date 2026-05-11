@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import { userAuth } from '../../core/hooks/userAuth'
+import { useUserAuth } from '../../core/hooks/userAuth'
 
 const ProfileNav = () => {
-  const { user } = userAuth()
+  const { user } = useUserAuth()
   const navigate = useNavigate()
   const initials = user?.name
     .split(' ')

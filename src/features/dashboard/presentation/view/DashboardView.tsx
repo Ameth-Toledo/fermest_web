@@ -25,7 +25,7 @@ const DashboardView = () => {
   })
 
   useEffect(() => {
-    if (!loading) { setElapsed(0); return }
+    if (!loading) { const t = setTimeout(() => setElapsed(0), 0); return () => clearTimeout(t) }
     const interval = setInterval(() => setElapsed(prev => prev + 1), 1000)
     return () => clearInterval(interval)
   }, [loading])

@@ -2,12 +2,12 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import { useExperimentStore } from '../../core/store/useExperimentStore'
 import { nav } from '../../core/navigation/navItems'
-import { userAuth } from '../../core/hooks/userAuth'
+import { useUserAuth } from '../../core/hooks/userAuth'
 import { cn } from '../../lib/utils'
 
 const Sidebar = () => {
   const { experimentId, individualId } = useExperimentStore()
-  const { user, logout }  = userAuth()
+  const { user, logout }  = useUserAuth()
   const navigate           = useNavigate()
   const location           = useLocation()
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({ 'Experimentar con IA': true })

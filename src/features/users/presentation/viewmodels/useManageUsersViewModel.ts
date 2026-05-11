@@ -1,13 +1,13 @@
 import { useState, useEffect }  from 'react'
 import { UserRepositoryImpl }   from '../../data/repositories/UserRepositoryImpl'
-import { userAuth }             from '../../../../core/hooks/userAuth'
+import { useUserAuth }             from '../../../../core/hooks/userAuth'
 import type { User, Role }      from '../../models/entities/User'
 import type { EditUserForm }    from '../types/EditUserForm'
 
 const repo = new UserRepositoryImpl()
 
 export const useManageUsersViewModel = () => {
-  const { user } = userAuth()
+  const { user } = useUserAuth()
   const isProfesor = (user?.role ?? '') === 'profesor'
 
   const [users,      setUsers]      = useState<User[]>([])

@@ -35,15 +35,17 @@ const ContactChat = ({ open, onClose }: ContactChatProps) => {
   }
 
   useEffect(() => {
-    if (open) {
+    if (!open) return
+    const t = setTimeout(() => {
       setMessages([{ from: 'bot', text: '¡Hola! 👋 ¿Cuál es tu nombre?' }])
       setStep('name')
       setInput('')
       setName('')
       setEmail('')
       setTyping(false)
-      setTimeout(() => inputRef.current?.focus(), 400)
-    }
+      inputRef.current?.focus()
+    }, 0)
+    return () => clearTimeout(t)
   }, [open])
 
   useEffect(() => {

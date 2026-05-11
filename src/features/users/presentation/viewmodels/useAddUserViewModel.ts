@@ -1,6 +1,6 @@
 import { useState, useEffect }  from 'react'
 import { UserRepositoryImpl }   from '../../data/repositories/UserRepositoryImpl'
-import { userAuth }             from '../../../../core/hooks/userAuth'
+import { useUserAuth }             from '../../../../core/hooks/userAuth'
 import type { AddUserForm }     from '../types/AddUserForm'
 
 const repo = new UserRepositoryImpl()
@@ -15,7 +15,7 @@ const initialForm: AddUserForm = {
 }
 
 export const useAddUserViewModel = () => {
-  const { user } = userAuth()
+  const { user } = useUserAuth()
 
   // Si es profesor, el rol queda fijo en 'estudiante'
   const userRole    = user?.role ?? ''

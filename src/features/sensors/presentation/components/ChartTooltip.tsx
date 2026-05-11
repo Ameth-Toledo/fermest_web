@@ -1,4 +1,7 @@
-const ChartTooltip = ({ active, payload, label, unit }: any) => {
+interface TooltipPayloadItem { value: number }
+interface ChartTooltipProps { active?: boolean; payload?: TooltipPayloadItem[]; label?: string; unit?: string }
+
+const ChartTooltip = ({ active, payload, label, unit }: ChartTooltipProps) => {
   if (!active || !payload?.length) return null
   return (
     <div

@@ -1,12 +1,12 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { userAuth } from '../hooks/userAuth'
+import { useUserAuth } from '../hooks/userAuth'
 
 interface PrivateRouteProps {
   allowedRoles?: string[]
 }
 
 const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
-  const { user } = userAuth()
+  const { user } = useUserAuth()
 
   if (!user) return <Navigate to="/login" replace />
 

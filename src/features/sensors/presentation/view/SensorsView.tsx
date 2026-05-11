@@ -1,6 +1,6 @@
 import { useSensorsViewModel } from '../viewmodels/useSensorsViewModel'
 import { useFermentation }     from '../../../fermentation/presentation/context/FermentationContext'
-import { userAuth }            from '../../../../core/hooks/userAuth'
+import { useUserAuth }            from '../../../../core/hooks/userAuth'
 import { SENSOR_META }         from '../../domain/models/Sensor'
 import SensorCard              from '../components/SensorCard'
 
@@ -13,7 +13,7 @@ const statusConfig = {
 }
 
 const SensorsView = () => {
-  const { user }    = userAuth()
+  const { user }    = useUserAuth()
   const { session } = useFermentation()
 
   const {

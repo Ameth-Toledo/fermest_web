@@ -14,6 +14,7 @@ export const FermentationProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useFermentation = (): FermentationContextValue => {
   const ctx = useContext(FermentationContext)
   if (!ctx) throw new Error('useFermentation debe usarse dentro de <FermentationProvider>')

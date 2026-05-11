@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { FermentationRepositoryImpl } from '../../data/repositories/FermentationRepositoryImpl'
-import { userAuth } from '../../../../core/hooks/userAuth'
+import { useUserAuth } from '../../../../core/hooks/userAuth'
 import { useCommandsWebSocket } from '../../../sensors/presentation/hooks/useCommandsWebSocket'
 import { SENSOR_KEY_TO_COMMAND, type DeviceState } from '../../../sensors/data/api/commandsWebSocket'
 import type { FermentationSession, FermentationReport } from '../../domain/models/Fermentation'
@@ -54,7 +54,7 @@ const toDeviceState = (states: SensorToggleState): Partial<DeviceState> => {
 }
 
 export const useFermentationViewModel = () => {
-  const { user } = userAuth()
+  const { user } = useUserAuth()
   const commands = useCommandsWebSocket()
 
   const [loading, setLoading]               = useState(false)
