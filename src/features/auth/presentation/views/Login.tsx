@@ -103,9 +103,9 @@ const Login = () => {
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <label className="text-sm text-neutral-400 font-medium">Contraseña</label>
-              <a href="#" className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">
+              <Link to="/forgot-password" className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">
                 ¿Olvidaste tu contraseña?
-              </a>
+              </Link>
             </div>
             <div className="relative">
               <input

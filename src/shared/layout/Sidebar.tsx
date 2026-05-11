@@ -3,226 +3,134 @@ import { useState } from 'react'
 import { useExperimentStore } from '../../core/store/useExperimentStore'
 import { nav } from '../../core/navigation/navItems'
 import { userAuth } from '../../core/hooks/userAuth'
+import { cn } from '../../lib/utils'
 
 const Sidebar = () => {
   const { experimentId, individualId } = useExperimentStore()
-  const { user } = userAuth()
-  const navigate  = useNavigate()
-  const location  = useLocation()
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({ Experimento: true })
-  const [hoveredLabel, setHoveredLabel] = useState<string | null>(null)
+  const { user, logout }  = userAuth()
+  const navigate           = useNavigate()
+  const location           = useLocation()
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({ 'Experimentar con IA': true })
 
-  const role = user?.role?.toLowerCase() ?? 'estudiante'
+  const role       = user?.role?.toLowerCase() ?? 'estudiante'
   const visibleNav = nav.filter(item => item.allowedRoles.includes(role))
 
-  const resolveePath = (path: string) => {
-    if (path.includes('/simulation/:id')) {
-      return individualId ? `/simulation/${individualId}` : null
-    }
-    if (path.includes(':id')) {
-      return experimentId ? path.replace(':id', experimentId) : null
-    }
+  const resolvePath = (path: string) => {
+    if (path.includes('/simulation/:id')) return individualId ? `/simulation/${individualId}` : null
+    if (path.includes(':id'))            return experimentId  ? path.replace(':id', experimentId) : null
     return path
   }
 
-  const toggleGroup = (group: string) => {
-    setOpenGroups(prev => ({ ...prev, [group]: !prev[group] }))
-  }
-
   const soloItems = visibleNav.filter(item => !item.group)
-
-  const groups = visibleNav
+  const groups    = visibleNav
     .filter(item => item.group)
     .reduce<string[]>((acc, item) => {
       if (!acc.includes(item.group!)) acc.push(item.group!)
       return acc
     }, [])
 
-  const renderNavButton = (item: typeof nav[0], indented = false) => {
-    const resolvedPath = resolveePath(item.path)
-    const isDisabled   = !resolvedPath
-    const isActive     = !!(resolvedPath && location.pathname === resolvedPath)
-    const isHovered    = hoveredLabel === item.label
+  const renderItem = (item: typeof nav[0], indented = false) => {
+    const resolved  = resolvePath(item.path)
+    const isActive  = !!(resolved && location.pathname === resolved)
+    const isDisabled = !resolved
 
     return (
       <button
         key={item.label}
-        onClick={() => resolvedPath && navigate(resolvedPath)}
+        onClick={() => resolved && navigate(resolved)}
         disabled={isDisabled}
-        onMouseEnter={() => !isDisabled && setHoveredLabel(item.label)}
-        onMouseLeave={() => setHoveredLabel(null)}
-        className="flex items-center gap-3 py-2.5 rounded-lg text-left transition-all w-full"
-        style={{
-          marginLeft:      indented ? '12px' : '0px',
-          width:           indented ? 'calc(100% - 12px)' : '100%',
-          paddingLeft:     indented ? '10px' : '0.75rem',
-          paddingRight:    '0.75rem',
-          backgroundColor: isActive
-            ? '#16A34A22'
-            : isHovered
-              ? '#22C55E0D'
-              : 'transparent',
-          borderLeft: isActive
-            ? '2px solid #22C55E'
-            : isHovered
-              ? '2px solid #22C55E55'
-              : '2px solid transparent',
-          cursor:     isDisabled ? 'not-allowed' : 'pointer',
-          opacity:    isDisabled ? 0.3 : 1,
-          transform:  isHovered && !isActive ? 'translateX(3px)' : 'translateX(0)',
-          boxShadow:  isHovered && !isActive ? 'inset 0 0 12px rgba(34,197,94,0.04)' : 'none',
-          transition: 'background-color 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s, opacity 0.15s',
-        }}
+        className={cn(
+          'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors text-left',
+          indented && 'ml-3 w-[calc(100%-12px)]',
+          isActive   && 'bg-neutral-800 text-white',
+          !isActive  && !isDisabled && 'text-neutral-500 hover:text-white hover:bg-neutral-900',
+          isDisabled && 'text-neutral-700 cursor-not-allowed opacity-40',
+        )}
       >
-        <svg
-          width={indented ? 13 : 18}
-          height={indented ? 13 : 18}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={isActive ? '#22C55E' : isHovered ? '#A1A1AA' : '#52525B'}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{ flexShrink: 0, transition: 'stroke 0.15s' }}
-        >
+        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
           <path d={item.icon} />
         </svg>
-        <div>
-          <p
-            className="text-xs font-medium"
-            style={{
-              color:      isActive ? '#22C55E' : isHovered ? '#D4D4D8' : '#A1A1AA',
-              fontSize:   indented ? '11px' : '12px',
-              transition: 'color 0.15s',
-            }}
-          >
-            {item.label}
-          </p>
-          <p style={{ color: isHovered ? '#52525B' : '#3F3F46', fontSize: '10px', transition: 'color 0.18s' }}>
-            {item.description}
-          </p>
-        </div>
+        <span className={cn('flex-1 text-xs font-medium', indented && 'text-[11px]')}>
+          {item.label}
+        </span>
       </button>
     )
   }
 
   return (
-    <aside
-      className="fixed left-0 top-0 h-full w-60 flex flex-col py-8 px-4"
-      style={{ backgroundColor: '#111215', borderRight: '1px solid #1A1A1D' }}
-    >
-      <div className="mb-10 px-2 flex items-center gap-3">
-        <img src="/assets/logo.svg" alt="FermEST" className="h-10 object-contain" />
-        <span className="text-base font-semibold" style={{ color: '#F4F4F5' }}>Nich-Ká</span>
+    <aside className="fixed left-0 top-0 h-full w-60 flex flex-col bg-[#0A0A0B] border-r border-neutral-900">
+      {/* Logo */}
+      <div className="px-5 py-6 border-b border-neutral-900 flex items-center gap-3">
+        <img src="/assets/logo.svg" alt="Nich-Ká" className="w-8 h-8 object-contain" />
+        <div>
+          <p className="text-white text-sm font-semibold leading-none">Nich-Ká</p>
+          <p className="text-neutral-600 text-[10px] mt-0.5">Panel de control</p>
+        </div>
       </div>
 
-      <nav className="flex flex-col gap-1">
-        {soloItems.map(item => renderNavButton(item, false))}
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-1">
+        {soloItems.map(item => renderItem(item))}
+
         {groups.map(group => {
-          const groupItems     = visibleNav.filter(item => item.group === group)
-          const firstItem      = groupItems[0]
-          const isOpen         = openGroups[group] ?? false
-          const isAnyActive    = groupItems.some(item => {
-            const resolved = resolveePath(item.path)
-            return resolved && location.pathname === resolved
+          const groupItems  = visibleNav.filter(item => item.group === group)
+          const firstItem   = groupItems[0]
+          const isOpen      = openGroups[group] ?? false
+          const isAnyActive = groupItems.some(item => {
+            const r = resolvePath(item.path)
+            return r && location.pathname === r
           })
-          const isGroupHovered = hoveredLabel === `group:${group}`
 
           return (
             <div key={group}>
               <button
-                onClick={() => toggleGroup(group)}
-                onMouseEnter={() => setHoveredLabel(`group:${group}`)}
-                onMouseLeave={() => setHoveredLabel(null)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all w-full"
-                style={{
-                  backgroundColor: isAnyActive
-                    ? '#16A34A22'
-                    : isGroupHovered
-                      ? '#22C55E0D'
-                      : 'transparent',
-                  borderLeft: isAnyActive
-                    ? '2px solid #22C55E'
-                    : isGroupHovered
-                      ? '2px solid #22C55E55'
-                      : '2px solid transparent',
-                  cursor:     'pointer',
-                  transform:  isGroupHovered && !isAnyActive ? 'translateX(3px)' : 'translateX(0)',
-                  transition: 'background-color 0.18s, border-color 0.18s, transform 0.18s',
-                }}
+                onClick={() => setOpenGroups(prev => ({ ...prev, [group]: !prev[group] }))}
+                className={cn(
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors text-left',
+                  isAnyActive ? 'bg-neutral-800 text-white' : 'text-neutral-500 hover:text-white hover:bg-neutral-900'
+                )}
               >
-                <svg
-                  width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke={isAnyActive ? '#22C55E' : isGroupHovered ? '#A1A1AA' : '#52525B'}
-                  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-                  style={{ flexShrink: 0, transition: 'stroke 0.15s' }}
-                >
+                <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                   <path d={firstItem.groupIcon ?? firstItem.icon} />
                 </svg>
-                <div className="flex-1">
-                  <p
-                    className="text-xs font-medium"
-                    style={{
-                      color:      isAnyActive ? '#22C55E' : isGroupHovered ? '#D4D4D8' : '#A1A1AA',
-                      transition: 'color 0.15s',
-                    }}
-                  >
-                    {group}
-                  </p>
-                  <p style={{ color: isGroupHovered ? '#52525B' : '#3F3F46', fontSize: '10px', transition: 'color 0.18s' }}>
-                    {firstItem.groupDescription ?? ''}
-                  </p>
-                </div>
+                <span className="flex-1 text-xs font-medium">{group}</span>
                 <svg
-                  width="12" height="12" viewBox="0 0 24 24" fill="none"
-                  stroke="#52525B" strokeWidth="2" strokeLinecap="round"
-                  style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                  className="w-3.5 h-3.5 text-neutral-600 transition-transform duration-200 flex-shrink-0"
+                  style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
                 >
                   <path d="M6 9l6 6 6-6" />
                 </svg>
               </button>
 
               <div
-                style={{
-                  maxHeight:    isOpen ? `${groupItems.length * 72}px` : '0px',
-                  overflow:     'hidden',
-                  transition:   'max-height 0.25s ease',
-                  borderLeft:   '1px solid #1F1F22',
-                  marginLeft:   '20px',
-                  paddingLeft:  '0px',
-                  marginTop:    isOpen ? '2px' : '0px',
-                  marginBottom: isOpen ? '2px' : '0px',
-                }}
+                className="overflow-hidden transition-all duration-200 ml-3 border-l border-neutral-900"
+                style={{ maxHeight: isOpen ? `${groupItems.length * 44}px` : '0px' }}
               >
-                {groupItems.map(item => renderNavButton(item, true))}
+                <div className="py-1 flex flex-col gap-0.5">
+                  {groupItems.map(item => renderItem(item, true))}
+                </div>
               </div>
             </div>
           )
         })}
       </nav>
 
-      <div className="mt-auto px-2">
-        <div className="h-px w-full mb-3" style={{ backgroundColor: '#1A1A1D' }} />
+      {/* Footer: logout */}
+      <div className="px-3 py-4 border-t border-neutral-900 flex flex-col gap-1">
         <button
-          onClick={() => {
-            localStorage.removeItem('access_token')
-            localStorage.removeItem('refresh_token')
-            localStorage.removeItem('user_data')
-            navigate('/login')
-          }}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg w-full transition-all duration-200 hover:bg-red-500/10 group"
+          onClick={() => { logout(); navigate('/login') }}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-neutral-500 hover:text-red-400 hover:bg-red-400/5 transition-colors text-left"
         >
-          <svg
-            width="18" height="18" viewBox="0 0 24 24" fill="none"
-            stroke="#71717A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-            className="group-hover:stroke-red-400 transition-colors"
-          >
+          <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
             <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
-          <span className="text-xs font-medium text-neutral-500 group-hover:text-red-400 transition-colors">
-            Cerrar sesión
-          </span>
+          <span className="text-xs font-medium">Cerrar sesión</span>
         </button>
+        <p className="text-neutral-800 text-[10px] px-3">Panel de control v1.0</p>
       </div>
     </aside>
   )

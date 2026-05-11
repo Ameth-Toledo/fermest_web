@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { ReactLenis } from "lenis/react";
 import Header from "./Header";
 import Footer from "./Footer";
+import ContactChat from "./ContactChat";
 import { cn } from "../../../../lib/utils";
 
 interface LegalSection {
@@ -18,7 +19,10 @@ interface LegalLayoutProps {
 }
 
 const LegalLayout = ({ badge, title, subtitle, updatedAt, sections }: LegalLayoutProps) => {
+  const [chatOpen, setChatOpen] = useState(false)
+
   return (
+    <>
     <ReactLenis root options={{ lerp: 0.08, duration: 1.2, smoothWheel: true }}>
     <div className="min-h-screen bg-bg text-white">
       <Header />
@@ -75,18 +79,21 @@ const LegalLayout = ({ badge, title, subtitle, updatedAt, sections }: LegalLayou
             <p className="text-sm font-semibold text-white">¿Tienes alguna pregunta?</p>
             <p className="text-xs text-neutral-500 mt-0.5">Puedes contactarnos en cualquier momento.</p>
           </div>
-          <a
-            href="mailto:contacto@nichka.com"
+          <button
+            onClick={() => setChatOpen(true)}
             className="shrink-0 text-sm font-medium px-5 py-2.5 rounded-xl bg-white text-black hover:bg-neutral-200 transition-colors duration-200"
           >
             Contáctanos
-          </a>
+          </button>
         </div>
       </div>
 
       <Footer />
     </div>
     </ReactLenis>
+
+    <ContactChat open={chatOpen} onClose={() => setChatOpen(false)} />
+    </>
   );
 };
 
