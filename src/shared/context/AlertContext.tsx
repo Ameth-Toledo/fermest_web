@@ -111,6 +111,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAlert = () => {
   const ctx = useContext(AlertContext)
   if (!ctx) throw new Error('useAlert must be used within AlertProvider')

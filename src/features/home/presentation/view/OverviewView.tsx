@@ -1,5 +1,5 @@
 import { useNavigate }          from 'react-router-dom'
-import { userAuth }             from '../../../../core/hooks/userAuth'
+import { useUserAuth }             from '../../../../core/hooks/userAuth'
 import { STATS }                from '../constants/stats'
 import { QUICK_ACTIONS }        from '../constants/quickActions'
 import { OVERVIEW_STYLES }      from '../constants/styles'
@@ -7,7 +7,7 @@ import { useSensorsViewModel }  from '../../../sensors/presentation/viewmodels/u
 
 const OverviewView = () => {
   const navigate   = useNavigate()
-  const { user }   = userAuth()
+  const { user }   = useUserAuth()
 
   const role = user?.role?.toLowerCase() ?? 'estudiante'
 

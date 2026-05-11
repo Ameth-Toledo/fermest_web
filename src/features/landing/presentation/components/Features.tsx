@@ -25,7 +25,7 @@ const PhChart = () => {
       for (let i = 0; i <= 120; i++) {
         const rx = i / 120; if (rx > t) break
         const x = pad.l + rx * gW, y = pad.t + gH - ((pH(rx) - 4) / 2.5) * gH
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+        if (i === 0) { ctx.moveTo(x, y) } else { ctx.lineTo(x, y) }
       }
       ctx.strokeStyle = "rgba(74,222,128,0.9)"; ctx.lineWidth = 2; ctx.shadowColor = "#4ade80"; ctx.shadowBlur = 8; ctx.stroke(); ctx.shadowBlur = 0
       const fill = ctx.createLinearGradient(0, pad.t, 0, pad.t + gH)
@@ -34,7 +34,7 @@ const PhChart = () => {
       for (let i = 0; i <= 120; i++) {
         const rx = i / 120; if (rx > t) break
         const x = pad.l + rx * gW, y = pad.t + gH - ((pH(rx) - 4) / 2.5) * gH
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+        if (i === 0) { ctx.moveTo(x, y) } else { ctx.lineTo(x, y) }
       }
       ctx.lineTo(pad.l + t * gW, pad.t + gH); ctx.lineTo(pad.l, pad.t + gH); ctx.closePath(); ctx.fillStyle = fill; ctx.fill()
       ctx.font = "8px monospace"; ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.textAlign = "right"

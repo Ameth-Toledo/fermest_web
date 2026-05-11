@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { cn } from '../../../../lib/utils'
 import { useSupportStore } from '../../../../core/store/useSupportStore'
-import { userAuth } from '../../../../core/hooks/userAuth'
+import { useUserAuth } from '../../../../core/hooks/userAuth'
 
 type SupportSection = 'tickets' | 'clients' | 'codes'
 
@@ -30,7 +30,7 @@ const items: { id: SupportSection; label: string; icon: string }[] = [
 
 const SupportSidebar = ({ active, onChange }: Props) => {
   const pending  = useSupportStore(s => s.tickets.filter(t => t.status === 'pending').length)
-  const { logout } = userAuth()
+  const { logout } = useUserAuth()
   const navigate   = useNavigate()
 
   const handleLogout = () => {

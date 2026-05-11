@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { ProfileRepositoryImpl } from '../../data/repositories/ProfileRepositoryImpl'
-import { notifyUserUpdated, userAuth } from '../../../../core/hooks/userAuth'
+import { notifyUserUpdated, useUserAuth } from '../../../../core/hooks/userAuth'
 
 const repository = new ProfileRepositoryImpl()
 
@@ -8,7 +8,7 @@ export type InfoForm = { name: string; last_name: string; email: string }
 export type PasswordForm = { current: string; next: string; confirm: string }
 
 export const useProfileViewModel = () => {
-  const { user } = userAuth()
+  const { user } = useUserAuth()
 
   // ── Info personal ──────────────────────────────────────────────────────────
   const [infoForm, setInfoForm] = useState<InfoForm>({

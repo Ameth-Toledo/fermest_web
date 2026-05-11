@@ -42,7 +42,7 @@ const readUserFromStorage = (): AuthUser | null => {
 export const notifyUserUpdated = () =>
   window.dispatchEvent(new Event(USER_UPDATED_EVENT))
 
-export const userAuth = () => {
+export const useUserAuth = () => {
   const [user, setUser] = useState<AuthUser | null>(readUserFromStorage)
 
   useEffect(() => {

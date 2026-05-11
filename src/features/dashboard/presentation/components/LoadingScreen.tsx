@@ -2,6 +2,15 @@ import { useState, useEffect } from 'react'
 import type { LoadingScreenProps } from '../types/LoadingScreenProps'
 import { AGD_MESSAGES } from '../constants/agdMessages'
 
+const BUBBLES = Array.from({ length: 18 }, (_, i) => ({
+  width:   `${Math.random() * 12 + 4}px`,
+  height:  `${Math.random() * 12 + 4}px`,
+  left:    `${Math.random() * 100}%`,
+  opacity: Math.random() * 0.4 + 0.1,
+  animation: `bubble ${Math.random() * 6 + 5}s ease-in ${Math.random() * 5}s infinite`,
+  backgroundColor: i % 3 === 0 ? '#22C55E' : i % 3 === 1 ? '#16A34A' : '#15803D',
+}))
+
 const LoadingScreen = ({ elapsed }: LoadingScreenProps) => {
   const [msgIndex, setMsgIndex] = useState(0)
   const [visible, setVisible]   = useState(true)
@@ -20,19 +29,11 @@ const LoadingScreen = ({ elapsed }: LoadingScreenProps) => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden" style={{ backgroundColor: '#0A0A0B' }}>
       <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 18 }).map((_, i) => (
+        {BUBBLES.map((style, i) => (
           <div
             key={i}
             className="absolute rounded-full"
-            style={{
-              width:           `${Math.random() * 12 + 4}px`,
-              height:          `${Math.random() * 12 + 4}px`,
-              left:            `${Math.random() * 100}%`,
-              bottom:          '-20px',
-              backgroundColor: i % 3 === 0 ? '#22C55E' : i % 3 === 1 ? '#16A34A' : '#15803D',
-              opacity:         Math.random() * 0.4 + 0.1,
-              animation:       `bubble ${Math.random() * 6 + 5}s ease-in ${Math.random() * 5}s infinite`,
-            }}
+            style={{ ...style, bottom: '-20px' }}
           />
         ))}
       </div>
