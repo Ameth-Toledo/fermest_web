@@ -27,7 +27,7 @@ jobs:
         run: npm run lint
 
   build:
-    name: Build & Type Check
+    name: Build and Test
     runs-on: ubuntu-latest
     needs: lint
     steps:
