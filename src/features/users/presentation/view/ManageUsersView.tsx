@@ -2,7 +2,7 @@ import { motion } from 'motion/react'
 import { useManageUsersViewModel } from '../viewmodels/useManageUsersViewModel'
 import { MANAGE_USERS_STYLES, ROLE_CONFIG } from '../constants/manageUsersStyles'
 import type { Role } from '../../models/entities/User'
-import { pageVariants, sectionVariants, gridVariants, cardVariants } from '../../../../shared/animations/variants'
+import { pageVariants, sectionVariants } from '../../../../shared/animations/variants'
 
 const inputStyle: React.CSSProperties = {
   width:           '100%',

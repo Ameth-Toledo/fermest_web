@@ -110,8 +110,11 @@ function toNearestTurn(prev: number | undefined, target: number) {
 
 function useShortestRotation(target: number) {
   const prevRef = React.useRef<number | undefined>(undefined);
+  // eslint-disable-next-line react-hooks/refs
   return React.useMemo(() => {
+    // eslint-disable-next-line react-hooks/refs
     const next = toNearestTurn(prevRef.current, target);
+    // eslint-disable-next-line react-hooks/refs
     prevRef.current = next;
     return next;
   }, [target]);

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'motion/react'
 import { useProfileViewModel } from '../viewmodels/useProfileViewModel'
 import { avatar as AVATARS } from '../../../../core/avatars/avatars'
-import { pageVariants, sectionVariants, gridVariants, cardVariants } from '../../../../shared/animations/variants'
+import { pageVariants, sectionVariants, gridVariants } from '../../../../shared/animations/variants'
 
 const STYLES = `
   .profile-input:focus {

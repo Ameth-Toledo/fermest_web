@@ -143,6 +143,7 @@ function DisclosurePanel<TTag extends React.ElementType = typeof motion.div>(
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export {
   Disclosure,
   DisclosureButton,

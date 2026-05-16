@@ -92,4 +92,5 @@ const GradientCard = React.forwardRef<HTMLDivElement, GradientCardProps>(
 );
 GradientCard.displayName = "GradientCard";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { GradientCard, cardVariants };

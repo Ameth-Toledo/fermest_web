@@ -35,7 +35,8 @@ function AccordionItem<TTag extends React.ElementType = 'div'>({
 }: AccordionItemProps<TTag>) {
   return (
     <DisclosurePrimitive {...props}>
-      {(bag) => (
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {(bag: any) => (
         <div className={cn('border-b last:border-b-0', className)}>
           {typeof children === 'function' ? children(bag) : children}
         </div>
@@ -62,7 +63,8 @@ function AccordionButton({
       )}
       {...props}
     >
-      {(bag) => (
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {(bag: any) => (
         <>
           {typeof children === 'function' ? children(bag) : children}
           {showArrow && (
@@ -85,7 +87,8 @@ function AccordionPanel<TTag extends React.ElementType = typeof motion.div>({
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <DisclosurePanelPrimitive<any> {...props}>
-      {(bag) => (
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {(bag: any) => (
         <div className={cn('text-sm pt-0 pb-4', className)}>
           {typeof children === 'function' ? children(bag) : children}
         </div>
