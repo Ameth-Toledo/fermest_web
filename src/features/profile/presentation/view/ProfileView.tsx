@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import { useProfileViewModel } from '../viewmodels/useProfileViewModel'
 import { avatar as AVATARS } from '../../../../core/avatars/avatars'
+import { pageVariants, sectionVariants, gridVariants } from '../../../../shared/animations/variants'
 
 const STYLES = `
   .profile-input:focus {
@@ -79,16 +81,16 @@ const ProfileView = () => {
   const roleColor = user?.role === 'admin' ? '#A78BFA' : user?.role === 'profesor' ? '#3B82F6' : '#22C55E'
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '40px 48px' }}>
+    <motion.div variants={pageVariants} initial="hidden" animate="visible" style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '40px 48px' }}>
       <style>{STYLES}</style>
 
-      <div style={{ marginBottom: 32 }}>
+      <motion.div variants={sectionVariants} style={{ marginBottom: 32 }}>
         <p style={{ color: '#22C55E', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0 0 10px 0' }}>Cuenta</p>
         <h1 style={{ color: '#F4F4F5', fontSize: 32, fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>Mi Perfil</h1>
         <div style={{ marginTop: 10, height: 1, width: 80, backgroundColor: '#22C55E', opacity: 0.4 }} />
-      </div>
+      </motion.div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 24, alignItems: 'start' }}>
+      <motion.div variants={gridVariants} style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 24, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ padding: 32, borderRadius: 16, backgroundColor: '#111113', border: '1px solid #1F1F22', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
             <div style={{ position: 'relative' }}>
@@ -296,8 +298,8 @@ const ProfileView = () => {
           </div>
 
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
 

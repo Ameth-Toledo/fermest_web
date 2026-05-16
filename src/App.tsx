@@ -1,11 +1,12 @@
+import { Toaster } from 'sileo'
 import AppRouter from './core/navigation/AppRouter'
-import { AlertProvider } from './shared/context/AlertContext'
 
 const App = () => {
   return (
-    <AlertProvider>
+    <>
+      <Toaster position="top-center" />
       <AppRouter />
-    </AlertProvider>
+    </>
   )
 }
 

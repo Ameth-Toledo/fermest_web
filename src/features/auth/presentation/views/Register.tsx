@@ -5,7 +5,7 @@ import { useRegisterViewModel } from '../viewmodels/useRegisterViewModel'
 import { cn } from '../../../../lib/utils'
 import Text3DFlip from '../../../../components/ui/text-3d-flip'
 import { Checkbox } from '../../../../components/ui/checkbox'
-import { useAlert } from '../../../../shared/context/AlertContext'
+import { sileo } from 'sileo'
 
 const COL1 = [
   'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80',
@@ -49,14 +49,13 @@ const Register = () => {
     handleSubmit,
   } = useRegisterViewModel()
 
-  const { showAlert } = useAlert()
   const [showPass, setShowPass]           = useState(false)
   const [showConfirm, setShowConfirm]     = useState(false)
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [touched, setTouched]             = useState<Partial<Record<Field, boolean>>>({})
 
   useEffect(() => {
-    if (error) showAlert({ title: 'No se pudo crear la cuenta', description: error, variant: 'error' })
+    if (error) sileo.error({ title: 'No se pudo crear la cuenta', description: error, fill: '#1A1A1A', styles: { title: 'text-white', description: 'text-white' } })
   }, [error])
 
   const errors: Record<Field, string> = {

@@ -72,47 +72,67 @@ const TicketsPanel = () => {
         </div>
       </div>
 
-      {/* ── Table: header sticky + rows in same scroll container ── */}
+      {/* ── Table ── */}
       <div className="flex-1 overflow-y-auto">
-        <div className="sticky top-0 z-10 bg-[#0A0A0B] px-8 py-2.5 border-b border-neutral-900 grid grid-cols-[2fr_2fr_3fr_1fr_1fr_auto] gap-4 items-center">
-          {['Usuario', 'Correo', 'Mensaje', 'Estado', 'Recibido', ''].map(h => (
-            <span key={h} className="text-[11px] font-semibold text-neutral-600 uppercase tracking-wider">{h}</span>
-          ))}
-        </div>
-
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-            <svg className="w-10 h-10 text-neutral-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-            </svg>
-            <p className="text-neutral-600 text-sm">{tickets.length === 0 ? 'Sin chats aún' : 'Sin resultados'}</p>
-          </div>
-        ) : (
-          filtered.map(ticket => (
-            <div key={ticket.id}
-              className="px-8 py-4 border-b border-neutral-900 hover:bg-neutral-900/50 transition-colors grid grid-cols-[2fr_2fr_3fr_1fr_1fr_auto] gap-4 items-center group">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-7 h-7 rounded-full bg-neutral-800 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-neutral-400">
-                  {ticket.name[0]}
-                </div>
-                <span className="text-sm text-white font-medium truncate">{ticket.name}</span>
-              </div>
-              <span className="text-sm text-neutral-400 truncate">{ticket.email}</span>
-              <span className="text-sm text-neutral-500 truncate">{ticket.message}</span>
-              <span className={cn('text-[11px] px-2.5 py-1 rounded-full border whitespace-nowrap w-fit',
-                ticket.status === 'pending'
-                  ? 'text-amber-400 bg-amber-400/10 border-amber-400/20'
-                  : 'text-green-400 bg-green-400/10 border-green-400/20')}>
-                {ticket.status === 'pending' ? 'Pendiente' : 'Respondido'}
-              </span>
-              <span className="text-xs text-neutral-600 whitespace-nowrap">{timeAgo(ticket.createdAt)}</span>
-              <button onClick={() => openTicket(ticket)}
-                className="text-xs px-3 py-1.5 rounded-lg border border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500 transition-colors opacity-0 group-hover:opacity-100 whitespace-nowrap">
-                {ticket.status === 'pending' ? 'Responder' : 'Ver'}
-              </button>
-            </div>
-          ))
-        )}
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="sticky top-0 z-10 bg-[#0A0A0B] border-b border-neutral-900">
+              {['Usuario', 'Correo', 'Mensaje', 'Estado', 'Recibido', ''].map(h => (
+                <th key={h} className="px-8 py-2.5 text-left text-[11px] font-semibold text-neutral-600 uppercase tracking-wider">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={6}>
+                  <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
+                    <svg className="w-10 h-10 text-neutral-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                    <p className="text-neutral-600 text-sm">{tickets.length === 0 ? 'Sin chats aún' : 'Sin resultados'}</p>
+                  </div>
+                </td>
+              </tr>
+            ) : filtered.map(ticket => (
+              <tr key={ticket.id} className="border-b border-neutral-900 hover:bg-neutral-900/50 transition-colors group">
+                <td className="px-8 py-4">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-neutral-800 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-neutral-400">
+                      {ticket.name[0]}
+                    </div>
+                    <span className="text-sm text-white font-medium truncate">{ticket.name}</span>
+                  </div>
+                </td>
+                <td className="px-8 py-4">
+                  <span className="text-sm text-neutral-400 truncate block">{ticket.email}</span>
+                </td>
+                <td className="px-8 py-4 max-w-[260px]">
+                  <span className="text-sm text-neutral-500 truncate block">{ticket.message}</span>
+                </td>
+                <td className="px-8 py-4">
+                  <span className={cn('text-[11px] px-2.5 py-1 rounded-full border whitespace-nowrap',
+                    ticket.status === 'pending'
+                      ? 'text-amber-400 bg-neutral-950 border-amber-500/60'
+                      : 'text-green-400 bg-neutral-950 border-green-500/60')}>
+                    {ticket.status === 'pending' ? 'Pendiente' : 'Respondido'}
+                  </span>
+                </td>
+                <td className="px-8 py-4">
+                  <span className="text-xs text-neutral-600 whitespace-nowrap">{timeAgo(ticket.createdAt)}</span>
+                </td>
+                <td className="px-8 py-4 text-right">
+                  <button onClick={() => openTicket(ticket)}
+                    className="text-xs px-3 py-1.5 rounded-lg border border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500 transition-colors opacity-0 group-hover:opacity-100 whitespace-nowrap">
+                    {ticket.status === 'pending' ? 'Responder' : 'Ver'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* ── Drawer overlay ── */}
@@ -135,7 +155,7 @@ const TicketsPanel = () => {
                   <p className="text-neutral-500 text-xs mt-0.5">{selected.email}</p>
                 </div>
                 <span className={cn('text-[11px] px-2.5 py-1 rounded-full border',
-                  selected.status === 'pending' ? 'text-amber-400 bg-amber-400/10 border-amber-400/20' : 'text-green-400 bg-green-400/10 border-green-400/20')}>
+                  selected.status === 'pending' ? 'text-amber-400 bg-neutral-950 border-amber-500/60' : 'text-green-400 bg-neutral-950 border-green-500/60')}>
                   {selected.status === 'pending' ? 'Pendiente' : 'Respondido'}
                 </span>
                 <button onClick={() => setSelected(null)}
