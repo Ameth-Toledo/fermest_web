@@ -71,50 +71,68 @@ const ClientsPanel = () => {
         </div>
       </div>
 
-      {/* ── Table: header sticky + rows in same scroll container ── */}
+      {/* ── Table ── */}
       <div className="flex-1 overflow-y-auto">
-        <div className="sticky top-0 z-10 bg-[#0A0A0B] px-8 py-2.5 border-b border-neutral-900 grid grid-cols-[2fr_2fr_1fr_1fr_1.5fr_auto] gap-4 items-center">
-          {['Usuario', 'Correo', 'Rol', 'Estado', 'Código', ''].map(h => (
-            <span key={h} className="text-[11px] font-semibold text-neutral-600 uppercase tracking-wider">{h}</span>
-          ))}
-        </div>
-
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-            <svg className="w-10 h-10 text-neutral-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            <p className="text-neutral-600 text-sm">Sin resultados</p>
-          </div>
-        ) : (
-          filtered.map(client => (
-            <div key={client.id}
-              className="px-8 py-4 border-b border-neutral-900 hover:bg-neutral-900/50 transition-colors grid grid-cols-[2fr_2fr_1fr_1fr_1.5fr_auto] gap-4 items-center group">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-7 h-7 rounded-full bg-neutral-800 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-neutral-400">
-                  {client.name[0]}{client.last_name[0]}
-                </div>
-                <span className="text-sm text-white font-medium truncate">{client.name} {client.last_name}</span>
-              </div>
-              <span className="text-sm text-neutral-400 truncate">{client.email}</span>
-              <span className="text-sm text-neutral-500">{roleLabel[client.role] ?? client.role}</span>
-              <span className={cn('flex items-center gap-1.5 text-xs',
-                client.status === 'active' ? 'text-green-400' : 'text-red-400')}>
-                <span className={cn('w-1.5 h-1.5 rounded-full flex-shrink-0',
-                  client.status === 'active' ? 'bg-green-400' : 'bg-red-400')} />
-                {client.status === 'active' ? 'Activo' : 'Suspendido'}
-              </span>
-              <span className={cn('text-xs font-mono',
-                client.activationCode ? 'text-green-400 font-bold tracking-wider' : 'text-neutral-700')}>
-                {client.activationCode ?? '—'}
-              </span>
-              <button onClick={() => openClient(client)}
-                className="text-xs px-3 py-1.5 rounded-lg border border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500 transition-colors opacity-0 group-hover:opacity-100 whitespace-nowrap">
-                Ver detalle
-              </button>
-            </div>
-          ))
-        )}
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="sticky top-0 z-10 bg-[#0A0A0B] border-b border-neutral-900">
+              {['Usuario', 'Correo', 'Rol', 'Estado', 'Código', ''].map(h => (
+                <th key={h} className="px-8 py-2.5 text-left text-[11px] font-semibold text-neutral-600 uppercase tracking-wider">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={6}>
+                  <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
+                    <svg className="w-10 h-10 text-neutral-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <p className="text-neutral-600 text-sm">Sin resultados</p>
+                  </div>
+                </td>
+              </tr>
+            ) : filtered.map(client => (
+              <tr key={client.id} className="border-b border-neutral-900 hover:bg-neutral-900/50 transition-colors group">
+                <td className="px-8 py-4">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-neutral-800 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-neutral-400">
+                      {client.name[0]}{client.last_name[0]}
+                    </div>
+                    <span className="text-sm text-white font-medium truncate">{client.name} {client.last_name}</span>
+                  </div>
+                </td>
+                <td className="px-8 py-4">
+                  <span className="text-sm text-neutral-400 truncate block">{client.email}</span>
+                </td>
+                <td className="px-8 py-4">
+                  <span className="text-sm text-neutral-500">{roleLabel[client.role] ?? client.role}</span>
+                </td>
+                <td className="px-8 py-4">
+                  <span className={cn('text-[11px] px-2.5 py-1 rounded-full border whitespace-nowrap',
+                    client.status === 'active' ? 'text-green-400 bg-neutral-950 border-green-500/60' : 'text-red-400 bg-neutral-950 border-red-500/60')}>
+                    {client.status === 'active' ? 'Activo' : 'Suspendido'}
+                  </span>
+                </td>
+                <td className="px-8 py-4">
+                  <span className={cn('text-xs font-mono',
+                    client.activationCode ? 'text-green-400 font-bold tracking-wider' : 'text-neutral-700')}>
+                    {client.activationCode ?? '—'}
+                  </span>
+                </td>
+                <td className="px-8 py-4 text-right">
+                  <button onClick={() => openClient(client)}
+                    className="text-xs px-3 py-1.5 rounded-lg border border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500 transition-colors opacity-0 group-hover:opacity-100 whitespace-nowrap">
+                    Ver detalle
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* ── Drawer overlay ── */}
@@ -154,7 +172,7 @@ const ClientsPanel = () => {
                     {roleLabel[selected.role] ?? selected.role}
                   </span>
                   <span className={cn('text-xs px-2.5 py-1 rounded-full border',
-                    selected.status === 'active' ? 'text-green-400 bg-green-400/10 border-green-400/20' : 'text-red-400 bg-red-400/10 border-red-400/20')}>
+                    selected.status === 'active' ? 'text-green-400 bg-neutral-950 border-green-500/60' : 'text-red-400 bg-neutral-950 border-red-500/60')}>
                     {selected.status === 'active' ? 'Activo' : 'Suspendido'}
                   </span>
                   <button onClick={handleToggle}

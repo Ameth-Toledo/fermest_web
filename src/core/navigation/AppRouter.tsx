@@ -10,6 +10,10 @@ import LandingView from '../../features/landing/presentation/views/LandingScreen
 import PrivacyView from '../../features/landing/presentation/views/PrivacyView'
 import TermsView from '../../features/landing/presentation/views/TermsView'
 import CookiesView from '../../features/landing/presentation/views/CookiesView'
+import HardwareView from '../../features/landing/presentation/views/HardwareView'
+import PlanesView from '../../features/landing/presentation/views/PlanesView'
+import ConsultoriaView from '../../features/landing/presentation/views/ConsultoriaView'
+import MantenimientoView from '../../features/landing/presentation/views/MantenimientoView'
 import Login from '../../features/auth/presentation/views/Login'
 import ForgotPassword from '../../features/auth/presentation/views/ForgotPassword'
 import FermentationView from '../../features/fermentation/presentation/view/FermentationView'
@@ -25,21 +29,29 @@ import ProfileView from '../../features/profile/presentation/view/ProfileView'
 import SupportView from '../../features/support/presentation/view/SupportView'
 import { FermentationProvider } from '../../features/fermentation/presentation/context/FermentationContext'
 import PrivateRoute from './PrivateRoute'
+import ScrollToTop from './ScrollToTop'
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingView />} />
         <Route path="/privacy" element={<PrivacyView />} />
         <Route path="/terms" element={<TermsView />} />
         <Route path="/cookies" element={<CookiesView />} />
+        <Route path="/hardware" element={<HardwareView />} />
+        <Route path="/planes" element={<PlanesView />} />
+        <Route path="/consultoria" element={<ConsultoriaView />} />
+        <Route path="/mantenimiento" element={<MantenimientoView />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Soporte - sin auth (acceso por rol soporte) */}
-        <Route path="/support" element={<SupportView />} />
+        {/* Soporte — auth requerido, solo rol soporte */}
+        <Route element={<PrivateRoute allowedRoles={['soporte']} />}>
+          <Route path="/support" element={<SupportView />} />
+        </Route>
 
         <Route element={<PrivateRoute />}>
           <Route element={<FermentationProvider><Layout /></FermentationProvider>}>

@@ -1,9 +1,46 @@
 import { useNavigate }          from 'react-router-dom'
+import { motion }               from 'motion/react'
 import { useUserAuth }             from '../../../../core/hooks/userAuth'
 import { STATS }                from '../constants/stats'
 import { QUICK_ACTIONS }        from '../constants/quickActions'
 import { OVERVIEW_STYLES }      from '../constants/styles'
 import { useSensorsViewModel }  from '../../../sensors/presentation/viewmodels/useSensorsViewModel'
+import { pageVariants, sectionVariants, cardVariants, gridVariants } from '../../../../shared/animations/variants'
+
+const ANNOUNCEMENTS = [
+  {
+    tag: 'Nuevo',
+    tagColor: '#22C55E',
+    version: 'v1.1',
+    date: 'May 2025',
+    title: 'Chat de soporte técnico',
+    description: 'Asistente IA Nich-káBot integrado para resolver dudas sobre fermentación de café y el uso de la plataforma.',
+  },
+  {
+    tag: 'Mejora',
+    tagColor: '#3B82F6',
+    version: 'v1.1',
+    date: 'May 2025',
+    title: 'Experiencia visual rediseñada',
+    description: 'Animaciones fluidas con Framer Motion, scroll suave global y barra de desplazamiento personalizada.',
+  },
+  {
+    tag: 'Nuevo',
+    tagColor: '#A855F7',
+    version: 'v1.0',
+    date: 'Abr 2025',
+    title: 'Monitoreo en tiempo real',
+    description: 'Visualización en vivo de sensores IoT: temperatura, pH, CO₂, turbidez y azúcar mediante WebSockets.',
+  },
+  {
+    tag: 'Nuevo',
+    tagColor: '#F59E0B',
+    version: 'v1.0',
+    date: 'Abr 2025',
+    title: 'Calculadora de eficiencia',
+    description: 'Herramienta para calcular la eficiencia del proceso de fermentación con base en los parámetros capturados.',
+  },
+]
 
 const OverviewView = () => {
   const navigate   = useNavigate()
@@ -26,7 +63,12 @@ const OverviewView = () => {
   const visibleActions = QUICK_ACTIONS.filter(a => a.allowedRoles.includes(role))
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '48px' }}>
+    <motion.div
+      variants={pageVariants}
+      initial="hidden"
+      animate="visible"
+      style={{ minHeight: '100vh', backgroundColor: '#0A0A0B', padding: '48px' }}
+    >
       <style>{OVERVIEW_STYLES}</style>
       <style>{`
         @keyframes pulse-dot {
@@ -36,7 +78,7 @@ const OverviewView = () => {
       `}</style>
 
       {/* Header */}
-      <div style={{ marginBottom: 40 }}>
+      <motion.div variants={sectionVariants} style={{ marginBottom: 40 }}>
         <p style={{ color: '#22C55E', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0 0 12px 0' }}>
           Panel principal
         </p>
@@ -67,13 +109,14 @@ const OverviewView = () => {
             <p style={{ color: '#3F3F46', fontSize: 12, textTransform: 'capitalize', margin: 0 }}>{date}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${visibleStats.length}, 1fr)`, gap: 16, marginBottom: 32 }}>
+      <motion.div variants={gridVariants} style={{ display: 'grid', gridTemplateColumns: `repeat(${visibleStats.length}, 1fr)`, gap: 16, marginBottom: 32 }}>
         {visibleStats.map(stat => (
-          <div
+          <motion.div
             key={stat.label}
+            variants={cardVariants}
             className="overview-stat-card"
             style={{ padding: '20px 24px', borderRadius: 14, backgroundColor: '#111113', border: '1px solid #1F1F22' }}
           >
@@ -100,19 +143,92 @@ const OverviewView = () => {
             <p style={{ color: '#3F3F46', fontSize: 11, margin: 0 }}>
               {stat.description}
             </p>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
+
+      {/* Avisos y novedades */}
+      <motion.div variants={sectionVariants} style={{ marginBottom: 40 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <p style={{ color: '#52525B', fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', margin: 0 }}>
+            Avisos y novedades
+          </p>
+          <span style={{ fontSize: 10, color: '#3F3F46' }}>Plataforma Nich-ká</span>
+        </div>
+        <motion.div variants={gridVariants} style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+          {ANNOUNCEMENTS.map(item => (
+            <motion.div
+              key={item.title}
+              variants={cardVariants}
+              style={{
+                display:         'flex',
+                gap:             16,
+                padding:         '18px 20px',
+                borderRadius:    14,
+                backgroundColor: '#111113',
+                border:          '1px solid #1F1F22',
+                overflow:        'hidden',
+                position:        'relative',
+              }}
+            >
+              {/* Left accent */}
+              <div style={{
+                position:        'absolute',
+                left:            0,
+                top:             16,
+                bottom:          16,
+                width:           3,
+                borderRadius:    9999,
+                backgroundColor: item.tagColor,
+                opacity:         0.6,
+              }} />
+
+              <div style={{ paddingLeft: 4, flex: 1, minWidth: 0 }}>
+                {/* Tag row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <span style={{
+                    padding:         '2px 8px',
+                    borderRadius:    999,
+                    backgroundColor: `${item.tagColor}15`,
+                    border:          `1px solid ${item.tagColor}30`,
+                    color:           item.tagColor,
+                    fontSize:        9,
+                    fontWeight:      700,
+                    letterSpacing:   '0.12em',
+                    textTransform:   'uppercase',
+                  }}>
+                    {item.tag}
+                  </span>
+                  <span style={{ color: '#3F3F46', fontSize: 10, fontFamily: 'monospace' }}>{item.version}</span>
+                  <span style={{ color: '#2A2A2D', fontSize: 10 }}>·</span>
+                  <span style={{ color: '#3F3F46', fontSize: 10 }}>{item.date}</span>
+                </div>
+
+                {/* Title */}
+                <p style={{ color: '#E4E4E7', fontSize: 13, fontWeight: 600, margin: '0 0 5px 0' }}>
+                  {item.title}
+                </p>
+
+                {/* Description */}
+                <p style={{ color: '#52525B', fontSize: 11, margin: 0, lineHeight: 1.6 }}>
+                  {item.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
 
       {/* Acceso rápido */}
-      <div style={{ marginBottom: 28 }}>
+      <motion.div variants={sectionVariants} style={{ marginBottom: 28 }}>
         <p style={{ color: '#52525B', fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0 0 16px 0' }}>
           Acceso rápido
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${visibleActions.length}, 1fr)`, gap: 16 }}>
+        <motion.div variants={gridVariants} style={{ display: 'grid', gridTemplateColumns: `repeat(${visibleActions.length}, 1fr)`, gap: 16 }}>
           {visibleActions.map(action => (
-            <div
+            <motion.div
               key={action.label}
+              variants={cardVariants}
               className="overview-action-card"
               onClick={() => navigate(action.path)}
               style={{ padding: '24px 20px', borderRadius: 14, backgroundColor: '#111113', border: '1px solid #1F1F22' }}
@@ -124,11 +240,11 @@ const OverviewView = () => {
               </div>
               <p style={{ color: '#F4F4F5', fontSize: 13, fontWeight: 600, margin: '0 0 6px 0' }}>{action.label}</p>
               <p style={{ color: '#52525B', fontSize: 11, margin: 0, lineHeight: 1.5 }}>{action.description}</p>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   )
 }
 

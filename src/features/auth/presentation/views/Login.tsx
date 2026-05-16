@@ -5,7 +5,7 @@ import { useLoginViewModel } from '../viewmodels/useLoginViewModel'
 import { cn } from '../../../../lib/utils'
 import { PointerHighlight } from '../../../../components/ui/pointer-highlight'
 import Text3DFlip from '../../../../components/ui/text-3d-flip'
-import { useAlert } from '../../../../shared/context/AlertContext'
+import { sileo } from 'sileo'
 
 const panel = {
   hidden: {},
@@ -42,13 +42,12 @@ const EyeIcon = ({ open }: { open: boolean }) => open
 const Login = () => {
   const location = useLocation()
   const { email, setEmail, password, setPassword, loading, error, handleSubmit } = useLoginViewModel()
-  const { showAlert } = useAlert()
   const [showPass, setShowPass] = useState(false)
   const justRegistered = location.state?.registered === true
 
   useEffect(() => {
     if (error) {
-      showAlert({ title: 'Error al iniciar sesión', description: error, variant: 'error' })
+      sileo.error({ title: 'Error al iniciar sesión', description: error, fill: '#1A1A1A', styles: { title: 'text-white', description: 'text-white' } })
     }
   }, [error])
   const registeredEmail = location.state?.email as string | undefined
