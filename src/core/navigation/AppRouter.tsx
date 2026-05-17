@@ -19,6 +19,7 @@ import ForgotPassword from '../../features/auth/presentation/views/ForgotPasswor
 import FermentationView from '../../features/fermentation/presentation/view/FermentationView'
 import SensorsView from '../../features/sensors/presentation/view/SensorsView'
 import Register from '../../features/auth/presentation/views/Register'
+import AuthCallbackView from '../../features/auth/presentation/views/AuthCallbackView'
 import ChatView from '../../features/chat/presentation/view/ChatView'
 import OverviewView from '../../features/home/presentation/view/OverviewView'
 import EfficiencyCalculatorView from '../../features/efficiency/presentation/view/EfficiencyCalculatorView'
@@ -47,6 +48,7 @@ const AppRouter = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/auth/callback"   element={<AuthCallbackView />} />
 
         {/* Soporte — auth requerido, solo rol soporte */}
         <Route element={<PrivateRoute allowedRoles={['soporte']} />}>
